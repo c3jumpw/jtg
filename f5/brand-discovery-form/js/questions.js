@@ -55,14 +55,15 @@
     /* ---------- Chapter 1: You & your business ---------- */
     {
       id: 'hello', chapter: 1,
-      host: function () { return 'Welcome. We’ll keep this relaxed, like a first coffee chat. What’s your name?'; },
+      host: function () { return 'Welcome. Ten focused minutes on your business, and we come to the call ready. What’s your name?'; },
       hint: 'We’ll ask for contact details at the end.',
       fields: [
         { id: 'firstName', type: 'text', half: true, label: 'First name', short: 'First name', required: true, autocomplete: 'given-name', max: 80,
           error: 'Add your first name so we know what to call you.' },
         { id: 'lastName', type: 'text', half: true, label: 'Last name', short: 'Last name', autocomplete: 'family-name', max: 80 },
         { id: 'role', type: 'single', label: 'Your role', short: 'Role', options: [
-          'Founder or owner', 'Executive', 'Marketing or brand lead', 'Sales or operations lead', { v: 'Other', other: true }
+          'Founder, owner or CEO', 'C-suite (COO, CFO, CMO, CRO)', 'VP or director of marketing',
+          'VP or director of operations', 'Head of growth or revenue', { v: 'Other', other: true }
         ] }
       ],
       echo: function (d) { return ((d.firstName || '') + ' ' + (d.lastName || '')).trim(); }
@@ -98,11 +99,11 @@
       hint: 'Be honest. There’s no wrong answer, and it helps us start in the right place.',
       fields: [
         { id: 'stage', type: 'single', layout: 'list', label: 'Current stage', short: 'Stage', options: [
-          { v: 'Just an idea',  d: 'Pre-launch, still shaping it' },
-          { v: 'Early days',    d: 'Launched and landing the first customers' },
-          { v: 'Growing',       d: 'Steady customers, but growth is uneven' },
-          { v: 'Established',   d: 'Solid revenue and ready to scale' },
-          { v: 'Reinventing',   d: 'A rebrand, a pivot or a new chapter' }
+          { v: 'Established and profitable', d: 'A real book of business, steady margins, ready to level up' },
+          { v: 'Scaling',                    d: 'Growing fast, feeling growing-pains, need the systems to match' },
+          { v: 'Multi-market or multi-location', d: 'Running in several places, needs one clear playbook across them' },
+          { v: 'Enterprise',                 d: 'Large team, mature ops, looking for the next unlock' },
+          { v: 'Repositioning',              d: 'A rebrand, a merger or a new chapter of the business' }
         ] }
       ],
       echo: function (d) { return d.stage; }
@@ -119,11 +120,11 @@
           'Digital products or software', 'Franchise or licensing', 'Marketplace or commissions'
         ] },
         { id: 'teamSize', type: 'single', label: 'How big is the team?', short: 'Team size', compact: true, options: [
-          'Just me', '2 to 5', '6 to 20', '21 to 50', '51 or more'
+          'Under 25', '25 to 100', '100 to 500', '500 to 2,000', '2,000+'
         ] },
         { id: 'revenue', type: 'single', label: 'Roughly what does the business bring in each year?', short: 'Annual revenue', compact: true,
           hint: 'Optional. It helps us size our recommendations.', options: [
-          'Under $100K', '$100K to $500K', '$500K to $1M', '$1M to $5M', '$5M or more', 'Prefer not to say'
+          'Under $1M', '$1M to $5M', '$5M to $25M', '$25M to $100M', '$100M or more', 'Prefer not to say'
         ] }
       ],
       echo: function (d) { return list(d.businessModel, 2); }
@@ -208,9 +209,10 @@
       host: function (d) { return 'Where do you want to take ' + biz(d) + '? Pick your top priorities for the next 12 months.'; },
       fields: [
         { id: 'goals', type: 'multi', max: 3, label: 'Top priorities', short: 'Goals for the next 12 months', options: [
-          'Get more leads', 'Raise prices or margins', 'Refresh the brand', 'Launch a new website',
-          'Launch a new product or service', 'Build better systems', 'Enter a new market', 'Grow the team',
-          'Prepare to sell or raise money', { v: 'Something else', other: true }
+          'Sharpen positioning and brand', 'Systematize operations', 'Fix attribution and analytics',
+          'Grow revenue and pipeline', 'Enter a new market or geography', 'Launch a new product or division',
+          'Rebuild or replace core systems', 'Prepare for acquisition or exit', 'Retain and develop the team',
+          { v: 'Something else', other: true }
         ] }
       ],
       echo: function (d) { return list(pick(d, 'goals'), 2); }

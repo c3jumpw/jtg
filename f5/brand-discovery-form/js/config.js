@@ -8,7 +8,7 @@ window.F5_CONFIG = {
 
   // Where the "Book a call" button on the thank-you screen goes.
   // Same link the main befortune5.com call-to-action uses.
-  bookingUrl: 'https://brandcraftsman.mambayk.com/book-a-call/',
+  bookingUrl: 'https://befortune5.com/#book',
 
   // The backend routes (Vercel functions in /api). On hosts that don't have
   // them (GitHub Pages, a local file) the form runs in preview mode.

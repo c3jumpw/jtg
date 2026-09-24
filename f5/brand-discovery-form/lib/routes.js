@@ -80,7 +80,7 @@ export function makeSubmit({ head, env = process.env, fetchImpl = fetch, now = D
 
     const rows = readRows(body.summary);
     const siteUrl = (env.SITE_URL || 'https://discovery.befortune5.com').replace(/\/$/, '');
-    const bookingUrl = env.BOOKING_URL || 'https://brandcraftsman.mambayk.com/book-a-call/';
+    const bookingUrl = env.BOOKING_URL || 'https://befortune5.com/#book';
     if (!env.NOTIFY_TO) return json(500, { error: 'This form isn’t fully set up yet. Please try again later.' });
 
     // Keep only files that really exist in storage and belong to this visit's folder.

@@ -235,7 +235,7 @@
       h('div', { class: 'hero-inner' },
         h('div', { class: 'hero-main' },
           h('img', { class: 'hero-mark', src: 'assets/mark.svg', alt: '', 'aria-hidden': 'true' }),
-          h('h1', { class: 'hero-title', id: 'ask', tabindex: '-1' }, 'Tell us about your brand.'),
+          h('h1', { class: 'hero-title', id: 'ask', tabindex: '-1' }, 'Tell us about your business.'),
           h('p', { class: 'hero-lede' },
             resume
               ? 'Welcome back' + (state.data.firstName ? ', ' + state.data.firstName : '') + '. Your answers are saved on this device.'
