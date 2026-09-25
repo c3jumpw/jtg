@@ -11,6 +11,65 @@ const SITE_URL = () => (process.env.SITE_URL || 'https://start.befortune5.com').
 const FROM_EMAIL = () => process.env.FROM_EMAIL || 'The Fortune 5 Agency <bookings@befortune5.com>';
 const NOTIFY_FALLBACK = () => process.env.NOTIFY_TO || '';
 
+/* ---------------- CRM sync (MKC CRM 2.0, ClickUp-backed) ----------------
+ * When CRM_ENDPOINT_URL and CRM_SHARED_SECRET are set, we POST to the CRM's
+ * /api/booking-created endpoint after saving. The CRM does contact resolution
+ * (match by email/phone or create a Lead) and logs the booking to that entry.
+ * We store the returned entryId on the appointment for cross-reference.
+ * Missing env vars = feature off. All errors are captured, never thrown. */
+
+async function syncToCRM({ apptId, repClickupId, repName, guest, meeting }) {
+  const endpoint = process.env.CRM_ENDPOINT_URL;
+  const secret = process.env.CRM_SHARED_SECRET;
+  if (!endpoint || !secret) return; // integration not configured — no-op
+  const body = {
+    repMkcId: repClickupId,   // may be null if this rep isn't linked to a Team Directory entry yet
+    repName,
+    attendee: {
+      firstName: guest.firstName || '',
+      lastName: guest.lastName || '',
+      email: guest.email,
+      phone: guest.phone || null,
+      company: guest.company || null
+    },
+    meeting: {
+      topic: meeting.topic,
+      startTime: meeting.startTime,
+      endTime: meeting.endTime,
+      meetingUrl: meeting.meetingUrl,
+      notes: meeting.notes,
+      mode: meeting.mode,
+      locationText: meeting.locationText
+    },
+    bookingSource: 'native',
+    bookingId: apptId
+  };
+  let ok = false, entryId = null, entryType = null, errorMsg = null;
+  try {
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Form-Secret': secret },
+      body: JSON.stringify(body)
+    });
+    const text = await res.text();
+    if (res.ok) {
+      try { const j = text ? JSON.parse(text) : {}; entryId = j.entryId || null; entryType = j.entryType || null; ok = true; }
+      catch { ok = true; }
+    } else {
+      errorMsg = `CRM ${res.status}: ${text.slice(0, 300)}`;
+    }
+  } catch (e) {
+    errorMsg = `CRM request failed: ${e.message}`;
+  }
+  try {
+    await patch('booking', 'appointments', `id=eq.${apptId}`, ok
+      ? { crm_entry_id: entryId, crm_entry_type: entryType, crm_synced_at: new Date().toISOString(), crm_sync_error: null }
+      : { crm_sync_error: errorMsg });
+  } catch (e) {
+    console.error('failed to record CRM sync result for', apptId, e.message);
+  }
+}
+
 /* ---------------- CREATE ---------------- */
 
 async function create(request) {
@@ -158,6 +217,20 @@ async function create(request) {
     console.error('email issues for booking', inserted.id, errors.join(' | '));
     try { await patch('booking', 'appointments', `id=eq.${inserted.id}`, { source: { ...(insertRow.source || {}), email_errors: errors } }); } catch {}
   }
+
+  // Fire-and-forget CRM sync: create/match the Lead or Contact in MKC CRM 2.0 and log this booking
+  // against them. Additive — booking is already saved; CRM sync failures are visible but non-fatal.
+  syncToCRM({
+    apptId: inserted.id,
+    repClickupId: rep.clickup_team_dir_id || null, repName: rep.display_name || person.full_name || 'a specialist',
+    guest: { firstName: guestName.split(' ')[0], lastName: guestName.split(' ').slice(1).join(' '), email: guestEmail, phone: guestPhone, company: guestCompany },
+    meeting: {
+      topic: page.title, startTime: insertRow.starts_at, endTime: insertRow.ends_at,
+      meetingUrl: insertRow.meet_url || null,
+      notes: guestNotes || null,
+      mode: mt.mode, locationText: insertRow.location_text || null
+    }
+  }).catch((e) => console.error('CRM sync scheduling failed for', inserted.id, e.message));
 
   return json(200, {
     ok: true, id: inserted.id, manageUrl,

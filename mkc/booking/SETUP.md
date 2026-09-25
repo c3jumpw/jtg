@@ -26,6 +26,8 @@ browser ── start.befortune5.com (static + /api on Vercel)
 | `SITE_URL` | `https://start.befortune5.com` | Used for the manage links and the logo in email |
 | `NOTIFY_TO` | `you@befortune5.com` | Fallback address if the rep has no email on file (rare) |
 | `ALLOWED_ORIGINS` | *(optional)* | Comma-separated extra origins allowed to call the API |
+| `CRM_ENDPOINT_URL` | *(optional)* | `https://jtg-tools-mkc-crm.vercel.app/api/booking-created` — MKC CRM sync endpoint. When set, a successful booking POSTs to the CRM to create/match a Lead or Contact and log the booking. |
+| `CRM_SHARED_SECRET` | *(optional)* | Value sent as `X-Form-Secret` header on CRM calls. Required by the CRM endpoint. |
 
 Redeploy after changing variables.
 
