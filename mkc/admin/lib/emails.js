@@ -4,7 +4,7 @@ const SHELL = (siteUrl, inner, preheader) => `<!doctype html><html><head><meta c
 <div style="display:none;max-height:0;overflow:hidden;opacity:0">${esc(preheader)}</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F1F3F5"><tr><td align="center" style="padding:24px 12px">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border-radius:12px;overflow:hidden">
-<tr><td style="background:#161B26;padding:22px 28px"><div style="color:#fff;font:800 15px Arial,sans-serif;letter-spacing:.14em;text-transform:uppercase">MKC Admin</div></td></tr>
+<tr><td style="background:#161B26;padding:22px 28px"><img src="${esc(siteUrl)}/assets/logo-light.png" alt="MKC" height="28" style="display:block;height:28px;width:auto;border:0"></td></tr>
 <tr><td style="padding:32px 28px">${inner}</td></tr>
 </table></td></tr></table></body></html>`;
 

@@ -124,7 +124,7 @@
     emailInput.addEventListener('keydown', function (ev) { if (ev.key === 'Enter') submit.click(); });
 
     var card = h('div', { class: 'login-card' }, [
-      h('div', { class: 'brand' }, h('div', {}, 'MKC Admin')),
+      h('div', { class: 'brand' }, h('img', { src: 'assets/logo-dark.png', alt: 'MKC' })),
       h('h1', {}, 'Sign in'),
       h('p', {}, 'Enter your email. We’ll send you a one-time sign-in link, good for 15 minutes.'),
       h('div', { class: 'field', style: 'gap:10px' }, [
@@ -156,8 +156,8 @@
     ];
     return h('aside', { class: 'sidebar' }, [
       h('div', { class: 'brand' }, [
-        h('span', { class: 'brand-mark' }),
-        h('span', { class: 'brand-text' }, 'MKC Admin')
+        h('img', { src: 'assets/logo-light.png', alt: 'MKC' }),
+        h('span', { class: 'brand-tag' }, 'Admin')
       ]),
       h('nav', {}, links.map(function (l) {
         return h('a', { href: '#/' + l[0], class: state.route === l[0] ? 'on' : '' }, [icon(l[0]), h('span', {}, l[1])]);
