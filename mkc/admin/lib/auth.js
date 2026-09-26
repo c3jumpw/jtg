@@ -27,27 +27,32 @@ export function sessionCookie(token, { maxAge = SESSION_TTL_SEC, clear = false }
 }
 
 /* Allowlist: an email is allowed if it appears in the MKC_ADMIN_EMAILS env var (bootstrap)
- * or has an admin tool_access row for the booking tool in core.tool_access. */
+ * or has a tool_access row for the booking tool in core.tool_access. */
 
 export function bootstrapEmails() {
   return (process.env.MKC_ADMIN_EMAILS || '')
     .split(',').map((s) => s.trim().toLowerCase()).filter(Boolean);
 }
 
-export async function isAllowed(email) {
+export async function getAccessRole(email) {
   const em = (email || '').toLowerCase();
-  if (!em) return false;
-  if (bootstrapEmails().includes(em)) return true;
-  // Existing admin in the DB: core.people joined to core.tool_access on booking/admin.
+  if (!em) return null;
+  if (bootstrapEmails().includes(em)) return 'super_admin';
   try {
     const rows = await select('core', 'people',
-      `select=id,tool_access:tool_access!inner(role,tool)&email=ilike.${encodeURIComponent(em)}&tool_access.tool=eq.booking&tool_access.role=eq.admin`
+      `select=id,tool_access!inner(role,tool)&email=ilike.${encodeURIComponent(em)}&tool_access.tool=eq.booking`
     );
-    return Array.isArray(rows) && rows.length > 0;
+    if (!Array.isArray(rows) || rows.length === 0) return null;
+    const ta = (rows[0].tool_access || [])[0] || {};
+    return ta.role || null; // 'super_admin' | 'admin' | 'rep'
   } catch (e) {
-    console.error('allowlist check failed', e.message);
-    return false;
+    console.error('role check failed', e.message);
+    return null;
   }
+}
+
+export async function isAllowed(email) {
+  return (await getAccessRole(email)) !== null;
 }
 
 /* Session verification for API handlers. Returns { email, personId, role } or throws a Response. */
@@ -60,14 +65,17 @@ export async function requireSession(request) {
   const s = rows && rows[0];
   if (!s) throw json(401, { error: 'Session invalid or expired.' });
   if (new Date(s.expires_at).getTime() < Date.now()) throw json(401, { error: 'Session expired.' });
-  // Re-check the allowlist on every request so removals take effect immediately.
-  const stillAllowed = await isAllowed(s.email);
-  if (!stillAllowed) throw json(403, { error: 'Access removed.' });
-  return { email: s.email, personId: s.person_id, role: 'admin' };
+  const role = await getAccessRole(s.email);
+  if (!role) throw json(403, { error: 'Access removed.' });
+  return { email: s.email, personId: s.person_id, role };
 }
 
-/* Create-or-fetch a core.people record for the signed-in email, and ensure they have tool_access.
- * Called on successful magic-link exchange so future sessions carry a person_id. */
+export async function requireSuperAdmin(request) {
+  const session = await requireSession(request);
+  if (session.role !== 'super_admin' && session.role !== 'admin') throw json(403, { error: 'Super-admin access required.' });
+  return session;
+}
+
 export async function ensurePerson(email, fullNameGuess = '') {
   const em = email.toLowerCase();
   const found = await select('core', 'people', `select=id,full_name,email&email=ilike.${encodeURIComponent(em)}`);
@@ -77,9 +85,10 @@ export async function ensurePerson(email, fullNameGuess = '') {
     person = created && created[0];
   }
   if (person) {
-    // Idempotent tool_access grant so future allowlist checks find them.
+    const isBootstrap = bootstrapEmails().includes(em);
+    const role = isBootstrap ? 'super_admin' : 'admin';
     try {
-      await insert('core', 'tool_access', { person_id: person.id, tool: 'booking', role: 'admin' }, { onConflict: 'person_id,tool' });
+      await insert('core', 'tool_access', { person_id: person.id, tool: 'booking', role }, { onConflict: 'person_id,tool' });
     } catch (e) { /* already granted */ }
   }
   return person;

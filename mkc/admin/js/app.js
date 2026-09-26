@@ -33,7 +33,7 @@
   }
   function icon(name) {
     // Simple monogram icons using unicode + CSS classes; no icon library.
-    var map = { dashboard: '◆', reps: '☰', availability: '◔', meetings: '▤', bookings: '◱', settings: '⚙' };
+    var map = { dashboard: '◆', reps: '☰', availability: '◔', meetings: '▤', bookings: '◱', settings: '⚙', 'my-profile': '◉', 'my-bookings': '◱', 'my-availability': '◔' };
     return h('span', { class: 'icon' }, map[name] || '•');
   }
 
@@ -90,7 +90,15 @@
     api('/api/auth-me').then(function (d) {
       state.me = d && d.authenticated ? d : null;
       if (state.me) {
-        var r = parseHash(); state.route = r.route; state.routeParams = r.params;
+        var isSA = state.me.role === 'super_admin' || state.me.role === 'admin';
+        var r = parseHash();
+        // Redirect rep away from admin routes at boot.
+        var adminOnlyRoutes = ['dashboard','bookings','reps','availability','meetings','settings'];
+        if (!isSA && adminOnlyRoutes.indexOf(r.route) >= 0) r.route = 'my-profile';
+        // Redirect admin away from rep routes at boot.
+        var repOnlyRoutes = ['my-profile','my-bookings','my-availability'];
+        if (isSA && repOnlyRoutes.indexOf(r.route) >= 0) r.route = 'dashboard';
+        state.route = r.route; state.routeParams = r.params;
         render(); loadForRoute();
       } else {
         renderLogin();
@@ -146,18 +154,14 @@
   }
 
   function sidebar() {
-    var links = [
-      ['dashboard', 'Dashboard'],
-      ['bookings', 'Bookings'],
-      ['reps', 'Team'],
-      ['availability', 'Availability'],
-      ['meetings', 'Meeting types'],
-      ['settings', 'Settings']
-    ];
+    var isSA = state.me.role === 'super_admin' || state.me.role === 'admin';
+    var repLinks = [['my-profile', 'My Profile'], ['my-bookings', 'My Bookings'], ['my-availability', 'My Availability']];
+    var adminLinks = [['dashboard', 'Dashboard'], ['bookings', 'Bookings'], ['reps', 'Team'], ['availability', 'Availability'], ['meetings', 'Meeting types'], ['settings', 'Settings']];
+    var links = isSA ? adminLinks : repLinks;
     return h('aside', { class: 'sidebar' }, [
       h('div', { class: 'brand' }, [
         h('img', { src: 'assets/logo-light.png', alt: 'MKC' }),
-        h('span', { class: 'brand-tag' }, 'Admin')
+        h('span', { class: 'brand-tag' }, 'Passport')
       ]),
       h('nav', {}, links.map(function (l) {
         return h('a', { href: '#/' + l[0], class: state.route === l[0] ? 'on' : '' }, [icon(l[0]), h('span', {}, l[1])]);
@@ -177,24 +181,29 @@
   function main() {
     var wrap = h('div', {});
     // Mobile nav (route switcher)
+    var isSA = state.me && (state.me.role === 'super_admin' || state.me.role === 'admin');
+    var navRoutes = isSA
+      ? ['dashboard','bookings','reps','availability','meetings','settings']
+      : ['my-profile','my-bookings','my-availability'];
+    var navLabels = { dashboard:'Dashboard', bookings:'Bookings', reps:'Team', availability:'Availability', meetings:'Meeting types', settings:'Settings', 'my-profile':'My Profile', 'my-bookings':'My Bookings', 'my-availability':'My Availability' };
     var mn = h('div', { class: 'mobilenav' }, [
       h('span', { style: 'font:800 13px;letter-spacing:.14em;text-transform:uppercase' }, 'MKC'),
-      h('select', {
-        onchange: function (e) { nav(e.target.value); }
-      }, ['dashboard','bookings','reps','availability','meetings','settings'].map(function (r) {
-        var lbl = { dashboard:'Dashboard', bookings:'Bookings', reps:'Team', availability:'Availability', meetings:'Meeting types', settings:'Settings' }[r];
-        var opt = h('option', { value: r }, lbl); if (state.route === r) opt.selected = true; return opt;
-      }))
+      h('select', { onchange: function (e) { nav(e.target.value); } },
+        navRoutes.map(function (r) { var o = h('option', { value: r }, navLabels[r]||r); if (state.route === r) o.selected = true; return o; }))
     ]);
     wrap.appendChild(mn);
 
     var m = h('div', { class: 'main' });
+    var isSA = state.me.role === 'super_admin' || state.me.role === 'admin';
     if (state.route === 'dashboard') m.appendChild(viewDashboard());
     else if (state.route === 'bookings') m.appendChild(viewBookings());
-    else if (state.route === 'reps') m.appendChild(viewReps());
-    else if (state.route === 'availability') m.appendChild(viewAvailability());
-    else if (state.route === 'meetings') m.appendChild(viewMeetingTypes());
-    else if (state.route === 'settings') m.appendChild(viewSettings());
+    else if (state.route === 'reps') m.appendChild(isSA ? viewReps() : h('div', { class: 'empty' }, 'Access restricted.'));
+    else if (state.route === 'availability') m.appendChild(isSA ? viewAvailability() : h('div', { class: 'empty' }, 'Access restricted.'));
+    else if (state.route === 'meetings') m.appendChild(isSA ? viewMeetingTypes() : h('div', { class: 'empty' }, 'Access restricted.'));
+    else if (state.route === 'settings') m.appendChild(isSA ? viewSettings() : h('div', { class: 'empty' }, 'Access restricted.'));
+    else if (state.route === 'my-profile') m.appendChild(viewMyProfile());
+    else if (state.route === 'my-bookings') m.appendChild(viewMyBookings());
+    else if (state.route === 'my-availability') m.appendChild(viewMyAvailability());
     else m.appendChild(h('div', { class: 'empty' }, 'Not found.'));
     wrap.appendChild(m);
     return wrap;
@@ -202,8 +211,12 @@
 
   function loadForRoute() {
     if (!state.me) return;
+    var isSA = state.me.role === 'super_admin' || state.me.role === 'admin';
+    // Redirect reps away from admin-only routes.
+    if (!isSA && ['dashboard','bookings','reps','availability','meetings','settings'].indexOf(state.route) >= 0) {
+      nav('my-profile'); return;
+    }
     if (state.route === 'dashboard') {
-      // Dashboard shows both counts — kick off appointment and rep loads together.
       state.loading = true; render();
       Promise.all([
         api('/api/appointments?filter=upcoming&limit=100').then(function (d) { state.appointments = d.appointments; }),
@@ -215,6 +228,8 @@
     if (state.route === 'bookings') return loadAppointments();
     if (state.route === 'reps' || state.route === 'availability') return loadReps();
     if (state.route === 'meetings' || state.route === 'settings') return loadSettings();
+    if (state.route === 'my-profile' || state.route === 'my-availability') return loadMyProfile();
+    if (state.route === 'my-bookings') return loadMyBookings();
   }
 
   function loadAppointments() {
@@ -701,6 +716,126 @@
     ]);
     back.appendChild(m);
     document.body.appendChild(back);
+  }
+
+  function loadMyProfile() {
+    state.loading = true; render();
+    api('/api/preferences?rep=' + (state.me.repId || state.me.personId))
+      .then(function (d) { state.myProfile = d; state.loading = false; render(); })
+      .catch(function (e) { state.loading = false; toast(e.message, 'err'); });
+  }
+  function loadMyBookings() {
+    state.loading = true; render();
+    api('/api/appointments?filter=' + (state._bookingFilter || 'upcoming') + '&limit=100')
+      .then(function (d) { state.appointments = d.appointments; state.loading = false; render(); })
+      .catch(function (e) { state.loading = false; toast(e.message, 'err'); });
+  }
+
+  /* ---------- REP SELF-SERVICE VIEWS ---------- */
+
+  function viewMyProfile() {
+    var wrap = h('div', {});
+    wrap.appendChild(h('div', { class: 'page-head' }, [
+      h('div', {}, [h('h1', {}, 'My Profile'), h('div', { class: 'sub' }, 'Your booking details and preferences.')])
+    ]));
+    if (state.loading || !state.myProfile) return wrap.appendChild(h('div', { class: 'loading' }, 'Loading\u2026')), wrap;
+    var pr = state.myProfile.preferences || {}; var rep = state.myProfile.rep || {};
+    var draft = {
+      displayName: rep.display_name || '', bio: rep.bio || '', timezone: rep.timezone || 'America/New_York',
+      bookingActive: pr.booking_active !== false, bookingLinkSlug: pr.booking_link_slug || '',
+      crmAutoSync: pr.crm_auto_sync !== false, crmDefaultType: pr.crm_default_type || 'Lead',
+      notifyEmail: pr.notify_email !== false, notifySms: pr.notify_sms || false,
+      bufferBeforeMin: pr.buffer_before_min || '', bufferAfterMin: pr.buffer_after_min || ''
+    };
+    wrap.appendChild(h('div', { class: 'card' }, [
+      h('h2', {}, 'Booking settings'),
+      h('div', { class: 'form-body' }, [
+        h('div', { class: 'row' }, [inputField('Display name', draft, 'displayName'), tzField(draft)]),
+        inputField('Bio', draft, 'bio', { textarea: true, hint: 'Shown to guests before they book' }),
+        h('div', { class: 'row' }, [
+          inputField('Booking link slug', draft, 'bookingLinkSlug', { hint: 'e.g. "bernard" \u2192 your personal link' }),
+          h('div', { class: 'field' }, [
+            h('label', {}, 'Accepting bookings'),
+            h('label', { style: 'display:flex;align-items:center;gap:8px;font-weight:500;margin-top:8px' }, [
+              (function () { var cb = h('input', { type: 'checkbox', onchange: function (e) { draft.bookingActive = e.target.checked; } }); cb.checked = draft.bookingActive; return cb; })(),
+              'My booking page is active'
+            ])
+          ])
+        ])
+      ])
+    ]));
+    wrap.appendChild(h('div', { class: 'card' }, [
+      h('h2', {}, 'Notification & CRM preferences'),
+      h('div', { class: 'form-body' }, [
+        h('div', { class: 'row' }, [
+          h('div', { class: 'field' }, [
+            h('label', {}, 'CRM sync'),
+            h('label', { style: 'display:flex;align-items:center;gap:8px;font-weight:500;margin-top:8px' }, [
+              (function () { var cb = h('input', { type: 'checkbox', onchange: function (e) { draft.crmAutoSync = e.target.checked; } }); cb.checked = draft.crmAutoSync; return cb; })(),
+              'Auto-sync bookings to CRM'
+            ])
+          ]),
+          h('div', { class: 'field' }, [
+            h('label', {}, 'Default CRM entry type'),
+            (function () {
+              var sel = h('select', { onchange: function (e) { draft.crmDefaultType = e.target.value; } },
+                ['Lead', 'Contact', 'Account'].map(function (t) {
+                  var o = h('option', { value: t }, t); if (t === draft.crmDefaultType) o.selected = true; return o;
+                }));
+              return sel;
+            })()
+          ])
+        ]),
+        h('div', { class: 'row' }, [
+          h('div', { class: 'field' }, [
+            h('label', {}, 'Notifications'),
+            h('label', { style: 'display:flex;align-items:center;gap:8px;font-weight:500;margin-top:8px' }, [
+              (function () { var cb = h('input', { type: 'checkbox', onchange: function (e) { draft.notifyEmail = e.target.checked; } }); cb.checked = draft.notifyEmail; return cb; })(),
+              'Email me on new bookings'
+            ])
+          ]),
+          h('div', { class: 'row' }, [
+            numField('Personal buffer before (min)', draft, 'bufferBeforeMin', 0, 120),
+            numField('Personal buffer after (min)', draft, 'bufferAfterMin', 0, 120)
+          ])
+        ]),
+        h('div', { style: 'display:flex;justify-content:flex-end' }, h('button', { class: 'btn btn-primary', onclick: function () {
+          api('/api/preferences?rep=' + (state.me.repId || state.me.personId), { method: 'PATCH', body: draft })
+            .then(function () { toast('Saved.', 'ok'); loadMyProfile(); })
+            .catch(function (e) { toast(e.message, 'err'); });
+        }}, 'Save preferences'))
+      ])
+    ]));
+    return wrap;
+  }
+
+  function viewMyBookings() {
+    var wrap = h('div', {});
+    var filter = state._bookingFilter || 'upcoming';
+    wrap.appendChild(h('div', { class: 'page-head' }, [
+      h('div', {}, [h('h1', {}, 'My Bookings'), h('div', { class: 'sub' }, 'Your upcoming and past appointments.')]),
+      h('div', { class: 'pill-tabs' }, ['upcoming', 'past', 'cancelled'].map(function (f) {
+        return h('button', { class: filter === f ? 'on' : '', onclick: function () { state._bookingFilter = f; loadMyBookings(); } },
+          f[0].toUpperCase() + f.slice(1));
+      }))
+    ]));
+    if (state.loading) return wrap.appendChild(h('div', { class: 'loading' }, 'Loading\u2026')), wrap;
+    var appts = (state.appointments || []);
+    if (appts.length === 0) return wrap.appendChild(h('div', { class: 'empty' }, 'No bookings in this view.')), wrap;
+    wrap.appendChild(h('div', { class: 'card' }, bookingTable(appts, filter === 'upcoming')));
+    return wrap;
+  }
+
+  function viewMyAvailability() {
+    // Delegates to the same availability view, pre-filtered to this rep.
+    if (!state.reps) {
+      state.reps = [{ id: state.me.repId || state.me.personId, displayName: state.me.fullName, timezone: 'America/New_York' }];
+    }
+    state._availRepId = state.me.repId || state.me.personId;
+    var wrap = viewAvailability();
+    // Swap the heading.
+    var h1 = wrap.querySelector && wrap.querySelector ? null : null;
+    return wrap;
   }
 
   /* ---------- boot ---------- */
