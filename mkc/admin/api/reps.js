@@ -2,17 +2,34 @@ import { select, insert, patch, json, clean, EMAIL_RE, UUID_RE, readJson } from 
 import { requireSession } from '../lib/auth.js';
 
 async function list() {
-  const rows = await select('booking', 'reps',
-    'select=person_id,display_name,title,bio,photo_url,timezone,weight,active,clickup_team_dir_id,updated_at,' +
-    'person:people!inner(email,full_name,phone),rep_meeting_types(meeting_type_id)&order=display_name.asc');
-  return json(200, { reps: (rows || []).map((r) => ({
-    id: r.person_id,
-    displayName: r.display_name, title: r.title, bio: r.bio, photoUrl: r.photo_url,
-    email: r.person && r.person.email, fullName: r.person && r.person.full_name, phone: r.person && r.person.phone,
-    timezone: r.timezone, weight: r.weight, active: r.active,
-    clickupTeamDirId: r.clickup_team_dir_id,
-    meetingTypeIds: (r.rep_meeting_types || []).map((x) => x.meeting_type_id)
-  })) });
+  // PostgREST embeds don't cross schemas, so we fetch the rep-side rows first,
+  // then batch-fetch the matching core.people rows and merge in JS. Two round-trips is fine.
+  const reps = await select('booking', 'reps',
+    'select=person_id,display_name,title,bio,photo_url,timezone,weight,active,clickup_team_dir_id,updated_at&order=display_name.asc');
+  if (!reps || reps.length === 0) return json(200, { reps: [] });
+
+  const ids = reps.map((r) => r.person_id);
+  const [people, links] = await Promise.all([
+    select('core',    'people',            `select=id,email,full_name,phone&id=in.(${ids.join(',')})`),
+    select('booking', 'rep_meeting_types', `select=rep_id,meeting_type_id&rep_id=in.(${ids.join(',')})`)
+  ]);
+  const personBy = new Map((people || []).map((p) => [p.id, p]));
+  const mtsBy = new Map();
+  for (const l of links || []) {
+    if (!mtsBy.has(l.rep_id)) mtsBy.set(l.rep_id, []);
+    mtsBy.get(l.rep_id).push(l.meeting_type_id);
+  }
+  return json(200, { reps: reps.map((r) => {
+    const p = personBy.get(r.person_id) || {};
+    return {
+      id: r.person_id,
+      displayName: r.display_name, title: r.title, bio: r.bio, photoUrl: r.photo_url,
+      email: p.email || null, fullName: p.full_name || null, phone: p.phone || null,
+      timezone: r.timezone, weight: r.weight, active: r.active,
+      clickupTeamDirId: r.clickup_team_dir_id,
+      meetingTypeIds: mtsBy.get(r.person_id) || []
+    };
+  }) });
 }
 
 async function create(body) {
