@@ -40,7 +40,10 @@ async function handler(request) {
       const rr = await select('booking', 'reps', `select=person_id&person_id=eq.${s.person_id}`);
       if (rr && rr[0]) repId = rr[0].person_id;
     }
-    return json(200, { authenticated: true, email: s.email, personId: s.person_id, fullName, role, repId });
+    return json(200, {
+      authenticated: true, email: s.email, personId: s.person_id, fullName, role, repId,
+      crmUrl: process.env.CRM_APP_URL || 'https://c1jumpw.github.io/jtg-tools/mkc-crm/'
+    });
   } catch (e) {
     console.error('auth-me failed', e.message);
     return json(500, { error: 'Auth check failed.' });

@@ -169,6 +169,15 @@
       h('nav', {}, links.map(function (l) {
         return h('a', { href: '#/' + l[0], class: state.route === l[0] ? 'on' : '' }, [icon(l[0]), h('span', {}, l[1])]);
       })),
+      h('div', { class: 'launch' }, [
+        h('a', {
+          href: (state.me && state.me.crmUrl) || 'https://c1jumpw.github.io/jtg-tools/mkc-crm/',
+          target: '_blank', rel: 'noopener'
+        }, [
+          h('span', { class: 'launch-icon', 'aria-hidden': 'true' }, '\u2197'),
+          h('span', {}, 'Open MKC CRM')
+        ])
+      ]),
       h('div', { class: 'foot' }, [
         h('div', { class: 'who' }, state.me.fullName || state.me.email),
         h('div', {}, state.me.email),
