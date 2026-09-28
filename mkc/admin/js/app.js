@@ -518,6 +518,35 @@
     }).catch(function (e) {
       body.textContent = '';
       body.appendChild(h('div', { class: 'err-box' }, e.message));
+      var diagWrap = h('div', { style: 'margin-top:14px' });
+      var diagBtn = h('button', { class: 'btn btn-secondary' }, 'Run connection check');
+      diagBtn.addEventListener('click', function () {
+        diagBtn.disabled = true; diagBtn.textContent = 'Checking\u2026';
+        api('/api/team-sync?kind=diagnose').then(function (d) {
+          diagWrap.textContent = '';
+          diagWrap.appendChild(h('div', { class: 'card', style: 'padding:16px' }, [
+            h('div', { style: 'font-weight:700;margin-bottom:10px' }, d.verdict || 'Check complete'),
+            h('table', { class: 'data' }, h('tbody', {}, [
+              ['URL configured', d.urlConfigured ? (d.url || 'yes') : 'NO'],
+              ['Secret configured', d.secretConfigured ? (d.secretLength + ' characters') : 'NO'],
+              ['Status with our secret', d.statusWithSecret != null ? String(d.statusWithSecret) : '\u2014'],
+              ['Status with no secret', d.statusWithoutSecret != null ? String(d.statusWithoutSecret) : '\u2014'],
+              ['Response was JSON', d.looksLikeJson == null ? '\u2014' : (d.looksLikeJson ? 'yes' : 'no')],
+              ['First 200 chars', d.bodyPreview || '\u2014']
+            ].map(function (row) {
+              return h('tr', {}, [
+                h('td', { style: 'font-weight:600;white-space:nowrap' }, row[0]),
+                h('td', { style: 'font-family:monospace;font-size:12px;word-break:break-all' }, row[1])
+              ]);
+            })))
+          ]));
+        }).catch(function (err) {
+          diagWrap.textContent = '';
+          diagWrap.appendChild(h('div', { class: 'err-box' }, err.message));
+        });
+      });
+      diagWrap.appendChild(diagBtn);
+      body.appendChild(diagWrap);
     });
   }
 

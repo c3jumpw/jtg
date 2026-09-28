@@ -90,25 +90,50 @@ async function fetchRoster(includeInactive) {
   const url = CRM_URL();
   const secret = CRM_SECRET();
   if (!url || !secret) {
-    throw new Error('CRM sync is not configured. Set CRM_TEAM_DIRECTORY_URL and CRM_SHARED_SECRET, then redeploy.');
+    const missing = [!url && 'CRM_TEAM_DIRECTORY_URL', !secret && 'CRM_SHARED_SECRET'].filter(Boolean).join(' and ');
+    throw new Error(`CRM sync is not configured — ${missing} not set. Add it in Vercel and redeploy.`);
+  }
+  if (!/^https?:\/\//i.test(url)) {
+    throw new Error(`CRM_TEAM_DIRECTORY_URL must start with https:// — currently "${url.slice(0, 80)}".`);
   }
   const full = url + (includeInactive ? (url.includes('?') ? '&' : '?') + 'includeInactive=true' : '');
   let res;
   try {
     res = await fetch(full, { headers: { 'X-Form-Secret': secret, Accept: 'application/json' } });
   } catch (e) {
-    throw new Error(`Couldn't reach the CRM: ${e.message}`);
+    throw new Error(`Couldn't reach the CRM at ${full} — ${e.message}`);
   }
   const text = await res.text();
   if (!res.ok) {
-    // Surface the CRM's own message — it distinguishes 401 (bad secret) from 502 (ClickUp down).
-    let detail = text.slice(0, 300);
-    try { const j = JSON.parse(text); detail = j.error + (j.detail ? ` — ${j.detail}` : ''); } catch {}
-    throw new Error(`CRM returned ${res.status}: ${detail}`);
+    // Flatten whatever shape the error is. Vercel's own 404 page returns
+    // {error:{code,message}} — an object — which is why a naive concat
+    // produced "[object Object]" and told us nothing.
+    let detail = '';
+    try {
+      const j = JSON.parse(text);
+      const e = j && j.error;
+      if (typeof e === 'string') detail = e + (j.detail ? ` — ${j.detail}` : '');
+      else if (e && typeof e === 'object') detail = [e.code, e.message].filter(Boolean).join(': ');
+      else detail = JSON.stringify(j).slice(0, 300);
+    } catch {
+      // Not JSON at all — almost always an HTML error page.
+      detail = /<html/i.test(text) ? 'the server returned an HTML page, not JSON' : text.slice(0, 200);
+    }
+    const hint =
+      res.status === 404 ? ` — no endpoint at ${full}. Check the URL and that /api/team-directory is deployed on the CRM.`
+      : res.status === 401 ? ' — the shared secret did not match. CRM_SHARED_SECRET here must equal FORM_SECRET there.'
+      : res.status === 502 ? ' — the CRM reached ClickUp but ClickUp rejected the request (check CLICKUP_TOKEN there).'
+      : res.status === 500 ? ' — the CRM is missing its own env vars (FORM_SECRET or CLICKUP_TOKEN).'
+      : '';
+    throw new Error(`CRM returned ${res.status}${detail ? `: ${detail}` : ''}${hint}`);
   }
   let data;
-  try { data = JSON.parse(text); } catch { throw new Error('CRM returned a response we couldn\'t parse.'); }
-  return Array.isArray(data.members) ? data.members : [];
+  try { data = JSON.parse(text); }
+  catch { throw new Error(`CRM returned a response we couldn't parse (first 120 chars: ${text.slice(0, 120)})`); }
+  if (!Array.isArray(data.members)) {
+    throw new Error(`CRM response had no "members" array. Keys present: ${Object.keys(data || {}).join(', ') || 'none'}.`);
+  }
+  return data.members;
 }
 
 /* ---------- GET: preview roster with a diff ---------- */
@@ -307,6 +332,50 @@ async function setBranchMap(body) {
   return json(200, { ok: true });
 }
 
+/* ---------- diagnostics ---------- */
+
+async function diagnose() {
+  const url = CRM_URL();
+  const secret = CRM_SECRET();
+  const out = {
+    urlConfigured: !!url,
+    url: url || null,
+    secretConfigured: !!secret,
+    secretLength: secret ? secret.length : 0,
+    bookingSiteUrl: process.env.BOOKING_SITE_URL || null
+  };
+  if (!url || !secret) { out.verdict = 'Not configured — set the missing env var and redeploy.'; return json(200, out); }
+
+  // Probe with the real secret, then deliberately without, so we can tell
+  // "endpoint missing" apart from "secret wrong".
+  try {
+    const withSecret = await fetch(url, { headers: { 'X-Form-Secret': secret, Accept: 'application/json' } });
+    out.statusWithSecret = withSecret.status;
+    const body = await withSecret.text();
+    out.bodyPreview = body.slice(0, 200);
+    out.looksLikeJson = (() => { try { JSON.parse(body); return true; } catch { return false; } })();
+
+    const withoutSecret = await fetch(url, { headers: { Accept: 'application/json' } });
+    out.statusWithoutSecret = withoutSecret.status;
+
+    if (withSecret.status === 200) out.verdict = 'Working.';
+    else if (withSecret.status === 404 && withoutSecret.status === 404) {
+      out.verdict = 'The URL 404s with and without a secret, so the endpoint is not deployed at this path. ' +
+                    'Confirm api/team-directory.ts is live on the CRM project and that the URL has no typo.';
+    } else if (withSecret.status === 401) {
+      out.verdict = 'The endpoint exists but rejected our secret. CRM_SHARED_SECRET here must exactly equal FORM_SECRET there ' +
+                    '(watch for trailing spaces or newlines when pasting).';
+    } else if (withoutSecret.status === 401 && withSecret.status !== 200) {
+      out.verdict = `The endpoint exists and enforces auth, but returned ${withSecret.status} with our secret.`;
+    } else {
+      out.verdict = `Unexpected: ${withSecret.status} with secret, ${withoutSecret.status} without.`;
+    }
+  } catch (e) {
+    out.verdict = `Could not reach the URL at all: ${e.message}`;
+  }
+  return json(200, out);
+}
+
 async function handler(request) {
   let session;
   try { session = await requireSession(request); } catch (e) { return e; }
@@ -320,6 +389,7 @@ async function handler(request) {
   }
 
   try {
+    if (kind === 'diagnose') return await diagnose();
     if (kind === 'branches') {
       if (request.method === 'GET') return await getBranchMap();
       if (request.method === 'PATCH') {
