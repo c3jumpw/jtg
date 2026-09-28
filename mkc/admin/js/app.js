@@ -342,26 +342,127 @@
   function viewReps() {
     var wrap = h('div', {});
     wrap.appendChild(h('div', { class: 'page-head' }, [
-      h('div', {}, [h('h1', {}, 'Team'), h('div', { class: 'sub' }, 'People who take bookings.')]),
-      h('div', { class: 'actions' }, h('button', { class: 'btn btn-primary', onclick: function () { openRepModal(null); } }, '+ Add team member'))
+      h('div', {}, [h('h1', {}, 'Team'), h('div', { class: 'sub' }, 'People who take bookings. Identity comes from the CRM Team Directory.')]),
+      h('div', { class: 'actions' }, [
+        h('button', { class: 'btn btn-secondary', onclick: openSyncModal }, 'Sync from CRM'),
+        h('button', { class: 'btn btn-primary', onclick: function () { openRepModal(null); } }, '+ Add manually')
+      ])
     ]));
-    if (state.loading || !state.reps) return wrap.appendChild(h('div', { class: 'loading' }, 'Loading…')), wrap;
-    if (state.reps.length === 0) return wrap.appendChild(h('div', { class: 'empty' }, 'No team members yet.')), wrap;
+    if (state.loading || !state.reps) return wrap.appendChild(h('div', { class: 'loading' }, 'Loading\u2026')), wrap;
+    if (state.reps.length === 0) return wrap.appendChild(h('div', { class: 'empty' }, 'No team members yet. Try "Sync from CRM".')), wrap;
     var body = state.reps.map(function (r) {
       return h('tr', {}, [
-        h('td', {}, [ h('div', { style: 'font-weight:700' }, r.displayName), r.title ? h('div', { style: 'font-size:12px;color:var(--steel)' }, r.title) : null ]),
-        h('td', {}, [ h('a', { href: 'mailto:' + r.email }, r.email), r.phone ? h('div', { style: 'font-size:12px;color:var(--steel)' }, r.phone) : null ]),
+        h('td', {}, [
+          h('div', { style: 'font-weight:700' }, r.displayName),
+          r.title ? h('div', { style: 'font-size:12px;color:var(--steel)' }, r.title) : null
+        ]),
+        h('td', {}, [
+          h('a', { href: 'mailto:' + r.email }, r.email),
+          r.phone ? h('div', { style: 'font-size:12px;color:var(--steel)' }, r.phone) : null
+        ]),
+        h('td', {}, r.branch ? h('span', { class: 'badge blue' }, r.branch) : h('span', { class: 'badge' }, '\u2014')),
         h('td', {}, r.timezone),
         h('td', {}, r.active ? h('span', { class: 'badge on' }, 'Active') : h('span', { class: 'badge off' }, 'Off')),
-        h('td', {}, r.clickupTeamDirId ? h('span', { class: 'badge blue', title: r.clickupTeamDirId }, 'CRM') : h('span', { class: 'badge' }, '—')),
+        h('td', {}, r.clickupTeamDirId ? h('span', { class: 'badge blue', title: r.clickupTeamDirId }, 'Linked') : h('span', { class: 'badge warn' }, 'Unlinked')),
         h('td', { class: 'row-actions' }, h('button', { class: 'btn-link', onclick: function () { openRepModal(r); } }, 'Edit'))
       ]);
     });
     wrap.appendChild(h('div', { class: 'card' }, h('table', { class: 'data' }, [
-      h('thead', {}, h('tr', {}, [ h('th', {}, 'Name'), h('th', {}, 'Contact'), h('th', {}, 'Timezone'), h('th', {}, 'Status'), h('th', {}, 'CRM'), h('th', {}) ])),
+      h('thead', {}, h('tr', {}, [
+        h('th', {}, 'Name'), h('th', {}, 'Contact'), h('th', {}, 'Branch'),
+        h('th', {}, 'Timezone'), h('th', {}, 'Status'), h('th', {}, 'CRM'), h('th', {})
+      ])),
       h('tbody', {}, body)
     ])));
     return wrap;
+  }
+
+  /* ---------- CRM roster sync ---------- */
+
+  function openSyncModal() {
+    var body = h('div', {}, h('div', { class: 'loading' }, 'Fetching roster from the CRM\u2026'));
+    var selected = new Set();
+    var rows = [];
+
+    var back = h('div', { class: 'modal-back', onclick: function (e) { if (e.target === back) close(); } });
+    function close() { back.remove(); }
+    var actionsBar = h('div', { class: 'modal-actions' }, [
+      h('button', { class: 'btn btn-secondary', onclick: close }, 'Cancel')
+    ]);
+    var modal = h('div', { class: 'modal', style: 'max-width:820px' }, [
+      h('h2', {}, 'Sync from CRM Team Directory'),
+      h('p', { class: 'sub' }, 'The CRM is the source of truth for names, titles, branch and access level. Pick who to bring across.'),
+      body, actionsBar
+    ]);
+    back.appendChild(modal);
+    document.body.appendChild(back);
+
+    api('/api/team-sync').then(function (d) {
+      rows = d.members || [];
+      body.textContent = '';
+      if (rows.length === 0) { body.appendChild(h('div', { class: 'empty' }, 'The CRM returned no members.')); return; }
+
+      // Pre-select everything that would create or update.
+      rows.forEach(function (m) { if (m.importable && m.action !== 'unchanged') selected.add(m.clickupId); });
+
+      body.appendChild(h('div', { style: 'display:flex;gap:14px;margin-bottom:14px;font-size:13px;color:var(--steel)' }, [
+        h('span', {}, d.summary.create + ' new'),
+        h('span', {}, d.summary.update + ' to update'),
+        h('span', {}, d.summary.unchanged + ' unchanged'),
+        d.summary.blocked ? h('span', { style: 'color:var(--warn)' }, d.summary.blocked + ' missing an email') : null
+      ]));
+
+      var tbody = h('tbody', {}, rows.map(function (m) {
+        var cb = h('input', { type: 'checkbox', disabled: !m.importable, onchange: function (e) {
+          if (e.target.checked) selected.add(m.clickupId); else selected.delete(m.clickupId);
+        }});
+        cb.checked = selected.has(m.clickupId);
+        var actionBadge = m.action === 'create' ? h('span', { class: 'badge on' }, 'New')
+          : m.action === 'update' ? h('span', { class: 'badge warn', title: m.changes.join(', ') }, 'Update')
+          : h('span', { class: 'badge' }, 'Unchanged');
+        return h('tr', {}, [
+          h('td', {}, cb),
+          h('td', {}, [
+            h('div', { style: 'font-weight:600' }, m.fullName || '(no name)'),
+            m.knownAs && m.knownAs !== m.fullName ? h('div', { style: 'font-size:12px;color:var(--steel)' }, '\u201c' + m.knownAs + '\u201d') : null,
+            !m.importable ? h('div', { style: 'font-size:12px;color:var(--warn)' }, 'No email on the CRM record') : null
+          ]),
+          h('td', { style: 'font-size:13px' }, m.email || '\u2014'),
+          h('td', {}, m.branch ? h('span', { class: 'badge blue' }, m.branch) : h('span', { class: 'badge' }, '\u2014')),
+          h('td', { style: 'font-size:13px' }, m.accessLevel || '\u2014'),
+          h('td', {}, actionBadge)
+        ]);
+      }));
+
+      body.appendChild(h('div', { style: 'max-height:48vh;overflow-y:auto' },
+        h('table', { class: 'data' }, [
+          h('thead', {}, h('tr', {}, [
+            h('th', {}, ''), h('th', {}, 'Name'), h('th', {}, 'Email'),
+            h('th', {}, 'Branch'), h('th', {}, 'CRM access'), h('th', {}, 'Action')
+          ])),
+          tbody
+        ])
+      ));
+
+      actionsBar.textContent = '';
+      actionsBar.appendChild(h('button', { class: 'btn btn-secondary', onclick: close }, 'Cancel'));
+      var go = h('button', { class: 'btn btn-primary' }, 'Sync selected');
+      go.addEventListener('click', function () {
+        if (selected.size === 0) { toast('Pick at least one person.', 'err'); return; }
+        go.disabled = true; go.textContent = 'Syncing\u2026';
+        api('/api/team-sync', { method: 'POST', body: { clickupIds: Array.from(selected) } })
+          .then(function (res) {
+            close();
+            toast(res.created + ' added, ' + res.updated + ' updated' + (res.skipped ? ', ' + res.skipped + ' skipped' : '') + '.', 'ok');
+            loadReps();
+          })
+          .catch(function (e) { go.disabled = false; go.textContent = 'Sync selected'; toast(e.message, 'err'); });
+      });
+      actionsBar.appendChild(go);
+    }).catch(function (e) {
+      body.textContent = '';
+      body.appendChild(h('div', { class: 'err-box' }, e.message));
+    });
   }
 
   function openRepModal(rep) {
@@ -375,6 +476,7 @@
       timezone: rep ? rep.timezone : 'America/New_York',
       active: rep ? rep.active : true,
       clickupTeamDirId: rep ? rep.clickupTeamDirId : '',
+      branch: rep ? rep.branch : '',
       meetingTypeIds: rep ? rep.meetingTypeIds : ((state.settings && state.settings.meetingTypes) || []).map(function (m) { return m.id; })
     };
     var mts = (state.settings && state.settings.meetingTypes) || [];
@@ -384,7 +486,8 @@
       inputField('Full name', v, 'fullName', { hint: 'Used internally, defaults to display name if blank' }),
       h('div', { class: 'row' }, [ inputField('Email', v, 'email', { type: 'email', required: true }), inputField('Phone', v, 'phone', { type: 'tel' }) ]),
       inputField('Title', v, 'title', { placeholder: 'e.g., Growth Strategist' }),
-      h('div', { class: 'row' }, [ tzField(v), inputField('CRM Team Directory ID', v, 'clickupTeamDirId', { hint: 'ClickUp task id — enables CRM sync on their bookings' }) ]),
+      h('div', { class: 'row' }, [ tzField(v), branchField(v) ]),
+      inputField('CRM Team Directory ID', v, 'clickupTeamDirId', { hint: 'ClickUp task id \u2014 prefer "Sync from CRM" over typing this' }),
       mts.length ? h('div', { class: 'field' }, [
         h('label', {}, 'Meeting types they can take'),
         h('div', { style: 'display:grid;gap:6px' }, mts.map(function (m) {
@@ -691,6 +794,22 @@
     var el = h('input', { type: 'number', min: String(min), max: String(max), oninput: function (e) { obj[key] = parseInt(e.target.value, 10) || 0; } });
     el.value = obj[key];
     return h('div', { class: 'field' }, [ h('label', {}, label), el ]);
+  }
+
+  function branchField(obj) {
+    // Branch decides which booking pages a rep is discoverable on by default.
+    // Options come from the pages we actually have, plus whatever is already set.
+    var pages = (state.settings && state.settings.pages) || [];
+    var opts = pages.map(function (p) { return p.slug; });
+    if (obj.branch && opts.indexOf(obj.branch) < 0) opts.unshift(obj.branch);
+    var sel = h('select', { onchange: function (e) { obj.branch = e.target.value || null; } },
+      [h('option', { value: '' }, '\u2014 none \u2014')].concat(opts.map(function (b) {
+        var o = h('option', { value: b }, b); if (b === obj.branch) o.selected = true; return o;
+      })));
+    return h('div', { class: 'field' }, [
+      h('label', {}, ['Branch ', h('span', { class: 'opt' }, '\u00b7 sets default page visibility')]),
+      sel
+    ]);
   }
 
   function tzField(obj) {
