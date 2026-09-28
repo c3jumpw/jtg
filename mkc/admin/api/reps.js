@@ -70,7 +70,7 @@ async function create(body) {
   return json(200, { ok: true, id: personId });
 }
 
-async function update(repId, body) {
+async function update(repId, body, isSuper) {
   if (!UUID_RE.test(repId)) return json(400, { error: 'Bad rep id.' });
   const patchRep = {}; const patchPerson = {};
   if (typeof body.displayName === 'string') patchRep.display_name = clean(body.displayName, 200);
@@ -80,7 +80,8 @@ async function update(repId, body) {
   if (typeof body.timezone === 'string')    patchRep.timezone     = clean(body.timezone, 80) || 'America/New_York';
   if (typeof body.weight === 'number' && body.weight >= 0 && body.weight <= 10) patchRep.weight = body.weight | 0;
   if (typeof body.active === 'boolean')     patchRep.active       = body.active;
-  if (typeof body.branch === 'string')      patchRep.branch       = clean(body.branch, 40) || null;
+  // Branch and page visibility decide who appears on public pages — super_admin only.
+  if (isSuper && typeof body.branch === 'string') patchRep.branch = clean(body.branch, 40) || null;
   if (typeof body.clickupTeamDirId === 'string') patchRep.clickup_team_dir_id = clean(body.clickupTeamDirId, 64) || null;
   if (typeof body.email === 'string' && EMAIL_RE.test(body.email)) patchPerson.email = body.email.toLowerCase();
   if (typeof body.fullName === 'string')    patchPerson.full_name = clean(body.fullName, 200);
@@ -90,8 +91,8 @@ async function update(repId, body) {
     if (Object.keys(patchPerson).length) await patch('core',    'people', `id=eq.${repId}`,        patchPerson);
   } catch (e) { console.error('rep update failed', e.message); return json(500, { error: "Couldn't save that." }); }
 
-  // Sync page discoverability if super_admin passes it.
-  if (Array.isArray(body.pages)) {
+  // Sync page discoverability — super_admin only.
+  if (isSuper && Array.isArray(body.pages)) {
     for (const pg of body.pages) {
       if (!UUID_RE.test(pg.pageId)) continue;
       try {
@@ -125,14 +126,15 @@ async function handler(request) {
   const id = url.searchParams.get('id') || '';
   const isSuperAdmin = session.role === 'super_admin' || session.role === 'admin';
   if (request.method === 'GET') return list(session);
-  if (!isSuperAdmin) return json(403, { error: 'Super-admin required.' });
+  if (!isSuperAdmin) return json(403, { error: 'Admin access required.' });
   if (request.method === 'POST') {
+    if (session.role !== 'super_admin') return json(403, { error: 'Super-admin access required to add team members.' });
     const { body, error } = await readJson(request); if (error) return error;
     return create(body);
   }
   if (request.method === 'PATCH') {
     const { body, error } = await readJson(request); if (error) return error;
-    return update(id, body);
+    return update(id, body, session.role === 'super_admin');
   }
   return json(405, { error: 'Method not allowed.' });
 }

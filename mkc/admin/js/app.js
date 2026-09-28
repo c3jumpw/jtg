@@ -13,6 +13,9 @@
     reps: null, appointments: null, settings: null, availability: null // for the active rep
   };
 
+  function isSuper() { return state.me && state.me.role === 'super_admin'; }
+  function isStaffAdmin() { return state.me && (state.me.role === 'super_admin' || state.me.role === 'admin'); }
+
   /* ---------- tiny DOM builder ---------- */
   function h(tag, attrs, kids) {
     var el = document.createElement(tag);
@@ -90,7 +93,7 @@
     api('/api/auth-me').then(function (d) {
       state.me = d && d.authenticated ? d : null;
       if (state.me) {
-        var isSA = state.me.role === 'super_admin' || state.me.role === 'admin';
+        var isSA = isStaffAdmin();
         var r = parseHash();
         // Redirect rep away from admin routes at boot.
         var adminOnlyRoutes = ['dashboard','bookings','reps','availability','meetings','settings'];
@@ -154,14 +157,14 @@
   }
 
   function sidebar() {
-    var isSA = state.me.role === 'super_admin' || state.me.role === 'admin';
+    var isSA = isStaffAdmin();
     var repLinks = [['my-profile', 'My Profile'], ['my-bookings', 'My Bookings'], ['my-availability', 'My Availability']];
     var adminLinks = [['dashboard', 'Dashboard'], ['bookings', 'Bookings'], ['reps', 'Team'], ['availability', 'Availability'], ['meetings', 'Meeting types'], ['settings', 'Settings']];
     var links = isSA ? adminLinks : repLinks;
     return h('aside', { class: 'sidebar' }, [
       h('div', { class: 'brand' }, [
         h('img', { src: 'assets/logo-light.png', alt: 'MKC' }),
-        h('span', { class: 'brand-tag' }, 'Passport')
+        h('span', { class: 'brand-tag' }, state.me.role === 'super_admin' ? 'Super' : (state.me.role === 'admin' ? 'Admin' : 'Passport'))
       ]),
       h('nav', {}, links.map(function (l) {
         return h('a', { href: '#/' + l[0], class: state.route === l[0] ? 'on' : '' }, [icon(l[0]), h('span', {}, l[1])]);
@@ -181,7 +184,7 @@
   function main() {
     var wrap = h('div', {});
     // Mobile nav (route switcher)
-    var isSA = state.me && (state.me.role === 'super_admin' || state.me.role === 'admin');
+    var isSA = isStaffAdmin();
     var navRoutes = isSA
       ? ['dashboard','bookings','reps','availability','meetings','settings']
       : ['my-profile','my-bookings','my-availability'];
@@ -194,7 +197,7 @@
     wrap.appendChild(mn);
 
     var m = h('div', { class: 'main' });
-    var isSA = state.me.role === 'super_admin' || state.me.role === 'admin';
+    var isSA = isStaffAdmin();
     if (state.route === 'dashboard') m.appendChild(viewDashboard());
     else if (state.route === 'bookings') m.appendChild(viewBookings());
     else if (state.route === 'reps') m.appendChild(isSA ? viewReps() : h('div', { class: 'empty' }, 'Access restricted.'));
@@ -211,7 +214,7 @@
 
   function loadForRoute() {
     if (!state.me) return;
-    var isSA = state.me.role === 'super_admin' || state.me.role === 'admin';
+    var isSA = isStaffAdmin();
     // Redirect reps away from admin-only routes.
     if (!isSA && ['dashboard','bookings','reps','availability','meetings','settings'].indexOf(state.route) >= 0) {
       nav('my-profile'); return;
@@ -343,10 +346,11 @@
     var wrap = h('div', {});
     wrap.appendChild(h('div', { class: 'page-head' }, [
       h('div', {}, [h('h1', {}, 'Team'), h('div', { class: 'sub' }, 'People who take bookings. Identity comes from the CRM Team Directory.')]),
-      h('div', { class: 'actions' }, [
+      isSuper() ? h('div', { class: 'actions' }, [
+        h('button', { class: 'btn btn-secondary', onclick: openBranchModal }, 'Branch mapping'),
         h('button', { class: 'btn btn-secondary', onclick: openSyncModal }, 'Sync from CRM'),
         h('button', { class: 'btn btn-primary', onclick: function () { openRepModal(null); } }, '+ Add manually')
-      ])
+      ]) : null
     ]));
     if (state.loading || !state.reps) return wrap.appendChild(h('div', { class: 'loading' }, 'Loading\u2026')), wrap;
     if (state.reps.length === 0) return wrap.appendChild(h('div', { class: 'empty' }, 'No team members yet. Try "Sync from CRM".')), wrap;
@@ -378,6 +382,51 @@
   }
 
   /* ---------- CRM roster sync ---------- */
+
+  function openBranchModal() {
+    var body = h('div', {}, h('div', { class: 'loading' }, 'Loading branch labels\u2026'));
+    var back = h('div', { class: 'modal-back', onclick: function (e) { if (e.target === back) close(); } });
+    function close() { back.remove(); }
+    var modal = h('div', { class: 'modal', style: 'max-width:720px' }, [
+      h('h2', {}, 'Branch mapping'),
+      h('p', { class: 'sub' }, 'Every branch label the CRM has reported, and which booking page it maps to. Unmapped labels leave a rep undiscoverable until you pick a page.'),
+      body,
+      h('div', { class: 'modal-actions' }, h('button', { class: 'btn btn-secondary', onclick: close }, 'Done'))
+    ]);
+    back.appendChild(modal); document.body.appendChild(back);
+
+    api('/api/team-sync?kind=branches').then(function (d) {
+      body.textContent = '';
+      var branches = d.branches || []; var pages = d.pages || [];
+      if (branches.length === 0) {
+        body.appendChild(h('div', { class: 'empty' }, 'No branch labels recorded yet. Run a CRM sync first.'));
+        return;
+      }
+      body.appendChild(h('table', { class: 'data' }, [
+        h('thead', {}, h('tr', {}, [ h('th', {}, 'CRM label'), h('th', {}, 'Maps to page'), h('th', {}, 'Seen') ])),
+        h('tbody', {}, branches.map(function (b) {
+          var sel = h('select', { onchange: function (e) {
+            api('/api/team-sync?kind=branches', { method: 'PATCH', body: { crmLabel: b.crm_label, pageSlug: e.target.value || null } })
+              .then(function () { toast('Mapping saved.', 'ok'); })
+              .catch(function (err) { toast(err.message, 'err'); });
+          }}, [h('option', { value: '' }, '\u2014 not mapped \u2014')].concat(pages.map(function (p) {
+            var o = h('option', { value: p.slug }, p.slug + ' \u00b7 ' + (p.title || ''));
+            if (p.slug === b.page_slug) o.selected = true; return o;
+          })));
+          return h('tr', {}, [
+            h('td', {}, [
+              h('div', { style: 'font-weight:600' }, b.crm_label),
+              !b.page_slug ? h('div', { style: 'font-size:12px;color:var(--warn)' }, 'Unmapped') : null
+            ]),
+            h('td', {}, sel),
+            h('td', { style: 'font-size:13px;color:var(--steel)' }, String(b.seen_count || 0))
+          ]);
+        }))
+      ]));
+    }).catch(function (e) {
+      body.textContent = ''; body.appendChild(h('div', { class: 'err-box' }, e.message));
+    });
+  }
 
   function openSyncModal() {
     var body = h('div', {}, h('div', { class: 'loading' }, 'Fetching roster from the CRM\u2026'));
@@ -411,6 +460,12 @@
         h('span', {}, d.summary.unchanged + ' unchanged'),
         d.summary.blocked ? h('span', { style: 'color:var(--warn)' }, d.summary.blocked + ' missing an email') : null
       ]));
+      if ((d.unmappedBranches || []).length) {
+        body.appendChild(h('div', { class: 'err-box', style: 'background:#FFF6E3;border-left-color:var(--warn);color:#6B4700' }, [
+          h('div', {}, 'Unmapped branch ' + (d.unmappedBranches.length === 1 ? 'label' : 'labels') + ': ' + d.unmappedBranches.join(', ')),
+          h('div', { style: 'font-weight:500;margin-top:4px' }, 'These reps will sync but won\u2019t appear on any booking page until you map the label. Close this and open "Branch mapping".')
+        ]));
+      }
 
       var tbody = h('tbody', {}, rows.map(function (m) {
         var cb = h('input', { type: 'checkbox', disabled: !m.importable, onchange: function (e) {
@@ -428,7 +483,8 @@
             !m.importable ? h('div', { style: 'font-size:12px;color:var(--warn)' }, 'No email on the CRM record') : null
           ]),
           h('td', { style: 'font-size:13px' }, m.email || '\u2014'),
-          h('td', {}, m.branch ? h('span', { class: 'badge blue' }, m.branch) : h('span', { class: 'badge' }, '\u2014')),
+          h('td', {}, m.branch ? h('span', { class: 'badge blue' }, m.branch)
+            : (m.branchUnmapped ? h('span', { class: 'badge warn', title: m.branchLabel }, 'unmapped') : h('span', { class: 'badge' }, '\u2014'))),
           h('td', { style: 'font-size:13px' }, m.accessLevel || '\u2014'),
           h('td', {}, actionBadge)
         ]);
@@ -802,7 +858,7 @@
     var pages = (state.settings && state.settings.pages) || [];
     var opts = pages.map(function (p) { return p.slug; });
     if (obj.branch && opts.indexOf(obj.branch) < 0) opts.unshift(obj.branch);
-    var sel = h('select', { onchange: function (e) { obj.branch = e.target.value || null; } },
+    var sel = h('select', { disabled: !isSuper(), onchange: function (e) { obj.branch = e.target.value || null; } },
       [h('option', { value: '' }, '\u2014 none \u2014')].concat(opts.map(function (b) {
         var o = h('option', { value: b }, b); if (b === obj.branch) o.selected = true; return o;
       })));

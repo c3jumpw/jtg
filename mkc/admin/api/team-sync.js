@@ -12,28 +12,78 @@ import { requireSession } from '../lib/auth.js';
 const CRM_URL = () => (process.env.CRM_TEAM_DIRECTORY_URL || '').trim();
 const CRM_SECRET = () => (process.env.CRM_SHARED_SECRET || '').trim();
 
-// The CRM reports 'Super Admin' | 'Admin' | 'Staff'. Map onto our roles.
-// Note: a CRM Super Admin is a CRM-wide role, not automatically a Passport
-// super-admin — but it's the sensible default, and a super-admin can override.
+// The CRM reports 'Super Admin' | 'Admin' | 'Staff'. Map onto our tiers.
+//   Super Admin -> super_admin  (roster sync, role assignment, page discoverability)
+//   Admin       -> admin        (day-to-day booking ops, no role/visibility control)
+//   Staff       -> rep          (self-service only)
 const ROLE_MAP = { 'super admin': 'super_admin', 'admin': 'admin', 'staff': 'rep' };
 function mapRole(accessLevel) {
   return ROLE_MAP[String(accessLevel || '').trim().toLowerCase()] || 'rep';
 }
 
-// The CRM's branch field is free-ish text ('Fortune 5', 'Build My Startup').
-// Normalise to the page slugs this system uses so discoverability lines up.
-const BRANCH_MAP = {
-  'fortune 5': 'fortune5', 'fortune5': 'fortune5', 'f5': 'fortune5',
-  'the fortune 5 agency': 'fortune5',
-  'build my startup': 'bms', 'buildmystartup': 'bms', 'bms': 'bms',
-  'jump tech group': 'jtg', 'jtg': 'jtg'
-};
-function mapBranch(branch) {
+/* Branch mapping lives in booking.branch_map, not in this file. A rename in
+ * ClickUp would silently break discoverability if the map were hardcoded;
+ * as data, an unseen label is recorded unmapped and surfaced to a super-admin
+ * instead of being guessed at. */
+async function loadBranchMap() {
+  const rows = await select('booking', 'branch_map', 'select=crm_label,page_slug,label');
+  const map = new Map();
+  for (const r of rows || []) map.set(r.crm_label, r);
+  return map;
+}
+
+// The CRM's branch field is a labels type and can hold several; we take the first.
+function normaliseBranchLabel(branch) {
   const key = String(branch || '').trim().toLowerCase();
   if (!key) return null;
-  // The CRM's labels field can hold several; take the first.
-  const first = key.split(',')[0].trim();
-  return BRANCH_MAP[first] || first.replace(/[^a-z0-9]+/g, '-') || null;
+  return key.split(',')[0].trim() || null;
+}
+
+/* Record labels we've never seen so they show up in the UI to be mapped.
+ * Fire-and-forget: a bookkeeping failure must not fail a sync. */
+async function recordBranchLabels(labels, existing) {
+  const now = new Date().toISOString();
+  for (const label of labels) {
+    if (!label) continue;
+    try {
+      if (existing.has(label)) {
+        const cur = existing.get(label);
+        await patch('booking', 'branch_map', `crm_label=eq.${encodeURIComponent(label)}`,
+          { seen_count: (cur.seen_count || 0) + 1, last_seen: now });
+      } else {
+        await insert('booking', 'branch_map',
+          { crm_label: label, page_slug: null, label: null, seen_count: 1, last_seen: now },
+          { onConflict: 'crm_label' });
+      }
+    } catch (e) { console.error('branch_map bookkeeping failed for', label, e.message); }
+  }
+}
+
+/* Native booking link: a stable public slug per rep, generated here and
+ * intended to be pushed back into the CRM's Discovery Call Link field so the
+ * CRM remains the place people look for "where do I book with X". */
+function slugify(name) {
+  const s = String(name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  return s || 'rep';
+}
+async function ensureBookingSlug(personId, displayName) {
+  const cur = await select('booking', 'rep_preferences', `select=booking_link_slug&rep_id=eq.${personId}`);
+  if (cur && cur[0] && cur[0].booking_link_slug) return cur[0].booking_link_slug;
+  const base = slugify(displayName);
+  let candidate = base;
+  for (let n = 2; n < 50; n++) {
+    const taken = await select('booking', 'rep_preferences',
+      `select=rep_id&booking_link_slug=eq.${encodeURIComponent(candidate)}`);
+    if (!taken || taken.length === 0) break;
+    candidate = base + '-' + n;
+  }
+  try { await patch('booking', 'rep_preferences', `rep_id=eq.${personId}`, { booking_link_slug: candidate }); }
+  catch (e) { console.error('slug assign failed', e.message); }
+  return candidate;
+}
+function nativeLinkFor(slug) {
+  const base = (process.env.BOOKING_SITE_URL || 'https://start.befortune5.com').replace(/\/$/, '');
+  return `${base}/?rep=${encodeURIComponent(slug)}`;
 }
 
 async function fetchRoster(includeInactive) {
@@ -65,9 +115,8 @@ async function fetchRoster(includeInactive) {
 
 async function preview(url) {
   const includeInactive = url.searchParams.get('includeInactive') === 'true';
-  const members = await fetchRoster(includeInactive);
+  const [members, branchMap] = await Promise.all([fetchRoster(includeInactive), loadBranchMap()]);
 
-  // What do we already hold? Match on clickup_team_dir_id first, then email.
   const [existingReps, existingPeople] = await Promise.all([
     select('booking', 'reps', 'select=person_id,display_name,clickup_team_dir_id,branch,title,crm_access_level'),
     select('core', 'people', 'select=id,email,full_name')
@@ -76,6 +125,7 @@ async function preview(url) {
   const peopleByEmail = new Map((existingPeople || []).map((p) => [(p.email || '').toLowerCase(), p]));
   const repByPerson = new Map((existingReps || []).map((r) => [r.person_id, r]));
 
+  const seenLabels = new Set();
   const rows = members.map((m) => {
     const email = (m.email || m.publicEmail || '').toLowerCase();
     let matched = byClickup.get(m.clickupId) || null;
@@ -84,7 +134,11 @@ async function preview(url) {
       const person = peopleByEmail.get(email);
       if (person) { matched = repByPerson.get(person.id) || null; if (matched) matchedBy = 'email'; }
     }
-    const branch = mapBranch(m.branch);
+    const rawLabel = normaliseBranchLabel(m.branch);
+    if (rawLabel) seenLabels.add(rawLabel);
+    const mapping = rawLabel ? branchMap.get(rawLabel) : null;
+    const branch = mapping ? mapping.page_slug : null;
+    const branchUnmapped = !!rawLabel && (!mapping || !mapping.page_slug);
     const role = mapRole(m.accessLevel);
     const changes = [];
     if (matched) {
@@ -97,7 +151,7 @@ async function preview(url) {
       clickupId: m.clickupId, mkcId: m.mkcId || null, status: m.status || null,
       fullName: m.fullName || '', knownAs: m.knownAs || null, title: m.title || null,
       email, publicEmail: m.publicEmail || null, publicPhone: m.publicPhone || null,
-      branchRaw: m.branch || null, branch,
+      branchRaw: m.branch || null, branchLabel: rawLabel, branch, branchUnmapped,
       accessLevel: m.accessLevel || null, mappedRole: role,
       bookingLinks: m.bookingLinks || {},
       action: matched ? (changes.length ? 'update' : 'unchanged') : 'create',
@@ -106,14 +160,21 @@ async function preview(url) {
     };
   });
 
+  // Bookkeeping so unseen labels appear in the branch-map UI. Non-blocking.
+  recordBranchLabels(seenLabels, branchMap).catch(() => {});
+
+  const unmapped = [...new Set(rows.filter((r) => r.branchUnmapped).map((r) => r.branchLabel))];
+
   return json(200, {
     count: rows.length,
     members: rows,
+    unmappedBranches: unmapped,
     summary: {
       create:    rows.filter((r) => r.action === 'create').length,
       update:    rows.filter((r) => r.action === 'update').length,
       unchanged: rows.filter((r) => r.action === 'unchanged').length,
-      blocked:   rows.filter((r) => !r.importable).length
+      blocked:   rows.filter((r) => !r.importable).length,
+      unmapped:  unmapped.length
     }
   });
 }
@@ -124,7 +185,8 @@ async function apply(body, session) {
   const wanted = Array.isArray(body.clickupIds) ? body.clickupIds.map((s) => String(s)) : [];
   if (wanted.length === 0) return json(400, { error: 'Pick at least one team member to sync.' });
   const includeInactive = body.includeInactive === true;
-  const members = (await fetchRoster(includeInactive)).filter((m) => wanted.includes(String(m.clickupId)));
+  const [roster, branchMap] = await Promise.all([fetchRoster(includeInactive), loadBranchMap()]);
+  const members = roster.filter((m) => wanted.includes(String(m.clickupId)));
   if (members.length === 0) return json(404, { error: 'None of those members are in the CRM roster.' });
 
   let created = 0, updated = 0, skipped = 0;
@@ -136,12 +198,13 @@ async function apply(body, session) {
       skipped++; detail.push({ clickupId: m.clickupId, name: m.fullName, result: 'skipped', why: 'no valid email on the CRM record' });
       continue;
     }
-    const branch = mapBranch(m.branch);
+    const rawLabel = normaliseBranchLabel(m.branch);
+    const mapping = rawLabel ? branchMap.get(rawLabel) : null;
+    const branch = mapping ? mapping.page_slug : null;
     const role = mapRole(m.accessLevel);
     const displayName = m.knownAs || m.fullName || email.split('@')[0];
 
     try {
-      // 1. core.people — match on email, create if new.
       const found = await select('core', 'people', `select=id&email=ilike.${encodeURIComponent(email)}`);
       let personId = found && found[0] && found[0].id;
       let isNew = false;
@@ -158,7 +221,6 @@ async function apply(body, session) {
       }
       if (!personId) { skipped++; detail.push({ clickupId: m.clickupId, name: m.fullName, result: 'skipped', why: 'could not create person' }); continue; }
 
-      // 2. booking.reps — upsert with everything the CRM is authoritative for.
       const existingRep = await select('booking', 'reps', `select=person_id,timezone&person_id=eq.${personId}`);
       const repExisted = existingRep && existingRep[0];
       await insert('booking', 'reps', {
@@ -173,18 +235,16 @@ async function apply(body, session) {
         public_phone: m.publicPhone || null,
         crm_access_level: m.accessLevel || null,
         crm_synced_at: new Date().toISOString(),
-        // Don't clobber a timezone someone set here — the CRM doesn't carry one.
         timezone: (repExisted && repExisted.timezone) || 'America/New_York',
         active: (m.status || 'active') === 'active'
       }, { onConflict: 'person_id' });
 
-      // 3. Access role from the CRM's access level.
       await insert('core', 'tool_access', { person_id: personId, tool: 'booking', role }, { onConflict: 'person_id,tool' });
-
-      // 4. Preferences row so the rep can sign in and edit immediately.
       try { await insert('booking', 'rep_preferences', { rep_id: personId }, { onConflict: 'rep_id' }); } catch {}
 
-      // 5. Mirror the CRM's booking links for reference + drift detection.
+      // Native booking link: assign a stable slug and record the link we want the CRM to hold.
+      const slug = await ensureBookingSlug(personId, displayName);
+      const native = nativeLinkFor(slug);
       const bl = m.bookingLinks || {};
       try {
         await insert('booking', 'rep_crm_links', {
@@ -192,11 +252,11 @@ async function apply(body, session) {
           crm_intro: bl.intro || null,
           crm_discovery: bl.discovery || null,
           crm_walkthrough: bl.walkthrough || null,
+          native_link: native,
           updated_at: new Date().toISOString()
         }, { onConflict: 'rep_id' });
       } catch (e) { console.error('rep_crm_links upsert failed', e.message); }
 
-      // 6. Discoverability: default them onto their branch's page.
       if (branch) {
         const pages = await select('booking', 'pages', `select=id&slug=eq.${encodeURIComponent(branch)}`);
         const page = pages && pages[0];
@@ -205,8 +265,10 @@ async function apply(body, session) {
         }
       }
 
-      if (repExisted && !isNew) { updated++; detail.push({ clickupId: m.clickupId, name: m.fullName, result: 'updated', role, branch }); }
-      else { created++; detail.push({ clickupId: m.clickupId, name: m.fullName, result: 'created', role, branch }); }
+      const note = { clickupId: m.clickupId, name: m.fullName, role, branch, slug, nativeLink: native };
+      if (rawLabel && !branch) note.warning = `branch "${rawLabel}" is not mapped to a page yet`;
+      if (repExisted && !isNew) { updated++; detail.push({ ...note, result: 'updated' }); }
+      else { created++; detail.push({ ...note, result: 'created' }); }
     } catch (e) {
       console.error('sync failed for', m.clickupId, e.message);
       skipped++; detail.push({ clickupId: m.clickupId, name: m.fullName, result: 'error', why: e.message.slice(0, 200) });
@@ -223,14 +285,49 @@ async function apply(body, session) {
   return json(200, { ok: true, created, updated, skipped, detail });
 }
 
+/* ---------- branch map management ---------- */
+
+async function getBranchMap() {
+  const [rows, pages] = await Promise.all([
+    select('booking', 'branch_map', 'select=crm_label,page_slug,label,seen_count,last_seen&order=seen_count.desc,crm_label.asc'),
+    select('booking', 'pages', 'select=id,slug,title&order=slug.asc')
+  ]);
+  return json(200, { branches: rows || [], pages: pages || [] });
+}
+
+async function setBranchMap(body) {
+  const label = clean(body.crmLabel, 120).toLowerCase();
+  if (!label) return json(400, { error: 'Missing branch label.' });
+  const pageSlug = body.pageSlug ? clean(body.pageSlug, 64) : null;
+  try {
+    await insert('booking', 'branch_map',
+      { crm_label: label, page_slug: pageSlug, label: clean(body.label, 120) || null },
+      { onConflict: 'crm_label' });
+  } catch (e) { console.error('branch map write failed', e.message); return json(500, { error: "Couldn't save the mapping." }); }
+  return json(200, { ok: true });
+}
+
 async function handler(request) {
   let session;
   try { session = await requireSession(request); } catch (e) { return e; }
-  if (session.role !== 'super_admin' && session.role !== 'admin') {
-    return json(403, { error: 'Super-admin access required to sync the roster.' });
-  }
   const url = new URL(request.url);
+  const kind = (url.searchParams.get('kind') || '').toLowerCase();
+
+  // Roster sync and branch mapping change who appears on public pages and who
+  // holds which role — super_admin only, not plain admin.
+  if (session.role !== 'super_admin') {
+    return json(403, { error: 'Super-admin access required.' });
+  }
+
   try {
+    if (kind === 'branches') {
+      if (request.method === 'GET') return await getBranchMap();
+      if (request.method === 'PATCH') {
+        const { body, error } = await readJson(request); if (error) return error;
+        return await setBranchMap(body);
+      }
+      return json(405, { error: 'Method not allowed.' });
+    }
     if (request.method === 'GET') return await preview(url);
     if (request.method === 'POST') {
       const { body, error } = await readJson(request); if (error) return error;
