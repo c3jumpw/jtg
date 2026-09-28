@@ -518,7 +518,14 @@
         api('/api/team-sync', { method: 'POST', body: { clickupIds: Array.from(selected) } })
           .then(function (res) {
             close();
-            toast(res.created + ' added, ' + res.updated + ' updated' + (res.skipped ? ', ' + res.skipped + ' skipped' : '') + '.', 'ok');
+            var msg = res.created + ' added, ' + res.updated + ' updated' + (res.skipped ? ', ' + res.skipped + ' skipped' : '') + '.';
+            var linkErrs = (res.detail || []).filter(function (d) { return d.linkPushError; });
+            if (linkErrs.length) {
+              toast(msg + ' Booking links not written to the CRM: ' + linkErrs[0].linkPushError, 'err');
+            } else {
+              var pushed = (res.detail || []).filter(function (d) { return d.linkPushed; }).length;
+              toast(msg + (pushed ? ' ' + pushed + ' booking link' + (pushed === 1 ? '' : 's') + ' written to the CRM.' : ''), 'ok');
+            }
             loadReps();
           })
           .catch(function (e) { go.disabled = false; go.textContent = 'Sync selected'; toast(e.message, 'err'); });

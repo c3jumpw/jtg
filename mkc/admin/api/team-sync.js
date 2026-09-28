@@ -86,6 +86,41 @@ function nativeLinkFor(slug) {
   return `${base}/?rep=${encodeURIComponent(slug)}`;
 }
 
+/* Write our live booking link back onto the rep's CRM Team Directory record.
+ * The CRM already renders Discovery Call Link in its Actions ("Invite to
+ * Intro Call" etc.), so pushing here means every existing CRM surface starts
+ * sending the real booking page with no CRM change.
+ *
+ * Derives the PATCH URL from CRM_TEAM_DIRECTORY_URL rather than taking a
+ * second env var, so there's only one place a typo can live.
+ * Never throws — a push failure is recorded and the sync continues. */
+function crmPatchUrlFor(clickupId) {
+  const base = CRM_URL().split('?')[0].replace(/\/$/, '');
+  return `${base}/${encodeURIComponent(clickupId)}`;
+}
+
+async function pushLinkToCRM(clickupId, link) {
+  const secret = CRM_SECRET();
+  if (!clickupId || !link || !secret) return { pushed: false, error: null };
+  try {
+    const res = await fetch(crmPatchUrlFor(clickupId), {
+      method: 'PATCH',
+      headers: { 'X-Form-Secret': secret, 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({ discoveryCallLink: link })
+    });
+    const text = await res.text();
+    if (res.ok) return { pushed: true, error: null };
+    // 404 here almost always means the PATCH route isn't deployed yet, which
+    // is expected until the CRM side ships it. Say so plainly.
+    let msg = `CRM PATCH ${res.status}`;
+    try { const j = JSON.parse(text); if (typeof j.error === 'string') msg += `: ${j.error}`; }
+    catch { if (res.status === 404) msg += ': the PATCH endpoint is not deployed yet'; }
+    return { pushed: false, error: msg };
+  } catch (e) {
+    return { pushed: false, error: `CRM PATCH failed: ${e.message}` };
+  }
+}
+
 async function fetchRoster(includeInactive) {
   const url = CRM_URL();
   const secret = CRM_SECRET();
@@ -271,6 +306,12 @@ async function apply(body, session) {
       const slug = await ensureBookingSlug(personId, displayName);
       const native = nativeLinkFor(slug);
       const bl = m.bookingLinks || {};
+
+      // Push our live link into the CRM unless the caller opted out.
+      const push = body.pushLinks === false
+        ? { pushed: false, error: null }
+        : await pushLinkToCRM(m.clickupId, native);
+
       try {
         await insert('booking', 'rep_crm_links', {
           rep_id: personId,
@@ -278,6 +319,8 @@ async function apply(body, session) {
           crm_discovery: bl.discovery || null,
           crm_walkthrough: bl.walkthrough || null,
           native_link: native,
+          pushed_at: push.pushed ? new Date().toISOString() : null,
+          push_error: push.error,
           updated_at: new Date().toISOString()
         }, { onConflict: 'rep_id' });
       } catch (e) { console.error('rep_crm_links upsert failed', e.message); }
@@ -292,6 +335,8 @@ async function apply(body, session) {
 
       const note = { clickupId: m.clickupId, name: m.fullName, role, branch, slug, nativeLink: native };
       if (rawLabel && !branch) note.warning = `branch "${rawLabel}" is not mapped to a page yet`;
+      if (push.pushed) note.linkPushed = true;
+      else if (push.error) note.linkPushError = push.error;
       if (repExisted && !isNew) { updated++; detail.push({ ...note, result: 'updated' }); }
       else { created++; detail.push({ ...note, result: 'created' }); }
     } catch (e) {
