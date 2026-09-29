@@ -80,7 +80,7 @@ export function makeSubmit({ head, env = process.env, fetchImpl = fetch, now = D
 
     const rows = readRows(body.summary);
     const siteUrl = (env.SITE_URL || 'https://start.buildmystart-up.com').replace(/\/$/, '');
-    const bookingUrl = env.BOOKING_URL || 'https://buildmystart-up.com/#book';
+    const bookingUrl = env.BOOKING_URL || 'https://book.buildmystart-up.com';
     if (!env.NOTIFY_TO) return json(500, { error: 'This form isn’t fully set up yet. Please try again later.' });
 
     // Keep only files that really exist in storage and belong to this visit's folder.

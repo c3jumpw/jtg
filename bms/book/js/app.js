@@ -3,9 +3,9 @@
   'use strict';
 
   var CFG = window.MKC_BOOKING || {};
-  if (!CFG.pageSlug) CFG.pageSlug = 'fortune5';
-  if (!CFG.brandName) CFG.brandName = 'The Fortune 5 Agency';
-  if (!CFG.siteUrl) CFG.siteUrl = 'https://befortune5.com';
+  if (!CFG.pageSlug) CFG.pageSlug = 'bms';
+  if (!CFG.brandName) CFG.brandName = 'Build My Startup';
+  if (!CFG.siteUrl) CFG.siteUrl = 'https://buildmystart-up.com';
   var TZ = Intl.DateTimeFormat().resolvedOptions().timeZone || 'America/New_York';
   // ?rep=<slug> turns this into a personal booking link: one rep's calendar,
   // one rep's meeting types, and the booking is pinned to them.

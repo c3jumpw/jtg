@@ -8,7 +8,7 @@ window.F5_CONFIG = {
 
   // Where the "Book a call" button on the thank-you screen goes.
   // Placeholder booking link. Points at the main site until the booking page is live.
-  bookingUrl: 'https://buildmystart-up.com/#book',
+  bookingUrl: 'https://book.buildmystart-up.com',
 
   // The backend routes (Vercel functions in /api). On hosts that don't have
   // them (GitHub Pages, a local file) the form runs in preview mode.

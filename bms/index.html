@@ -223,9 +223,9 @@
 
 <script>
   // Both "Schedule a call" links point here until the booking page exists. Once
-  // start.buildmystart-up.com/book (or wherever) is live, one edit to BOOK_URL
+  // One switch for every "Book a call" link on the page.
   // updates every button on the page.
-  var BOOK_URL = ''; // e.g. 'https://start.buildmystart-up.com/book'
+  var BOOK_URL = 'https://book.buildmystart-up.com';
   if (BOOK_URL) {
     document.querySelectorAll('[data-book-cta], .btn.btn-ghost[href="#book"]').forEach(function (a) {
       a.setAttribute('href', BOOK_URL);

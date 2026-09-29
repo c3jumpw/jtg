@@ -53,7 +53,7 @@
       reason
     ]));
     card.appendChild(h('div', { class: 'actions' }, [
-      h('a', { href: (window.MKC_BOOKING && window.MKC_BOOKING.siteUrl) || 'https://befortune5.com', class: 'btn-link' }, '← Back'),
+      h('a', { href: (window.MKC_BOOKING && window.MKC_BOOKING.siteUrl) || 'https://buildmystart-up.com', class: 'btn-link' }, '← Back'),
       h('button', {
         class: 'btn btn-primary', type: 'button',
         onclick: function () {

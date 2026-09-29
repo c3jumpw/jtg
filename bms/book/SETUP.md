@@ -1,0 +1,86 @@
+# MKC Booking — start.befortune5.com
+
+The customer-facing booking page. Backed by the MKC-Admin Supabase project.
+
+```
+browser ── start.befortune5.com (static + /api on Vercel)
+   ├─ GET  /api/page?slug=fortune5           → page + active meeting types
+   ├─ POST /api/availability                 → open slots for a meeting type across a date range
+   ├─ POST /api/appointments                 → create booking (rate-limited, honeypot, GIST-guarded)
+   ├─ GET  /api/appointments?t=<token>       → look up a booking (from the emailed manage link)
+   └─ POST /api/appointments?action=cancel   → cancel a booking
+        ↓
+   MKC-Admin Supabase project (service-role only)
+        ↓
+   Resend (confirmation + notification emails, each with an .ics attachment)
+```
+
+## Request a time (the fallback)
+
+A booking calendar can come up empty four ways, and all of them look identical
+to a visitor: no reps configured on that page yet, a fully booked horizon, a
+rep who paused, or offered times that simply don't suit. Each one is someone
+who wanted a meeting and left.
+
+So the page never dead-ends. `POST /api/inquiry` captures name, email, an
+optional date range, time-of-day preference and their timezone, and writes it
+to `booking.inquiries`. The row is saved *before* any email or CRM call, and
+those failures are recorded rather than raised — losing a lead because a
+notification bounced would be the worst possible trade.
+
+It appears as the main call to action when the calendar is empty, and as a
+quieter "None of these times work?" link when it isn't. The stored `reason`
+(`no_reps`, `no_slots`, `rep_paused`, `none_suit`) separates a coverage gap
+from a preference mismatch when reviewing them in Passport.
+
+## Personal booking links
+
+`start.befortune5.com/?rep=<slug>` scopes the page to one rep. The slug is
+`booking.rep_preferences.booking_link_slug`, assigned automatically when a rep
+is synced from the CRM Team Directory (and pushed back into their Discovery
+Call Link field so CRM Actions send the live page).
+
+On a personal link:
+- the header names the rep instead of the page,
+- the meeting types are narrowed to the ones that rep takes on this page,
+- availability shows only their calendar,
+- the booking is pinned to them — the round-robin is bypassed.
+
+A slug is refused, with the team page still offered, when the rep is inactive,
+has paused bookings, isn't discoverable on that page, or has no active meeting
+type there. A booking request naming a rep who isn't genuinely free at that
+moment is rejected rather than reassigned: someone who clicked one person's
+link must never end up booked with a colleague without being told.
+
+## Environment variables (Vercel → Project → Settings → Environment Variables)
+
+| Name | Example | Notes |
+| --- | --- | --- |
+| `SUPABASE_URL` | `https://symbmscaajjmgywbifhv.supabase.co` | The MKC-Admin project URL |
+| `SUPABASE_SERVICE_ROLE_KEY` | `eyJhbGciOi...` | **You add this** — grab from Supabase → Project Settings → API |
+| `RESEND_API_KEY` | `re_...` | Same key you use for the F5 form is fine |
+| `FROM_EMAIL` | `The Fortune 5 Agency <bookings@befortune5.com>` | Must be on a domain verified in Resend |
+| `SITE_URL` | `https://start.befortune5.com` | Used for the manage links and the logo in email |
+| `NOTIFY_TO` | `you@befortune5.com` | Fallback address if the rep has no email on file (rare) |
+| `ALLOWED_ORIGINS` | *(optional)* | Comma-separated extra origins allowed to call the API |
+| `CRM_ENDPOINT_URL` | *(optional)* | `https://jtg-tools-mkc-crm.vercel.app/api/booking-created` — MKC CRM sync endpoint. When set, a successful booking POSTs to the CRM to create/match a Lead or Contact and log the booking. |
+| `CRM_SHARED_SECRET` | *(optional)* | Value sent as `X-Form-Secret` header on CRM calls. Required by the CRM endpoint. |
+
+Redeploy after changing variables.
+
+## Testing
+
+The scheduling engine is pure and unit-tested:
+
+```
+npm test
+```
+
+Ten tests cover timezone math, DST, day-off overrides, buffer blocking, notice-time cutoff,
+horizon clamping, and multi-rep zone unions.
+
+## What's not built yet (phase 2)
+
+- Google Calendar sync (per-rep OAuth, busy-time subtraction, event creation with Meet link).
+- Admin tool for adding reps, hours and locations. For now, edit rows directly in Supabase Studio.
+- Reminder emails (24h and 1h before). Rows exist in the schema; a scheduled function will send them.

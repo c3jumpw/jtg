@@ -7,11 +7,11 @@ import { buildIcs, guestConfirmationEmail, repNotificationEmail, sendEmail, huma
 const hashToken = (raw) => createHash('sha256').update(raw).digest('hex');
 const makeToken = () => randomBytes(24).toString('base64url'); // 32 chars
 
-const SITE_URL = () => (process.env.SITE_URL || 'https://start.befortune5.com').replace(/\/$/, '');
-const FROM_EMAIL = () => process.env.FROM_EMAIL || 'The Fortune 5 Agency <bookings@befortune5.com>';
+const SITE_URL = () => (process.env.SITE_URL || 'https://book.buildmystart-up.com').replace(/\/$/, '');
+const FROM_EMAIL = () => process.env.FROM_EMAIL || 'Build My Startup <bookings@buildmystart-up.com>';
 // Brand identity lives in env so a second brand is a config change, not a fork.
-const BRAND_NAME = () => process.env.BRAND_NAME || 'The Fortune 5 Agency';
-const BRAND_DOMAIN = () => process.env.BRAND_DOMAIN || 'befortune5.com';
+const BRAND_NAME = () => process.env.BRAND_NAME || 'Build My Startup';
+const BRAND_DOMAIN = () => process.env.BRAND_DOMAIN || 'buildmystart-up.com';
 const NOTIFY_FALLBACK = () => process.env.NOTIFY_TO || '';
 
 /* ---------------- CRM sync (MKC CRM 2.0, ClickUp-backed) ----------------
