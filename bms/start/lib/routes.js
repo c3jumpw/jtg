@@ -1,5 +1,7 @@
 // The three routes as factories, so the real files in api/ wire in the real services
 // and tests can wire in fakes.
+import { buildSubmissionPdf } from './pdf.js';
+import { LOGO_PNG } from './brand-logo.js';
 import {
   MAX_BYTES, MAX_BODY_CHARS, GROUPS, UUID_RE, EMAIL_RE,
   json, clean, rateLimited, clientIp, originAllowed, parseUploadPath, readRows,
@@ -102,14 +104,36 @@ export function makeSubmit({ head, env = process.env, fetchImpl = fetch, now = D
     const id = `${folder.slice(0, 8)}-${newId().slice(0, 8)}`;
     const meta = typeof body.meta === 'object' && body.meta ? body.meta : {};
     const record = { id, receivedAt: new Date(now()).toISOString(), data: d, summary: rows, files: files.map(({ url, ...f }) => f), meta };
-    const attachment = { filename: 'answers.json', content: Buffer.from(JSON.stringify(record, null, 2)).toString('base64') };
+    const attachments = [
+      { filename: 'answers.json', content: Buffer.from(JSON.stringify(record, null, 2)).toString('base64') }
+    ];
+
+    // A readable copy for humans, alongside the JSON for machines. Best-effort
+    // by design: the owner email is the only record of this submission, so a
+    // PDF that fails to render must never be the reason it doesn't arrive.
+    try {
+      const pdf = await buildSubmissionPdf({
+        id, receivedAt: record.receivedAt, data: d, rows, files,
+        brand: { name: 'Build My Startup', ink: '#161B26', accent: '#084098', logoPng: LOGO_PNG() }
+      });
+      const safeName = (d.businessName || [d.firstName, d.lastName].filter(Boolean).join(' ') || 'submission')
+        .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 48) || 'submission';
+      attachments.push({
+        filename: `discovery-summary-${safeName}.pdf`,
+        content: Buffer.from(pdf).toString('base64'),
+        contentType: 'application/pdf'
+      });
+    } catch (e) {
+      console.error('pdf render failed for', id, e && e.message);
+    }
 
     const errors = [];
     const [ownerErr, confirmErr] = await Promise.all([
       sendEmail({ to: env.NOTIFY_TO, ...ownerEmail({ id, data: d, rows, files, siteUrl, confirmationSent: true }),
-        replyTo: d.email, key: `${folder}-owner`, attachments: [attachment] }, env, fetchImpl),
+        replyTo: d.email, key: `${folder}-owner`, attachments }, env, fetchImpl),
       sendEmail({ to: d.email, ...confirmationEmail({ data: d, rows, siteUrl, bookingUrl }),
-        replyTo: env.NOTIFY_TO, key: `${folder}-confirm` }, env, fetchImpl)
+        replyTo: env.NOTIFY_TO, key: `${folder}-confirm`,
+        attachments: attachments.filter((a) => a.contentType === 'application/pdf') }, env, fetchImpl)
     ]);
     if (confirmErr) errors.push(`confirmation: ${confirmErr}`);
 

@@ -2,8 +2,11 @@
   "name": "befortune5-discovery",
   "private": true,
   "type": "module",
-  "engines": { "node": "24.x" },
+  "engines": {
+    "node": "24.x"
+  },
   "dependencies": {
-    "@vercel/blob": "^2.8.0"
+    "@vercel/blob": "^2.8.0",
+    "pdf-lib": "^1.17.1"
   }
 }

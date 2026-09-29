@@ -1,0 +1,8 @@
+# Installed dependencies — Vercel runs its own install from package-lock.json.
+node_modules/
+
+# Local scratch
+.env
+.env.local
+.DS_Store
+*.log
