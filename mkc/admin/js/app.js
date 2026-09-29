@@ -11,7 +11,7 @@
     toast: null,
     // caches
     reps: null, appointments: null, settings: null, availability: null, // for the active rep
-    inquiries: null
+    inquiries: null, gcal: null, myProfile: null
   };
 
   function isSuper() { return state.me && state.me.role === 'super_admin'; }
@@ -81,6 +81,14 @@
   function boot() {
     // If the URL has an error query from the auth callback, show it.
     var qs = new URLSearchParams(location.search);
+
+    // The Google callback redirects back here with its outcome.
+    var gcalOk = qs.get('gcal'), gcalErr = qs.get('gcalerr');
+    if (gcalOk || gcalErr) {
+      history.replaceState({}, '', location.pathname + location.hash);
+      setTimeout(function () { toast(gcalOk || gcalErr, gcalOk ? 'ok' : 'err'); }, 300);
+    }
+
     var err = qs.get('e');
     if (err) {
       history.replaceState({}, '', location.pathname);
@@ -943,9 +951,86 @@
 
   function loadMyProfile() {
     state.loading = true; render();
-    api('/api/preferences?rep=' + (state.me.repId || state.me.personId))
-      .then(function (d) { state.myProfile = d; state.loading = false; render(); })
+    var rep = state.me.repId || state.me.personId;
+    Promise.all([
+      api('/api/preferences?rep=' + rep).then(function (d) { state.myProfile = d; }),
+      // A calendar failure must not stop the profile loading — it renders its
+      // own error state instead.
+      api('/api/google-calendar?action=status&rep=' + rep)
+        .then(function (d) { state.gcal = d; })
+        .catch(function (e) { state.gcal = { configured: true, connected: false, loadError: e.message }; })
+    ]).then(function () { state.loading = false; render(); })
       .catch(function (e) { state.loading = false; toast(e.message, 'err'); });
+  }
+
+  /* Google Calendar connection panel. Two jobs it does for a rep: stops the
+   * booking pages offering times they are already busy, and puts the meeting
+   * in the calendar they actually look at. */
+  function renderCalendarCard() {
+    var g = state.gcal;
+    var card = h('div', { class: 'card' });
+    card.appendChild(h('h2', {}, 'Google Calendar'));
+
+    if (!g) { card.appendChild(h('div', { class: 'loading' }, 'Checking\u2026')); return card; }
+
+    if (g.configured === false) {
+      card.appendChild(h('div', { class: 'sub' },
+        'Calendar sync isn\u2019t set up on this install yet. Until it is, your availability here is the only thing protecting you from being double-booked.'));
+      return card;
+    }
+
+    if (g.connected && g.calendar) {
+      var stale = g.calendar.status === 'needs_reconnect';
+      card.appendChild(h('div', { class: 'sub' },
+        stale ? 'Google stopped accepting our access. Reconnect to restore protection.'
+              : 'Busy times are read from this calendar, and new bookings are written to it.'));
+      card.appendChild(h('div', { style: 'display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:14px 0 18px' }, [
+        stale ? h('span', { class: 'badge off' }, 'Needs reconnect') : h('span', { class: 'badge on' }, 'Connected'),
+        h('span', { style: 'font-weight:600' }, g.calendar.accountEmail),
+        g.calendar.connectedAt
+          ? h('span', { style: 'font-size:12px;color:var(--dim)' },
+              'since ' + new Date(g.calendar.connectedAt).toLocaleDateString())
+          : null
+      ]));
+      if (g.calendar.lastError) {
+        card.appendChild(h('div', { class: 'err-box', style: 'font-weight:500' }, g.calendar.lastError));
+      }
+      card.appendChild(h('div', { style: 'display:flex;gap:8px;flex-wrap:wrap' }, [
+        h('button', { class: 'btn btn-secondary', onclick: verifyCalendar }, 'Test connection'),
+        h('button', { class: 'btn btn-secondary', onclick: connectCalendar }, stale ? 'Reconnect' : 'Reconnect a different account'),
+        h('button', { class: 'btn btn-danger', onclick: disconnectCalendar }, 'Disconnect')
+      ]));
+      return card;
+    }
+
+    card.appendChild(h('div', { class: 'sub' },
+      'Connect your calendar so the booking pages stop offering times you\u2019re already busy, and new bookings land in your calendar with a Meet link.'));
+    if (g.loadError) card.appendChild(h('div', { class: 'err-box', style: 'font-weight:500' }, g.loadError));
+    card.appendChild(h('div', { style: 'margin-top:14px' },
+      h('button', { class: 'btn btn-primary', onclick: connectCalendar }, 'Connect Google Calendar')));
+    card.appendChild(h('div', { style: 'margin-top:12px;font-size:12.5px;color:var(--steel)' },
+      'We ask for read access to your free/busy times and permission to create the meetings you accept. We never read event contents.'));
+    return card;
+  }
+
+  function connectCalendar() {
+    api('/api/google-calendar?action=start&rep=' + (state.me.repId || state.me.personId))
+      .then(function (d) { if (d && d.url) location.href = d.url; else toast('Couldn\u2019t start the connection.', 'err'); })
+      .catch(function (e) { toast(e.message, 'err'); });
+  }
+  function verifyCalendar() {
+    api('/api/google-calendar?action=verify&rep=' + (state.me.repId || state.me.personId), { method: 'POST' })
+      .then(function (d) {
+        toast(d.ok ? 'Connection is healthy.' : ('Google refused: ' + d.error), d.ok ? 'ok' : 'err');
+        loadMyProfile();
+      })
+      .catch(function (e) { toast(e.message, 'err'); });
+  }
+  function disconnectCalendar() {
+    if (!confirm('Disconnect your Google Calendar? Booking pages will stop checking it for conflicts.')) return;
+    api('/api/google-calendar?action=disconnect&rep=' + (state.me.repId || state.me.personId), { method: 'POST' })
+      .then(function () { toast('Disconnected.', 'ok'); state.gcal = null; loadMyProfile(); })
+      .catch(function (e) { toast(e.message, 'err'); });
   }
   function loadMyBookings() {
     state.loading = true; render();
@@ -1091,6 +1176,7 @@
         ])
       ])
     ]));
+    wrap.appendChild(renderCalendarCard());
     wrap.appendChild(h('div', { class: 'card' }, [
       h('h2', {}, 'Notification & CRM preferences'),
       h('div', { class: 'form-body' }, [
