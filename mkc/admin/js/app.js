@@ -163,7 +163,7 @@
     var adminLinks = [['dashboard', 'Dashboard'], ['bookings', 'Bookings'], ['requests', 'Requests'], ['reps', 'Team'], ['availability', 'Availability'], ['meetings', 'Meeting types'], ['settings', 'Settings']];
     var links = isSA ? adminLinks : repLinks;
     return h('aside', { class: 'sidebar' }, [
-      h('div', { class: 'brand' }, [
+      h('a', { class: 'brand', href: '#/' + (isStaffAdmin() ? 'dashboard' : 'my-profile'), 'aria-label': 'MKC Passport home' }, [
         h('img', { src: 'assets/logo-light.png', alt: 'MKC' }),
         h('span', { class: 'brand-tag' }, state.me.role === 'super_admin' ? 'Super' : (state.me.role === 'admin' ? 'Admin' : 'Passport'))
       ]),

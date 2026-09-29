@@ -135,7 +135,8 @@
     var segs = CHAPTERS.map(function () { return h('span', { class: 'seg' }, h('span', { class: 'fill' })); });
     track = h('div', { class: 'track', 'aria-hidden': 'true' }, segs);
     bar = h('header', { class: 'bar' },
-      h('div', { class: 'brand' }, h('img', { src: 'assets/logo-light.png', alt: 'The Fortune 5 Agency', width: '153', height: '28' })),
+      h('a', { class: 'brand', href: 'https://befortune5.com', 'aria-label': 'The Fortune 5 Agency home' },
+        h('img', { src: 'assets/logo-light.png', alt: 'The Fortune 5 Agency', width: '153', height: '28' })),
       h('div', { class: 'bar-meta', id: 'barMeta' }),
       track
     );

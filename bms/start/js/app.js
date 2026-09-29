@@ -135,7 +135,8 @@
     var segs = CHAPTERS.map(function () { return h('span', { class: 'seg' }, h('span', { class: 'fill' })); });
     track = h('div', { class: 'track', 'aria-hidden': 'true' }, segs);
     bar = h('header', { class: 'bar' },
-      h('div', { class: 'brand' }, h('img', { src: 'assets/logo-light.png', alt: 'Build My Startup', width: '153', height: '28' })),
+      h('a', { class: 'brand', href: 'https://buildmystart-up.com', 'aria-label': 'Build My Startup home' },
+        h('img', { src: 'assets/logo-light.png', alt: 'Build My Startup', width: '153', height: '28' })),
       h('div', { class: 'bar-meta', id: 'barMeta' }),
       track
     );

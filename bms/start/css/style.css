@@ -339,3 +339,7 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="tel"]:focus, te
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* The header logo links home; it must not look like body copy. */
+a.brand { text-decoration: none; display: inline-flex; align-items: center; }
+a.brand:hover { text-decoration: none; opacity: .88; }

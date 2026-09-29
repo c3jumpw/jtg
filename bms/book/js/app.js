@@ -5,6 +5,7 @@
   var CFG = window.MKC_BOOKING || {};
   if (!CFG.pageSlug) CFG.pageSlug = 'bms';
   if (!CFG.brandName) CFG.brandName = 'Build My Startup';
+  if (!CFG.contactEmail) CFG.contactEmail = 'bookings@buildmystart-up.com';
   if (!CFG.siteUrl) CFG.siteUrl = 'https://buildmystart-up.com';
   var TZ = Intl.DateTimeFormat().resolvedOptions().timeZone || 'America/New_York';
   // ?rep=<slug> turns this into a personal booking link: one rep's calendar,
@@ -28,6 +29,7 @@
     inquiry: { name: '', email: '', phone: '', company: '', notes: '',
                earliestDate: '', latestDate: '', timePrefs: [] },
     inquiryConsent: false, inquiryDone: false, inquirySubmitting: false,
+    loadFailed: null,
     guest: { name: '', email: '', phone: '', company: '', notes: '' },
     consent: false,
     step: 1,                     // 1 type, 2 pick, 3 details, 4 done
@@ -158,6 +160,7 @@
   function render() {
     app.textContent = '';
     var frag = document.createDocumentFragment();
+    if (state.loadFailed) { app.appendChild(renderLoadFailed()); return; }
     if (!state.page) { frag.appendChild(h('div', { class: 'load' }, 'Loading…')); app.appendChild(frag); return; }
 
     if (state.rep) {
@@ -208,7 +211,7 @@
     var card = h('div', { class: 'card' });
     card.appendChild(h('h2', { style: 'margin:0 0 16px;font-size:22px' }, 'How would you like to meet?'));
     var grid = h('div', { class: 'mt-grid' });
-    state.meetingTypes.forEach(function (mt) {
+    (state.meetingTypes || []).forEach(function (mt) {
       var meta = mt.duration_min + ' min';
       if (mt.mode === 'in_person' && mt.location) meta += ' · ' + mt.location.name;
       grid.appendChild(h('button', {
@@ -408,6 +411,19 @@
       oninput: function (e) { state.guest[id] = e.target.value; }
     }));
     return f;
+  }
+
+  function renderLoadFailed() {
+    var subject = encodeURIComponent('Booking a call');
+    return h('div', { class: 'card' }, [
+      h('h1', { style: 'font-size:26px;margin:0 0 10px' }, 'We can’t load the calendar right now'),
+      h('p', { style: 'color:var(--steel);margin:0 0 22px' },
+        'This is on our side, not yours. Email us and we’ll get a time in the diary.'),
+      h('a', { class: 'btn btn-primary', href: 'mailto:' + CFG.contactEmail + '?subject=' + subject }, 'Email us →'),
+      h('p', { style: 'margin:22px 0 0;font-size:14px;color:var(--steel)' }, [
+        h('button', { type: 'button', class: 'linkish', onclick: function () { location.reload(); } }, 'Try again')
+      ])
+    ]);
   }
 
   /* -------- request a time (the fallback that keeps the page from dead-ending) -------- */
@@ -651,5 +667,11 @@
   /* -------- go -------- */
   loadPage()
     .then(function () { if (state.step === 2) loadMonth(new Date()); else render(); })
-    .catch(function (e) { state.error = e.message; state.page = { title: 'Book a call', intro: '' }; render(); });
+    .catch(function (e) {
+      // The page config could not be loaded at all. Render an honest error
+      // with a way to reach a human — never a blank screen, which is what a
+      // half-initialised render used to produce.
+      state.loadFailed = e.message || 'We could not load the booking page.';
+      render();
+    });
 })();
