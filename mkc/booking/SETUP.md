@@ -15,6 +15,25 @@ browser ── start.befortune5.com (static + /api on Vercel)
    Resend (confirmation + notification emails, each with an .ics attachment)
 ```
 
+## Personal booking links
+
+`start.befortune5.com/?rep=<slug>` scopes the page to one rep. The slug is
+`booking.rep_preferences.booking_link_slug`, assigned automatically when a rep
+is synced from the CRM Team Directory (and pushed back into their Discovery
+Call Link field so CRM Actions send the live page).
+
+On a personal link:
+- the header names the rep instead of the page,
+- the meeting types are narrowed to the ones that rep takes on this page,
+- availability shows only their calendar,
+- the booking is pinned to them — the round-robin is bypassed.
+
+A slug is refused, with the team page still offered, when the rep is inactive,
+has paused bookings, isn't discoverable on that page, or has no active meeting
+type there. A booking request naming a rep who isn't genuinely free at that
+moment is rejected rather than reassigned: someone who clicked one person's
+link must never end up booked with a colleague without being told.
+
 ## Environment variables (Vercel → Project → Settings → Environment Variables)
 
 | Name | Example | Notes |

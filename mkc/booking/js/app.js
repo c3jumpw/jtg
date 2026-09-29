@@ -4,6 +4,12 @@
 
   var CFG = window.MKC_BOOKING || { pageSlug: 'fortune5' };
   var TZ = Intl.DateTimeFormat().resolvedOptions().timeZone || 'America/New_York';
+  // ?rep=<slug> turns this into a personal booking link: one rep's calendar,
+  // one rep's meeting types, and the booking is pinned to them.
+  var REP_SLUG = (function () {
+    try { return (new URL(location.href).searchParams.get('rep') || '').trim().slice(0, 80); }
+    catch (_) { return ''; }
+  })();
   var USE_24H = /^[A-Z]{2}$/.test(navigator.language) ? false : /^(de|fr|es|it|nl|pl|sv|no|da|fi|cs|hu|ro|pt|ru|tr|ja|ko|zh)/i.test(navigator.language || '');
 
   var state = {
@@ -13,6 +19,7 @@
     days: {},                    // 'YYYY-MM-DD' -> slots for this month
     availabilityLoadedFor: null, // ISO month string
     date: null, slot: null,
+    rep: null, repError: null,   // set when a personal link resolves (or doesn't)
     guest: { name: '', email: '', phone: '', company: '', notes: '' },
     consent: false,
     step: 1,                     // 1 type, 2 pick, 3 details, 4 done
@@ -37,6 +44,12 @@
       el.appendChild(typeof kid === 'string' ? document.createTextNode(kid) : kid);
     });
     return el;
+  }
+
+  function initialsOf(name) {
+    var parts = String(name || '').trim().split(/\s+/).filter(Boolean);
+    if (!parts.length) return '?';
+    return (parts[0][0] + (parts.length > 1 ? parts[parts.length - 1][0] : '')).toUpperCase();
   }
 
   function ymd(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
@@ -72,14 +85,31 @@
 
   /* -------- data loads -------- */
   function loadPage() {
-    return api('/api/page?slug=' + encodeURIComponent(CFG.pageSlug)).then(function (d) {
+    var q = '/api/page?slug=' + encodeURIComponent(CFG.pageSlug);
+    if (REP_SLUG) q += '&rep=' + encodeURIComponent(REP_SLUG);
+    return api(q).then(function (d) {
       state.page = d.page;
       state.meetingTypes = d.meeting_types || [];
+      state.rep = d.rep || null;
+      state.repError = d.repError || null;
       if (state.meetingTypes.length === 1) {
         state.meetingType = state.meetingTypes[0];
         state.step = 2;
       }
     });
+  }
+
+  // What to tell someone whose personal link didn't resolve. They still get a
+  // working page — the goal is a booked meeting, not a correct error.
+  function repErrorMessage(err) {
+    var who = err.displayName || 'That team member';
+    switch (err.reason) {
+      case 'not_accepting':    return who + ' isn’t taking bookings right now. You can book with the team below.';
+      case 'inactive':
+      case 'not_on_page':
+      case 'no_meeting_types': return who + ' isn’t available on this page. You can book with the team below.';
+      default:                 return 'We didn’t recognise that personal link, but you can still book with the team below.';
+    }
   }
 
   function loadAvailabilityForMonth(anchor) {
@@ -90,10 +120,12 @@
     // For the month that contains today, start from now so the API doesn't return in-the-past days.
     var today = new Date(); today.setHours(0, 0, 0, 0);
     if (from < today) from = today;
-    return api('/api/availability', {
+    var payload = {
       meetingTypeId: state.meetingType.id,
       from: from.toISOString(), to: to.toISOString()
-    }).then(function (out) {
+    };
+    if (state.rep) payload.repId = state.rep.id;
+    return api('/api/availability', payload).then(function (out) {
       state.days = {};
       (out.days || []).forEach(function (d) { state.days[d.date] = d.slots; });
       state.availabilityLoadedFor = key;
@@ -106,8 +138,23 @@
     var frag = document.createDocumentFragment();
     if (!state.page) { frag.appendChild(h('div', { class: 'load' }, 'Loading…')); app.appendChild(frag); return; }
 
-    frag.appendChild(h('h1', {}, state.page.title));
-    if (state.page.intro) frag.appendChild(h('p', { class: 'lede' }, state.page.intro));
+    if (state.rep) {
+      // On a personal link, whose calendar this is matters more than the page title.
+      frag.appendChild(h('h1', {}, 'Book with ' + state.rep.displayName));
+      frag.appendChild(h('div', { class: 'rep-card' }, [
+        h('div', { class: 'rep-avatar', 'aria-hidden': 'true' }, initialsOf(state.rep.displayName)),
+        h('div', {}, [
+          h('div', { class: 'rep-name' }, state.rep.displayName),
+          state.rep.title ? h('div', { class: 'rep-title' }, state.rep.title) : null,
+          state.rep.bio ? h('div', { class: 'rep-bio' }, state.rep.bio) : null
+        ])
+      ]));
+    } else {
+      frag.appendChild(h('h1', {}, state.page.title));
+      if (state.page.intro) frag.appendChild(h('p', { class: 'lede' }, state.page.intro));
+    }
+
+    if (state.repError) frag.appendChild(h('div', { class: 'notice' }, repErrorMessage(state.repError)));
 
     frag.appendChild(renderSteps());
     if (state.error) frag.appendChild(h('div', { class: 'err-box' }, state.error));
@@ -233,7 +280,7 @@
     var panel = h('div', { class: 'slot-panel' });
     if (!state.date) {
       panel.appendChild(h('h3', {}, 'Select a date'));
-      panel.appendChild(h('div', { class: 'no-slots' }, 'Pick a day on the left to see times.'));
+      panel.appendChild(h('div', { class: 'no-slots' }, 'Pick a day to see available times.'));
       return panel;
     }
     panel.appendChild(h('h3', {}, fmtDate(state.date)));
@@ -354,6 +401,7 @@
     api('/api/appointments', {
       meetingTypeId: state.meetingType.id,
       startsAt: state.slot.start,
+      repId: state.rep ? state.rep.id : undefined,
       guest: {
         name: g.name.trim(), email: g.email.trim(), phone: g.phone.trim(),
         company: g.company.trim(), notes: g.notes.trim(), timezone: state.tz

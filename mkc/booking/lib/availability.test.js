@@ -140,3 +140,65 @@ test('max_days_ahead clamps the horizon', () => {
   // Only 3 days from now => March 2 (Mon), 3 (Tue), 4 (Wed). Sunday Mar 1 is a weekend, skipped anyway.
   assert.ok(out.days.length <= 3);
 });
+
+/* ---- Personal booking links (?rep=slug) ----
+   The API narrows `inputs.reps` to one rep before calling computeAvailability.
+   These assert that narrowing genuinely isolates that rep: their slots are
+   unchanged, the other rep's disappear, and — critically — one rep's busy
+   time never suppresses the other's availability. */
+
+test('narrowing to one rep returns only that rep, with their own hours intact', () => {
+  const east = { person_id: 'east', timezone: 'America/New_York', weight: 1 };
+  const west = { person_id: 'west', timezone: 'America/Los_Angeles', weight: 1 };
+  const rules = [
+    ...weekdays.map((wd) => ({ rep_id: 'east', weekday: wd, start_time: '09:00', end_time: '17:00' })),
+    ...weekdays.map((wd) => ({ rep_id: 'west', weekday: wd, start_time: '09:00', end_time: '17:00' }))
+  ];
+  const from = utcMsFromZoned('America/New_York', 2026, 3, 9, 0, 0);
+  const to   = utcMsFromZoned('America/New_York', 2026, 3, 10, 0, 0);
+  const now  = from - 86400000;
+
+  const both = computeAvailability({ meeting_type: mt, reps: [east, west], rules, overrides: [], busy: [] }, from, to, now);
+  const only = computeAvailability({ meeting_type: mt, reps: [east],       rules, overrides: [], busy: [] }, from, to, now);
+
+  // Every slot in the narrowed result belongs solely to the requested rep.
+  for (const d of only.days) for (const s of d.slots) assert.deepEqual(s.repIds, ['east']);
+  // Narrowing removes slots, never invents them.
+  assert.ok(only.days[0].slots.length < both.days[0].slots.length);
+  // East's own 09:00 is still there.
+  const nine = utcMsFromZoned('America/New_York', 2026, 3, 9, 9, 0);
+  assert.ok(only.days[0].slots.some((s) => new Date(s.start).getTime() === nine));
+});
+
+test("one rep's busy time does not suppress the other rep's slot", () => {
+  const a = { person_id: 'a', timezone: 'America/New_York', weight: 1 };
+  const b = { person_id: 'b', timezone: 'America/New_York', weight: 1 };
+  const rules = [
+    ...weekdays.map((wd) => ({ rep_id: 'a', weekday: wd, start_time: '09:00', end_time: '17:00' })),
+    ...weekdays.map((wd) => ({ rep_id: 'b', weekday: wd, start_time: '09:00', end_time: '17:00' }))
+  ];
+  const from = utcMsFromZoned('America/New_York', 2026, 3, 9, 0, 0);
+  const to   = utcMsFromZoned('America/New_York', 2026, 3, 10, 0, 0);
+  const tenAm = utcMsFromZoned('America/New_York', 2026, 3, 9, 10, 0);
+  // Rep A is booked 10:00-10:30; rep B is free.
+  const busy = [{ rep_id: 'a', starts_at: new Date(tenAm).toISOString(), ends_at: new Date(tenAm + 30 * 60000).toISOString() }];
+
+  const onlyA = computeAvailability({ meeting_type: mt, reps: [a], rules, overrides: [], busy }, from, to, from - 86400000);
+  const onlyB = computeAvailability({ meeting_type: mt, reps: [b], rules, overrides: [], busy }, from, to, from - 86400000);
+
+  const hasTen = (out) => out.days[0].slots.some((s) => new Date(s.start).getTime() === tenAm);
+  assert.equal(hasTen(onlyA), false, "A is booked at 10:00 and must not be offered");
+  assert.equal(hasTen(onlyB), true,  "B is free at 10:00 and must still be offered");
+});
+
+test('narrowing to a rep with no hours yields nothing rather than falling back to the team', () => {
+  const ghost = { person_id: 'ghost', timezone: 'America/New_York', weight: 1 };
+  const real  = { person_id: 'real',  timezone: 'America/New_York', weight: 1 };
+  // Only `real` has hours. A link for `ghost` must return an empty calendar,
+  // never silently show someone else's availability.
+  const rules = weekdays.map((wd) => ({ rep_id: 'real', weekday: wd, start_time: '09:00', end_time: '17:00' }));
+  const from = utcMsFromZoned('America/New_York', 2026, 3, 9, 0, 0);
+  const to   = utcMsFromZoned('America/New_York', 2026, 3, 10, 0, 0);
+  const out = computeAvailability({ meeting_type: mt, reps: [ghost], rules, overrides: [], busy: [] }, from, to, from - 86400000);
+  assert.equal(out.days.length, 0);
+});

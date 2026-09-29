@@ -92,6 +92,7 @@ async function create(request) {
   const guestNotes = clean(guest.notes, 4000);
   const guestTimezone = clean(guest.timezone, 80) || 'America/New_York';
   const discoveryFolder = clean(body.discoveryFolder, 64) || null;
+  const requestedRepId = clean(body.repId, 64);
   const consent = body.consent === true;
 
   if (!UUID_RE.test(meetingTypeId)) return json(400, { error: 'Bad meeting type.' });
@@ -101,6 +102,7 @@ async function create(request) {
   if (!EMAIL_RE.test(guestEmail)) return json(400, { error: 'Please check your email address.' });
   if (!consent) return json(400, { error: 'Please tick the consent box so we can contact you.' });
   if (discoveryFolder && !UUID_RE.test(discoveryFolder)) return json(400, { error: 'Bad reference.' });
+  if (requestedRepId && !UUID_RE.test(requestedRepId)) return json(400, { error: 'Bad rep.' });
 
   // Re-derive availability at booking time from truth — never trust the client's picked slot alone.
   // We check a narrow window (the slot + one grid step) so busy meetings inserted between availability
@@ -120,15 +122,28 @@ async function create(request) {
   }
   if (!match) return json(409, { error: 'That time was just taken. Please pick another.' });
 
-  // Round-robin among the reps who can take this slot: score by recent confirmed bookings (last 30 days).
-  const sinceIso = new Date(Date.now() - 30 * 86400_000).toISOString();
-  const scoreRows = await select(
-    'booking', 'appointments',
-    `select=rep_id,starts_at&status=eq.confirmed&starts_at=gte.${encodeURIComponent(sinceIso)}&rep_id=in.(${match.repIds.join(',')})`
-  );
-  const count = new Map();
-  for (const r of scoreRows || []) count.set(r.rep_id, (count.get(r.rep_id) || 0) + 1);
-  const repId = pickRep(match.repIds, count);
+  // A personal booking link pins the meeting to one rep. `match.repIds` is
+  // derived here from live availability, never from the client, so asking for
+  // a rep who isn't genuinely free at this moment is refused rather than
+  // quietly reassigned to someone else — a visitor who clicked one person's
+  // link must not silently end up booked with a colleague.
+  let repId;
+  if (requestedRepId) {
+    if (!match.repIds.includes(requestedRepId)) {
+      return json(409, { error: 'That time isn’t available any more. Please pick another.' });
+    }
+    repId = requestedRepId;
+  } else {
+    // Round-robin among the reps who can take this slot: score by recent confirmed bookings (last 30 days).
+    const sinceIso = new Date(Date.now() - 30 * 86400_000).toISOString();
+    const scoreRows = await select(
+      'booking', 'appointments',
+      `select=rep_id,starts_at&status=eq.confirmed&starts_at=gte.${encodeURIComponent(sinceIso)}&rep_id=in.(${match.repIds.join(',')})`
+    );
+    const count = new Map();
+    for (const r of scoreRows || []) count.set(r.rep_id, (count.get(r.rep_id) || 0) + 1);
+    repId = pickRep(match.repIds, count);
+  }
   const rep = inputs.reps.find((r) => r.person_id === repId);
 
   // Fetch page + rep email in one shot (we need the rep's email for the notification).
