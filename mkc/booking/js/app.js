@@ -20,6 +20,11 @@
     availabilityLoadedFor: null, // ISO month string
     date: null, slot: null,
     rep: null, repError: null,   // set when a personal link resolves (or doesn't)
+    // The request-a-time fallback. A booking page must never dead-end: if the
+    // calendar can't serve someone, we still capture them.
+    inquiry: { name: '', email: '', phone: '', company: '', notes: '',
+               earliestDate: '', latestDate: '', timePrefs: [] },
+    inquiryConsent: false, inquiryDone: false, inquirySubmitting: false,
     guest: { name: '', email: '', phone: '', company: '', notes: '' },
     consent: false,
     step: 1,                     // 1 type, 2 pick, 3 details, 4 done
@@ -92,11 +97,25 @@
       state.meetingTypes = d.meeting_types || [];
       state.rep = d.rep || null;
       state.repError = d.repError || null;
-      if (state.meetingTypes.length === 1) {
+      if (state.meetingTypes.length === 0) {
+        // Nothing bookable on this page at all — go straight to the request
+        // form rather than showing an empty chooser.
+        state.step = 'inquiry';
+      } else if (state.meetingTypes.length === 1) {
         state.meetingType = state.meetingTypes[0];
         state.step = 2;
       }
     });
+  }
+
+  /* Why the calendar couldn't serve this visitor. Recorded with the request so
+   * a coverage gap (nobody configured, nothing open) can be told apart from a
+   * simple preference mismatch when reviewing them later. */
+  function inquiryReason() {
+    if (state.meetingTypes && state.meetingTypes.length === 0) return 'no_reps';
+    if (state.repError && state.repError.reason === 'not_accepting') return 'rep_paused';
+    if (state.availabilityLoadedFor && Object.keys(state.days).length === 0) return 'no_slots';
+    return 'none_suit';
   }
 
   // What to tell someone whose personal link didn't resolve. They still get a
@@ -156,10 +175,11 @@
 
     if (state.repError) frag.appendChild(h('div', { class: 'notice' }, repErrorMessage(state.repError)));
 
-    frag.appendChild(renderSteps());
+    if (state.step !== 'inquiry') frag.appendChild(renderSteps());
     if (state.error) frag.appendChild(h('div', { class: 'err-box' }, state.error));
 
-    if (state.step === 1) frag.appendChild(renderPickType());
+    if (state.step === 'inquiry') frag.appendChild(state.inquiryDone ? renderInquiryDone() : renderInquiry());
+    else if (state.step === 1) frag.appendChild(renderPickType());
     else if (state.step === 2) frag.appendChild(renderPickTime());
     else if (state.step === 3) frag.appendChild(renderDetails());
     else if (state.step === 4) frag.appendChild(renderDone());
@@ -219,6 +239,25 @@
     pick.appendChild(renderCalendar());
     pick.appendChild(renderSlots());
     card.appendChild(pick);
+
+    // Nothing open anywhere in the booking window — make requesting a time the
+    // obvious next move rather than leaving an empty calendar as the answer.
+    var loaded = !!state.availabilityLoadedFor;
+    var empty = loaded && Object.keys(state.days).length === 0;
+    if (empty) {
+      card.appendChild(h('div', { class: 'empty-cal' }, [
+        h('div', { class: 'empty-cal-title' }, state.rep
+          ? 'No open times on ' + state.rep.displayName + '’s calendar right now'
+          : 'No open times in the next few weeks'),
+        h('div', { class: 'empty-cal-sub' }, 'Tell us when suits you and we’ll come back with times that work.'),
+        h('button', { type: 'button', class: 'btn btn-primary', onclick: openInquiry }, 'Request a time →')
+      ]));
+    } else if (loaded) {
+      card.appendChild(h('p', { class: 'alt-path' }, [
+        'None of these times work? ',
+        h('button', { type: 'button', class: 'linkish', onclick: openInquiry }, 'Request a different time')
+      ]));
+    }
 
     var actions = h('div', { class: 'actions' }, [
       state.meetingTypes.length > 1
@@ -366,6 +405,177 @@
       oninput: function (e) { state.guest[id] = e.target.value; }
     }));
     return f;
+  }
+
+  /* -------- request a time (the fallback that keeps the page from dead-ending) -------- */
+
+  function openInquiry() {
+    // Carry anything already typed on the details step across, so nobody
+    // retypes their name because the calendar let them down.
+    var g = state.guest;
+    if (g.name && !state.inquiry.name) state.inquiry.name = g.name;
+    if (g.email && !state.inquiry.email) state.inquiry.email = g.email;
+    if (g.phone && !state.inquiry.phone) state.inquiry.phone = g.phone;
+    if (g.company && !state.inquiry.company) state.inquiry.company = g.company;
+    state._preInquiryStep = state.step;
+    state.step = 'inquiry'; state.error = '';
+    render();
+    window.scrollTo(0, 0);
+  }
+
+  function renderInquiry() {
+    var q = state.inquiry;
+    var card = h('div', { class: 'card' });
+    card.appendChild(h('h2', { style: 'margin:0 0 6px;font-size:22px' }, 'Request a time'));
+    card.appendChild(h('p', { class: 'lede', style: 'margin-bottom:24px' },
+      state.rep
+        ? 'Tell ' + state.rep.displayName + ' when suits you and they’ll come back with options.'
+        : 'Tell us when suits you and a specialist will come back with options.'));
+
+    function field(id, type, label, required, autocomplete) {
+      var el = h('input', {
+        id: 'q-' + id, type: type, autocomplete: autocomplete || 'off',
+        value: q[id] || '', oninput: function (e) { q[id] = e.target.value; }
+      });
+      return h('div', { class: 'field' }, [
+        h('label', { for: 'q-' + id }, [label, ' ', h('span', { class: 'opt' }, required ? '(required)' : '(optional)')]),
+        el
+      ]);
+    }
+
+    function dateField(id, label) {
+      var today = new Date();
+      var min = ymd(today);
+      var max = ymd(new Date(today.getFullYear(), today.getMonth() + 6, today.getDate()));
+      var el = h('input', {
+        id: 'q-' + id, type: 'date', min: min, max: max,
+        value: q[id] || '', oninput: function (e) { q[id] = e.target.value; }
+      });
+      return h('div', { class: 'field' }, [
+        h('label', { for: 'q-' + id }, [label, ' ', h('span', { class: 'opt' }, '(optional)')]), el
+      ]);
+    }
+
+    var PREFS = [
+      ['morning',   'Morning',   'Before 12'],
+      ['afternoon', 'Afternoon', '12 – 5'],
+      ['evening',   'Evening',   'After 5'],
+      ['flexible',  'Flexible',  'Any time']
+    ];
+    var prefGrid = h('div', { class: 'pref-grid' }, PREFS.map(function (p) {
+      var on = q.timePrefs.indexOf(p[0]) >= 0;
+      return h('button', {
+        type: 'button', class: 'pref' + (on ? ' on' : ''), 'aria-pressed': on ? 'true' : 'false',
+        onclick: function () {
+          var i = q.timePrefs.indexOf(p[0]);
+          if (i >= 0) q.timePrefs.splice(i, 1);
+          else if (p[0] === 'flexible') q.timePrefs = ['flexible'];
+          else {
+            var f = q.timePrefs.indexOf('flexible');
+            if (f >= 0) q.timePrefs.splice(f, 1);
+            q.timePrefs.push(p[0]);
+          }
+          render();
+        }
+      }, [h('span', { class: 'pref-name' }, p[1]), h('span', { class: 'pref-when' }, p[2])]);
+    }));
+
+    card.appendChild(h('div', { class: 'form' }, [
+      h('div', { class: 'row' }, [
+        field('name', 'text', 'Your name', true, 'name'),
+        field('email', 'email', 'Email', true, 'email')
+      ]),
+      h('div', { class: 'row' }, [
+        field('phone', 'tel', 'Phone', false, 'tel'),
+        field('company', 'text', 'Company', false, 'organization')
+      ]),
+      h('div', { class: 'field' }, [
+        h('label', {}, ['When would suit? ', h('span', { class: 'opt' }, '(pick any that work)')]),
+        prefGrid
+      ]),
+      h('div', { class: 'row' }, [
+        dateField('earliestDate', 'Earliest date'),
+        dateField('latestDate', 'Latest date')
+      ]),
+      (function () {
+        var f = h('div', { class: 'field' });
+        f.appendChild(h('label', { for: 'q-notes' }, ['Anything we should know? ', h('span', { class: 'opt' }, '(optional)')]));
+        var ta = h('textarea', { id: 'q-notes', rows: '3', oninput: function (e) { q.notes = e.target.value; } });
+        ta.value = q.notes || '';
+        f.appendChild(ta);
+        return f;
+      })(),
+      (function () {
+        var wrap = h('label', { class: 'consent' });
+        var cb = h('input', { type: 'checkbox', onchange: function (e) { state.inquiryConsent = e.target.checked; } });
+        cb.checked = state.inquiryConsent;
+        wrap.appendChild(cb);
+        wrap.appendChild(h('span', { style: 'font-size:14px' }, 'It’s fine to email or call me about this request.'));
+        return wrap;
+      })(),
+      h('div', { style: 'position:absolute;left:-9999px' },
+        h('input', { type: 'text', tabindex: '-1', autocomplete: 'off', oninput: function (e) { state.hp = e.target.value; } }))
+    ]));
+
+    card.appendChild(h('div', { class: 'actions' }, [
+      state.meetingTypes.length
+        ? h('button', { type: 'button', class: 'btn-link', onclick: function () {
+            state.step = state._preInquiryStep || 2; state.error = ''; render();
+          } }, '← Back to the calendar')
+        : h('span'),
+      h('button', {
+        type: 'button', class: 'btn btn-primary',
+        disabled: state.inquirySubmitting,
+        onclick: submitInquiry
+      }, state.inquirySubmitting ? 'Sending…' : 'Send request')
+    ]));
+    return card;
+  }
+
+  function submitInquiry() {
+    var q = state.inquiry;
+    state.error = '';
+    if (!(q.name || '').trim()) return err('Please add your name.');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test((q.email || '').trim())) return err('Please check your email address.');
+    if (!state.inquiryConsent) return err('Please tick the consent box.');
+    if (q.earliestDate && q.latestDate && q.latestDate < q.earliestDate) return err('The latest date is before the earliest.');
+
+    state.inquirySubmitting = true; render();
+    api('/api/inquiry', {
+      pageSlug: CFG.pageSlug,
+      repId: state.rep ? state.rep.id : undefined,
+      meetingTypeId: state.meetingType ? state.meetingType.id : undefined,
+      reason: inquiryReason(),
+      name: q.name.trim(), email: q.email.trim(), phone: q.phone.trim(),
+      company: q.company.trim(), notes: q.notes.trim(),
+      timezone: state.tz,
+      earliestDate: q.earliestDate || undefined,
+      latestDate: q.latestDate || undefined,
+      timePrefs: q.timePrefs,
+      consent: true,
+      hp: state.hp || '',
+      referrer: document.referrer || '',
+      utm: pickUtm()
+    }).then(function () {
+      state.inquirySubmitting = false; state.inquiryDone = true; render(); window.scrollTo(0, 0);
+    }).catch(function (e) {
+      state.inquirySubmitting = false; state.error = e.message; render();
+    });
+  }
+
+  function renderInquiryDone() {
+    var q = state.inquiry;
+    var card = h('div', { class: 'card' });
+    card.appendChild(h('div', { class: 'done-hero' }, [
+      h('div', { class: 'mark', 'aria-hidden': 'true' }, '✓'),
+      h('h1', {}, 'Request sent.'),
+      h('p', {}, state.rep
+        ? state.rep.displayName + ' will come back to you with times that fit.'
+        : 'A specialist will come back to you with times that fit.')
+    ]));
+    card.appendChild(h('p', { style: 'text-align:center;font-size:14px;color:var(--steel);margin:18px 0 0' },
+      'We’ve emailed a copy to ' + q.email.trim() + '.'));
+    return card;
   }
 
   /* -------- step 4: done -------- */

@@ -67,6 +67,37 @@ h1 { font-size: clamp(28px, 4vw, 40px); line-height: 1.1; letter-spacing: -0.015
   border-radius: 6px; color: #6B4700; font-size: 14px; font-weight: 600;
 }
 
+/* Empty calendar → request a time. The page must never dead-end. */
+.empty-cal {
+  margin-top: 24px; padding: 24px 22px; text-align: center;
+  background: var(--paper); border: 1px dashed var(--line); border-radius: 10px;
+}
+.empty-cal-title { font-weight: 700; font-size: 17px; color: var(--ink); }
+.empty-cal-sub   { font-size: 14.5px; color: var(--steel); margin: 6px 0 18px; }
+
+/* Secondary escape hatch shown beneath a calendar that does have times */
+.alt-path { margin: 20px 0 0; font-size: 14px; color: var(--steel); text-align: center; }
+.linkish {
+  background: none; border: none; padding: 0; font: inherit; font-weight: 700;
+  color: var(--blue-deep); cursor: pointer; text-decoration: underline; text-underline-offset: 3px;
+}
+.linkish:hover { color: var(--ink); }
+
+/* Time-of-day preference picker */
+.pref-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+@media (max-width: 560px) { .pref-grid { grid-template-columns: repeat(2, 1fr); } }
+.pref {
+  display: grid; gap: 2px; padding: 12px 10px; text-align: center;
+  background: #fff; border: 2px solid var(--line); border-radius: 8px;
+  font: inherit; color: var(--ink); cursor: pointer;
+  transition: border-color .12s ease, background .12s ease;
+}
+.pref:hover { border-color: var(--ink); }
+.pref.on { background: var(--ink); border-color: var(--ink); color: #fff; }
+.pref-name { font-weight: 700; font-size: 14.5px; }
+.pref-when { font-size: 12px; color: var(--steel); }
+.pref.on .pref-when { color: #C6CBD6; }
+
 /* Steps indicator */
 .steps { display: flex; gap: 8px; margin-bottom: 28px; }
 .step-tick { flex: 1; height: 4px; background: var(--line); border-radius: 3px; }

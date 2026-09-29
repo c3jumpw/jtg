@@ -15,6 +15,24 @@ browser ── start.befortune5.com (static + /api on Vercel)
    Resend (confirmation + notification emails, each with an .ics attachment)
 ```
 
+## Request a time (the fallback)
+
+A booking calendar can come up empty four ways, and all of them look identical
+to a visitor: no reps configured on that page yet, a fully booked horizon, a
+rep who paused, or offered times that simply don't suit. Each one is someone
+who wanted a meeting and left.
+
+So the page never dead-ends. `POST /api/inquiry` captures name, email, an
+optional date range, time-of-day preference and their timezone, and writes it
+to `booking.inquiries`. The row is saved *before* any email or CRM call, and
+those failures are recorded rather than raised — losing a lead because a
+notification bounced would be the worst possible trade.
+
+It appears as the main call to action when the calendar is empty, and as a
+quieter "None of these times work?" link when it isn't. The stored `reason`
+(`no_reps`, `no_slots`, `rep_paused`, `none_suit`) separates a coverage gap
+from a preference mismatch when reviewing them in Passport.
+
 ## Personal booking links
 
 `start.befortune5.com/?rep=<slug>` scopes the page to one rep. The slug is
