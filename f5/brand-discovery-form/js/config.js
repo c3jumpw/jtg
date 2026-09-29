@@ -7,8 +7,9 @@ window.F5_CONFIG = {
   company: 'The Fortune 5 Agency',
 
   // Where the "Book a call" button on the thank-you screen goes.
-  // Same link the main befortune5.com call-to-action uses.
-  bookingUrl: 'https://befortune5.com/#book',
+  // Straight to the booking page — someone who just finished the form is the
+  // warmest they will ever be, so don't send them back to the marketing site.
+  bookingUrl: 'https://start.befortune5.com',
 
   // The backend routes (Vercel functions in /api). On hosts that don't have
   // them (GitHub Pages, a local file) the form runs in preview mode.

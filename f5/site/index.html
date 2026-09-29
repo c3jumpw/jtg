@@ -211,9 +211,8 @@
 </footer>
 
 <script>
-  // One switch for every "Book a call" link on the page. When the real booking
-  // page is live, set BOOK_URL to that URL and every button here follows.
-  var BOOK_URL = '';
+  // One switch for every "Book a call" link on the page.
+  var BOOK_URL = 'https://start.befortune5.com';
   if (BOOK_URL) {
     document.querySelectorAll('[data-book-cta]').forEach(function (a) {
       a.setAttribute('href', BOOK_URL);
