@@ -10,7 +10,8 @@
     loading: false,
     toast: null,
     // caches
-    reps: null, appointments: null, settings: null, availability: null // for the active rep
+    reps: null, appointments: null, settings: null, availability: null, // for the active rep
+    inquiries: null
   };
 
   function isSuper() { return state.me && state.me.role === 'super_admin'; }
@@ -36,7 +37,7 @@
   }
   function icon(name) {
     // Simple monogram icons using unicode + CSS classes; no icon library.
-    var map = { dashboard: '◆', reps: '☰', availability: '◔', meetings: '▤', bookings: '◱', settings: '⚙', 'my-profile': '◉', 'my-bookings': '◱', 'my-availability': '◔' };
+    var map = { dashboard: '\u25c6', reps: '\u2630', availability: '\u25d4', meetings: '\u25a4', bookings: '\u25b1', settings: '\u2699', requests: '\u2709', 'my-profile': '\u25c9', 'my-bookings': '\u25b1', 'my-availability': '\u25d4' };
     return h('span', { class: 'icon' }, map[name] || '•');
   }
 
@@ -158,8 +159,8 @@
 
   function sidebar() {
     var isSA = isStaffAdmin();
-    var repLinks = [['my-profile', 'My Profile'], ['my-bookings', 'My Bookings'], ['my-availability', 'My Availability']];
-    var adminLinks = [['dashboard', 'Dashboard'], ['bookings', 'Bookings'], ['reps', 'Team'], ['availability', 'Availability'], ['meetings', 'Meeting types'], ['settings', 'Settings']];
+    var repLinks = [['my-profile', 'My Profile'], ['my-bookings', 'My Bookings'], ['my-availability', 'My Availability'], ['requests', 'Requests']];
+    var adminLinks = [['dashboard', 'Dashboard'], ['bookings', 'Bookings'], ['requests', 'Requests'], ['reps', 'Team'], ['availability', 'Availability'], ['meetings', 'Meeting types'], ['settings', 'Settings']];
     var links = isSA ? adminLinks : repLinks;
     return h('aside', { class: 'sidebar' }, [
       h('div', { class: 'brand' }, [
@@ -195,9 +196,9 @@
     // Mobile nav (route switcher)
     var isSA = isStaffAdmin();
     var navRoutes = isSA
-      ? ['dashboard','bookings','reps','availability','meetings','settings']
-      : ['my-profile','my-bookings','my-availability'];
-    var navLabels = { dashboard:'Dashboard', bookings:'Bookings', reps:'Team', availability:'Availability', meetings:'Meeting types', settings:'Settings', 'my-profile':'My Profile', 'my-bookings':'My Bookings', 'my-availability':'My Availability' };
+      ? ['dashboard','bookings','requests','reps','availability','meetings','settings']
+      : ['my-profile','my-bookings','my-availability','requests'];
+    var navLabels = { dashboard:'Dashboard', bookings:'Bookings', requests:'Requests', reps:'Team', availability:'Availability', meetings:'Meeting types', settings:'Settings', 'my-profile':'My Profile', 'my-bookings':'My Bookings', 'my-availability':'My Availability' };
     var mn = h('div', { class: 'mobilenav' }, [
       h('span', { style: 'font:800 13px;letter-spacing:.14em;text-transform:uppercase' }, 'MKC'),
       h('select', { onchange: function (e) { nav(e.target.value); } },
@@ -213,6 +214,7 @@
     else if (state.route === 'availability') m.appendChild(isSA ? viewAvailability() : h('div', { class: 'empty' }, 'Access restricted.'));
     else if (state.route === 'meetings') m.appendChild(isSA ? viewMeetingTypes() : h('div', { class: 'empty' }, 'Access restricted.'));
     else if (state.route === 'settings') m.appendChild(isSA ? viewSettings() : h('div', { class: 'empty' }, 'Access restricted.'));
+    else if (state.route === 'requests') m.appendChild(viewRequests());
     else if (state.route === 'my-profile') m.appendChild(viewMyProfile());
     else if (state.route === 'my-bookings') m.appendChild(viewMyBookings());
     else if (state.route === 'my-availability') m.appendChild(viewMyAvailability());
@@ -240,6 +242,7 @@
     if (state.route === 'bookings') return loadAppointments();
     if (state.route === 'reps' || state.route === 'availability') return loadReps();
     if (state.route === 'meetings' || state.route === 'settings') return loadSettings();
+    if (state.route === 'requests') return loadRequests();
     if (state.route === 'my-profile' || state.route === 'my-availability') return loadMyProfile();
     if (state.route === 'my-bookings') return loadMyBookings();
   }
@@ -949,6 +952,110 @@
     api('/api/appointments?filter=' + (state._bookingFilter || 'upcoming') + '&limit=100')
       .then(function (d) { state.appointments = d.appointments; state.loading = false; render(); })
       .catch(function (e) { state.loading = false; toast(e.message, 'err'); });
+  }
+
+  function loadRequests() {
+    state.loading = true; render();
+    var f = state._requestFilter || 'open';
+    api('/api/inquiries?status=' + encodeURIComponent(f) + '&limit=200')
+      .then(function (d) { state.inquiries = d.inquiries; state.loading = false; render(); })
+      .catch(function (e) { state.loading = false; toast(e.message, 'err'); });
+  }
+
+  var REASON_LABEL = {
+    no_reps: 'Nobody bookable',
+    no_slots: 'No open times',
+    rep_paused: 'Rep paused',
+    none_suit: 'Times didn’t suit'
+  };
+  var PREF_LABEL = { morning: 'Morning', afternoon: 'Afternoon', evening: 'Evening', flexible: 'Flexible' };
+
+  function fmtDay(d) {
+    if (!d) return null;
+    try {
+      return new Date(d + 'T12:00:00Z').toLocaleDateString(undefined,
+        { timeZone: 'UTC', month: 'short', day: 'numeric', year: 'numeric' });
+    } catch (_) { return d; }
+  }
+  function fmtRange(a, b) {
+    if (a && b) return a === b ? fmtDay(a) : fmtDay(a) + ' – ' + fmtDay(b);
+    if (a) return 'From ' + fmtDay(a);
+    if (b) return 'Before ' + fmtDay(b);
+    return 'No dates given';
+  }
+
+  function viewRequests() {
+    var wrap = h('div', {});
+    var filter = state._requestFilter || 'open';
+    wrap.appendChild(h('div', { class: 'page-head' }, [
+      h('div', {}, [
+        h('h1', {}, 'Requests'),
+        h('div', { class: 'sub' }, 'People the booking calendar couldn’t serve. Each one asked to be contacted.')
+      ]),
+      h('div', { class: 'pill-tabs' }, [['open', 'Open'], ['new', 'New'], ['contacted', 'Contacted'], ['booked', 'Booked'], ['closed', 'Closed']].map(function (f) {
+        return h('button', { class: filter === f[0] ? 'on' : '', onclick: function () { state._requestFilter = f[0]; loadRequests(); } }, f[1]);
+      }))
+    ]));
+
+    if (state.loading) return wrap.appendChild(h('div', { class: 'loading' }, 'Loading…')), wrap;
+    if (!state.inquiries || state.inquiries.length === 0) {
+      wrap.appendChild(h('div', { class: 'empty' }, filter === 'open'
+        ? 'No open requests. Anyone the calendar can’t serve will appear here.'
+        : 'Nothing in this view.'));
+      return wrap;
+    }
+
+    state.inquiries.forEach(function (r) {
+      var card = h('div', { class: 'card' });
+      card.appendChild(h('div', { style: 'display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start' }, [
+        h('div', {}, [
+          h('div', { style: 'font-weight:700;font-size:17px' }, r.guest_name),
+          h('div', { style: 'font-size:13px;margin-top:2px' }, [
+            h('a', { href: 'mailto:' + r.guest_email }, r.guest_email),
+            r.guest_phone ? h('span', { style: 'color:var(--steel)' }, ' · ' + r.guest_phone) : null,
+            r.guest_company ? h('span', { style: 'color:var(--steel)' }, ' · ' + r.guest_company) : null
+          ])
+        ]),
+        h('div', { style: 'display:flex;gap:6px;align-items:center;flex-wrap:wrap' }, [
+          h('span', { class: 'badge blue' }, r.page_slug || '—'),
+          h('span', { class: 'badge warn', title: 'Why the calendar could not serve them' }, REASON_LABEL[r.reason] || r.reason),
+          r.status === 'new' ? h('span', { class: 'badge on' }, 'New')
+            : h('span', { class: 'badge' }, r.status)
+        ])
+      ]));
+
+      card.appendChild(h('div', { style: 'margin-top:14px;padding:14px 16px;background:var(--paper);border-radius:8px;border-left:4px solid var(--blue)' }, [
+        h('div', { style: 'font:700 11px var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:var(--blue-deep)' }, 'Wants'),
+        h('div', { style: 'font-weight:700;margin-top:4px' }, fmtRange(r.earliest_date, r.latest_date)),
+        h('div', { style: 'font-size:14px;color:var(--steel);margin-top:2px' },
+          ((r.time_prefs || []).map(function (p) { return PREF_LABEL[p] || p; }).join(', ') || 'No time preference')
+          + ' · ' + (r.guest_timezone || '')),
+        r.repName ? h('div', { style: 'font-size:13px;color:var(--steel);margin-top:6px' }, 'Asked for ' + r.repName) : null
+      ]));
+
+      if (r.guest_notes) {
+        card.appendChild(h('div', { style: 'margin-top:12px;font-size:14px;white-space:pre-wrap;color:var(--ink)' }, r.guest_notes));
+      }
+
+      card.appendChild(h('div', { style: 'display:flex;justify-content:space-between;align-items:center;margin-top:16px;gap:10px;flex-wrap:wrap' }, [
+        h('div', { style: 'font-size:12px;color:var(--dim)' },
+          'Received ' + new Date(r.created_at).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })),
+        h('div', { style: 'display:flex;gap:6px;flex-wrap:wrap' }, [
+          h('a', { class: 'btn btn-secondary', href: 'mailto:' + r.guest_email + '?subject=' + encodeURIComponent('Finding you a time') }, 'Email'),
+          r.status !== 'contacted' ? h('button', { class: 'btn btn-secondary', onclick: setStatus.bind(null, r.id, 'contacted') }, 'Mark contacted') : null,
+          r.status !== 'booked' ? h('button', { class: 'btn btn-primary', onclick: setStatus.bind(null, r.id, 'booked') }, 'Mark booked') : null,
+          r.status !== 'closed' ? h('button', { class: 'btn-link', onclick: setStatus.bind(null, r.id, 'closed') }, 'Close') : null
+        ])
+      ]));
+      wrap.appendChild(card);
+    });
+    return wrap;
+  }
+
+  function setStatus(id, status) {
+    api('/api/inquiries', { method: 'PATCH', body: { id: id, status: status } })
+      .then(function () { toast('Updated.', 'ok'); loadRequests(); })
+      .catch(function (e) { toast(e.message, 'err'); });
   }
 
   /* ---------- REP SELF-SERVICE VIEWS ---------- */
