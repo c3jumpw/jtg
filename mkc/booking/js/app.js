@@ -5,7 +5,7 @@
   var CFG = window.MKC_BOOKING || {};
   if (!CFG.pageSlug) CFG.pageSlug = 'fortune5';
   if (!CFG.brandName) CFG.brandName = 'The Fortune 5 Agency';
-  if (!CFG.contactEmail) CFG.contactEmail = 'bookings@befortune5.com';
+  if (!CFG.contactEmail) CFG.contactEmail = 'support@befortune5.com';
   if (!CFG.siteUrl) CFG.siteUrl = 'https://befortune5.com';
   var TZ = Intl.DateTimeFormat().resolvedOptions().timeZone || 'America/New_York';
   // ?rep=<slug> turns this into a personal booking link: one rep's calendar,
@@ -246,8 +246,9 @@
     pick.appendChild(renderSlots());
     card.appendChild(pick);
 
-    // Nothing open anywhere in the booking window — make requesting a time the
-    // obvious next move rather than leaving an empty calendar as the answer.
+    // Nothing open anywhere in the booking window. The request form goes on the
+    // page itself rather than behind a "request a time" button: a visitor who
+    // has already hit a dead end shouldn't have to ask twice to be helped.
     var loaded = !!state.availabilityLoadedFor;
     var empty = loaded && Object.keys(state.days).length === 0;
     if (empty) {
@@ -255,8 +256,7 @@
         h('div', { class: 'empty-cal-title' }, state.rep
           ? 'No open times on ' + state.rep.displayName + '’s calendar right now'
           : 'No open times in the next few weeks'),
-        h('div', { class: 'empty-cal-sub' }, 'Tell us when suits you and we’ll come back with times that work.'),
-        h('button', { type: 'button', class: 'btn btn-primary', onclick: openInquiry }, 'Request a time →')
+        h('div', { class: 'empty-cal-sub' }, 'Tell us when suits you in the form below and we’ll come back with times that work.')
       ]));
     } else if (loaded) {
       card.appendChild(h('p', { class: 'alt-path' }, [
@@ -272,6 +272,14 @@
       h('span')
     ]);
     card.appendChild(actions);
+
+    // An empty calendar and the form that rescues it travel together.
+    if (empty) {
+      var both = document.createDocumentFragment();
+      both.appendChild(card);
+      both.appendChild(renderInquiry({ embedded: true }));
+      return both;
+    }
     return card;
   }
 
@@ -324,8 +332,13 @@
   function renderSlots() {
     var panel = h('div', { class: 'slot-panel' });
     if (!state.date) {
-      panel.appendChild(h('h3', {}, 'Select a date'));
-      panel.appendChild(h('div', { class: 'no-slots' }, 'Pick a day to see available times.'));
+      // Don't tell someone to pick a day when the whole month is closed —
+      // point them at the two things that can actually move them forward.
+      var monthEmpty = state.availabilityLoadedFor && Object.keys(state.days).length === 0;
+      panel.appendChild(h('h3', {}, monthEmpty ? 'Nothing open this month' : 'Select a date'));
+      panel.appendChild(h('div', { class: 'no-slots' }, monthEmpty
+        ? 'Try the next month, or use the request form below.'
+        : 'Pick a day to see available times.'));
       return panel;
     }
     panel.appendChild(h('h3', {}, fmtDate(state.date)));
@@ -442,10 +455,39 @@
     window.scrollTo(0, 0);
   }
 
-  function renderInquiry() {
+  /* A mailto that arrives useful: the reply-to is theirs, and the skeleton means
+   * we get the same facts the form would have collected. This is the alternative
+   * route, never the only one — the form is always on the page beside it. */
+  function emailUsLink() {
+    var subject = state.rep
+      ? 'Requesting a call with ' + state.rep.displayName
+      : 'Requesting a call — ' + CFG.brandName;
+    var body = [
+      'Hi — I’d like to book a call.', '',
+      'Name:', 'Company:', 'Phone:', 'Best days and times for me:', '',
+      'My timezone: ' + state.tz
+    ].join('\n');
+    return 'mailto:' + CFG.contactEmail +
+      '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+  }
+
+  function renderInquiry(opts) {
+    var embedded = !!(opts && opts.embedded);
     var q = state.inquiry;
     var card = h('div', { class: 'card' });
-    card.appendChild(h('h2', { style: 'margin:0 0 6px;font-size:22px' }, 'Request a time'));
+    // Nobody is bookable online at all, so the visitor never saw a calendar.
+    // Say why before asking them to fill anything in.
+    var noReps = !embedded && state.meetingTypes && state.meetingTypes.length === 0;
+    if (noReps) {
+      card.appendChild(h('div', { class: 'empty-cal', style: 'margin:0 0 24px' }, [
+        h('div', { class: 'empty-cal-title' }, 'Online booking isn’t open right now'),
+        h('div', { class: 'empty-cal-sub', style: 'margin-bottom:0' },
+          'Leave your details below and a specialist will come back to you with times.')
+      ]));
+    }
+
+    card.appendChild(h('h2', { style: 'margin:0 0 6px;font-size:22px' },
+      embedded ? 'Request a time instead' : 'Request a time'));
     card.appendChild(h('p', { class: 'lede', style: 'margin-bottom:24px' },
       state.rep
         ? 'Tell ' + state.rep.displayName + ' when suits you and they’ll come back with options.'
@@ -537,7 +579,9 @@
     ]));
 
     card.appendChild(h('div', { class: 'actions' }, [
-      state.meetingTypes.length
+      // Embedded, the calendar is already directly above — a "back" that scrolls
+      // nowhere would just be noise.
+      (!embedded && state.meetingTypes.length)
         ? h('button', { type: 'button', class: 'btn-link', onclick: function () {
             state.step = state._preInquiryStep || 2; state.error = ''; render();
           } }, '← Back to the calendar')
@@ -547,6 +591,11 @@
         disabled: state.inquirySubmitting,
         onclick: submitInquiry
       }, state.inquirySubmitting ? 'Sending…' : 'Send request')
+    ]));
+
+    card.appendChild(h('p', { class: 'alt-path' }, [
+      'Prefer to write to us? ',
+      h('a', { class: 'linkish', href: emailUsLink() }, 'Email ' + CFG.contactEmail)
     ]));
     return card;
   }
@@ -576,7 +625,11 @@
       referrer: document.referrer || '',
       utm: pickUtm()
     }).then(function () {
-      state.inquirySubmitting = false; state.inquiryDone = true; render(); window.scrollTo(0, 0);
+      state.inquirySubmitting = false; state.inquiryDone = true;
+      // Submitted from under an empty calendar, the confirmation replaces the
+      // whole view rather than sitting below the calendar that failed them.
+      state.step = 'inquiry';
+      render(); window.scrollTo(0, 0);
     }).catch(function (e) {
       state.inquirySubmitting = false; state.error = e.message; render();
     });

@@ -207,7 +207,7 @@ async function create(request) {
     location: insertRow.location_text || undefined,
     url: manageUrl,
     organizerName: BRAND_NAME(),
-    organizerEmail: person.email || `bookings@${BRAND_DOMAIN()}`,
+    organizerEmail: person.email || `support@${BRAND_DOMAIN()}`,
     attendees: [{ name: guestName, email: guestEmail }]
   });
   const icsAttachment = { filename: 'meeting.ics', content: Buffer.from(ics, 'utf8').toString('base64'), contentType: 'text/calendar; charset=utf-8; method=REQUEST' };
@@ -308,7 +308,7 @@ async function cancel(request) {
         description: reason ? `Cancelled. Reason: ${reason}` : 'Cancelled by guest.',
         start: appt.starts_at, end: appt.ends_at,
         method: 'CANCEL', sequence: 1,
-        organizerName: BRAND_NAME(), organizerEmail: (rep && rep.email) || `bookings@${BRAND_DOMAIN()}`,
+        organizerName: BRAND_NAME(), organizerEmail: (rep && rep.email) || `support@${BRAND_DOMAIN()}`,
         attendees: [{ name: appt.guest_name, email: appt.guest_email }]
       });
       const att = { filename: 'cancelled.ics', content: Buffer.from(ics, 'utf8').toString('base64'), contentType: 'text/calendar; charset=utf-8; method=CANCEL' };
