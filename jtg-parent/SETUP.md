@@ -4,7 +4,7 @@ The parent-group site for JTG. Static HTML/CSS/JS plus one Vercel function for t
 
 ```
 jtg-parent/            ← Vercel project "jtg-jtg-parent", Root Directory = jtg-parent
-├─ index.html          the page (hero + team finder, services, 12 agencies, process, contact)
+├─ index.html          the page (hero + team finder, services, agency directory, process, contact)
 ├─ 404.html
 ├─ css/style.css
 ├─ js/app.js           finder data/matching + contact form submit
