@@ -1,0 +1,12 @@
+{
+  "name": "The Party Designers",
+  "short_name": "Party Designers",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#E0C2C2",
+  "theme_color": "#E0C2C2",
+  "icons": [
+    { "src": "/assets/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/assets/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
