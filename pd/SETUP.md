@@ -17,15 +17,16 @@ Pushing to `main` deploys to production.
 
 ## Domain
 
-Add `wearepartydesigners.com` and `www.wearepartydesigners.com` in Vercel → jtg-pd → Settings → Domains,
-then set the DNS records Vercel shows there at your registrar:
+`wearepartydesigners.com` and `www.wearepartydesigners.com` (redirects to the bare domain) are already
+added to Vercel → jtg-pd → Settings → Domains. DNS is at GoDaddy; replace the parked-page records with:
 
 | Type | Name | Value |
 | --- | --- | --- |
-| A | `@` | `76.76.21.21` |
-| CNAME | `www` | `cname.vercel-dns.com` |
+| A | `@` | `216.150.1.1` |
+| CNAME | `www` | `791e9a087e9bd733.vercel-dns-016.com` |
 
-Vercel may show a project-specific value instead; use whatever the Domains page lists.
+Delete any other `A` record on `@` (GoDaddy's parking IP `198.12.221.35`). The Domains page in Vercel turns
+green once the records resolve, and Vercel issues the SSL certificate on its own.
 
 ## Request form (Resend)
 
