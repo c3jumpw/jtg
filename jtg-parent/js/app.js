@@ -4,54 +4,54 @@
 
   var BRANCHES = {
     f5: {
-      name: 'Fortune 5 Agency', abbr: 'F5', for: 'Scaling service businesses',
+      name: 'Fortune 5 Agency', logo: 'f5.png', for: 'Scaling service businesses',
       offer: 'Marketing systems, operational workflows and lead generation, planned and implemented so the business can grow without everything running through you.',
       site: 'befortune5.com'
     },
     bms: {
-      name: 'Build My Start-Up', abbr: 'BMS', for: 'Startups and new businesses',
+      name: 'Build My Start-Up', logo: 'bms.png', for: 'Startups and new businesses',
       offer: 'Business setup, branding, website and marketing foundations, priced for early-stage budgets.',
       site: 'buildmystart-up.com'
     },
     blk: {
-      name: 'Blanket Label', abbr: 'BLK', for: 'Consultants and professionals',
+      name: 'Blanket Label', logo: 'blk.png', for: 'Consultants and professionals',
       offer: 'White-label design, branding and marketing you can resell to your clients under your own brand.'
     },
     bb: {
-      name: 'Bar Boost', abbr: 'BB', for: 'Restaurants, bars, clubs and lounges',
+      name: 'Bar Boost', logo: 'bb.png', for: 'Restaurants, bars, clubs and lounges',
       offer: 'Lead generation, local marketing and customer acquisition systems built for food and nightlife.'
     },
     pd: {
-      name: 'Party Designers', abbr: 'PD', for: 'Event planners, promoters, clubs and lounges',
-      offer: 'Same-day and next-day flyers, promo graphics and print assets for upcoming events.',
+      name: 'Party Designers', logo: 'pd.jpg', tile: 'pd', for: 'Event planners, and anyone planning an event',
+      offer: 'The creative marketing arm for your event: invitations, flyers, slideshows, banners, backdrops, signage and event websites with guest photo uploads, turned around same-day or next-day.',
       site: 'wearepartydesigners.com'
     },
     blm: {
-      name: 'Blloom', abbr: 'BLM', for: 'Beauty professionals',
+      name: 'Blloom', logo: 'blm.png', for: 'Beauty professionals',
       offer: 'Client acquisition, social growth, monetization and efficiency systems for beauty businesses.'
     },
     acad: {
-      name: 'Acad Branding', abbr: 'ACAD', for: 'Schools, academies, daycares and tutoring centers',
+      name: 'Acad Branding', logo: 'acad.png', tile: 'dark', for: 'Schools, academies, daycares and tutoring centers',
       offer: 'Branding, enrollment marketing and reworked processes that bring in more students.'
     },
     sd: {
-      name: 'Seeder', abbr: 'SD', for: 'Nonprofits and community organizations',
+      name: 'Seeder', logo: 'sd.png', for: 'Nonprofits and community organizations',
       offer: 'Brand, messaging and administrative systems that help you win grants, volunteers and community trust.'
     },
     bc: {
-      name: 'BC Agency', abbr: 'BC', for: 'Government contractors',
+      name: 'BC Agency', logo: 'bc.png', tile: 'dark', for: 'Government contractors',
       offer: 'Website, branding and digital infrastructure built to government contracting standards.'
     },
     mbc: {
-      name: 'Media BC', abbr: 'MBC', for: 'Small and mid-sized businesses',
+      name: 'Media BC', logo: 'mbc.png', for: 'Small and mid-sized businesses',
       offer: 'Video content from strategy through editing to posting, produced consistently.'
     },
     jw: {
-      name: 'Jumpwebs', abbr: 'JW', for: 'Businesses that need social handled',
+      name: 'Jumpwebs', logo: 'jw.png', for: 'Businesses that need social handled',
       offer: 'Social content development, strategy, management and posting, done for you.'
     },
     f5ceo: {
-      name: 'Fortune 5 CEO', abbr: 'F5 CEO', for: 'Entrepreneurs and growing business leaders',
+      name: 'Fortune 5 CEO', logo: 'f5ceo.png', for: 'Entrepreneurs and growing business leaders',
       offer: 'A media network and community: leadership content, founder stories and member access.',
       site: 'fortune5ceo.com'
     }
@@ -72,7 +72,8 @@
     video: { branch: 'mbc', pair: ['jw'] },
     social: { branch: 'jw', pair: ['mbc'] },
     whitelabel: { branch: 'blk', pair: ['f5'] },
-    community: { branch: 'f5ceo', pair: ['f5'] }
+    community: { branch: 'f5ceo', pair: ['f5'] },
+    eventdesign: { branch: 'pd', note: 'For professional planners and for anyone planning an event themselves.', pair: ['mbc', 'bb'] }
   };
 
   function el(tag, cls, text) {
@@ -92,9 +93,12 @@
     var b = BRANCHES[m.branch];
 
     var wrap = el('div', 'match');
-    var badge = el('span', 'badge match__abbr', b.abbr);
-    badge.setAttribute('aria-hidden', 'true');
-    wrap.appendChild(badge);
+    var tile = el('span', 'logo-tile match__logo' + (b.tile ? ' logo-tile--' + b.tile : ''));
+    var img = el('img');
+    img.src = '/assets/brands/' + b.logo;
+    img.alt = '';
+    tile.appendChild(img);
+    wrap.appendChild(tile);
     wrap.appendChild(el('h3', 'match__name', b.name));
     wrap.appendChild(el('p', 'match__for', b.for));
     wrap.appendChild(el('p', 'match__offer', b.offer));
@@ -105,7 +109,7 @@
     talk.href = '#contact';
     talk.setAttribute('data-branch', m.branch);
     actions.appendChild(talk);
-    var details = el('a', 'link-quiet', 'More about ' + b.abbr);
+    var details = el('a', 'link-quiet', 'More about ' + b.name);
     details.href = '#branch-' + m.branch;
     actions.appendChild(details);
     if (b.site) {

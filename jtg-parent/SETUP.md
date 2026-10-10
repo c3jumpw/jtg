@@ -10,7 +10,8 @@ jtg-parent/            ← Vercel project "jtg-jtg-parent", Root Directory = jtg
 ├─ js/app.js           finder data/matching + contact form submit
 ├─ api/contact.js      POST /api/contact → Resend
 ├─ assets/             logo, light logo, icons, share image, self-hosted fonts
-└─ media/              original uploads (logo + icon)
+│  └─ brands/          web-sized branch logos (generated from media/)
+└─ media/              original uploads (JTG + branch logos)
 ```
 
 ## Contact form (Resend)
@@ -35,5 +36,8 @@ Set these in Vercel → jtg-jtg-parent → Settings → Environment Variables (P
 - Agency rows live in `index.html` under `#agencies` (ids `branch-<key>`).
 - The finder's short descriptions and which choice maps to which agency live at the top of `js/app.js`
   (`BRANCHES` and `MATCHES`). The team dropdown in the form and `BRANCHES` in `api/contact.js` use the same keys.
+- Branch logos: the site uses the trimmed copies in `assets/brands/<key>.png` (Party Designers is `pd.jpg`).
+  To swap one, replace that file (max ~480×200). ACAD and BC Agency sit on dark tiles because their logos are white;
+  that's the `tile: 'dark'` flag in `js/app.js` and the `logo-tile--dark` class in `index.html`.
 - When a branch gets a website, add the link in its directory row, in `BRANCHES[key].site` in `js/app.js`,
   and in the footer if wanted.
