@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 170" fill="none">
+  <!-- Dotted flight path from the hero copy toward the team finder, ending in the JTG paper plane -->
+  <path d="M6 150 C 90 152, 120 84, 196 92 S 300 168, 372 120 S 430 52, 452 44"
+        stroke="#00AEEF" stroke-width="3" stroke-linecap="round" stroke-dasharray="0.1 11"/>
+  <circle cx="6" cy="150" r="5" fill="#00AEEF"/>
+  <g transform="translate(450 14) rotate(-8)">
+    <!-- paper plane: two folded wings, echoing the mark in the logo -->
+    <path d="M0 34 L62 0 L40 54 Z" fill="#2E3192"/>
+    <path d="M40 54 L62 0 L26 40 Z" fill="#00AEEF"/>
+    <path d="M26 40 L32 62 L40 54 Z" fill="#16185A"/>
+  </g>
+</svg>

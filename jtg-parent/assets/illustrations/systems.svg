@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 320" fill="none">
+  <!-- A business running on systems: a lead arrives, follow-up is automated, results show up on the dashboard -->
+
+  <!-- dashboard -->
+  <rect x="64.5" y="44.5" width="300" height="196" rx="16" fill="#EEF3FA" stroke="#D3DCEB"/>
+  <rect x="88" y="68" width="84" height="10" rx="5" fill="#2E3192"/>
+  <rect x="88" y="86" width="132" height="8" rx="4" fill="#D3DCEB"/>
+  <rect x="300" y="66" width="44" height="22" rx="11" fill="#FFFFFF" stroke="#D3DCEB"/>
+  <circle cx="312" cy="77" r="4" fill="#00AEEF"/>
+  <rect x="320" y="74" width="16" height="6" rx="3" fill="#D3DCEB"/>
+  <!-- chart -->
+  <path d="M88 200.5 H340" stroke="#D3DCEB"/>
+  <path d="M88 170.5 H340" stroke="#D3DCEB" stroke-dasharray="3 5"/>
+  <path d="M88 140.5 H340" stroke="#D3DCEB" stroke-dasharray="3 5"/>
+  <path d="M88 192 C 116 190, 130 172, 156 174 S 196 150, 222 154 S 262 128, 288 124 S 324 104, 340 100 V200 H88 Z" fill="#00AEEF" fill-opacity=".14"/>
+  <path d="M88 192 C 116 190, 130 172, 156 174 S 196 150, 222 154 S 262 128, 288 124 S 324 104, 340 100" stroke="#00AEEF" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="340" cy="100" r="6" fill="#FFFFFF" stroke="#00AEEF" stroke-width="3"/>
+  <rect x="88" y="214" width="40" height="8" rx="4" fill="#D3DCEB"/>
+  <rect x="140" y="214" width="40" height="8" rx="4" fill="#D3DCEB"/>
+  <rect x="192" y="214" width="40" height="8" rx="4" fill="#D3DCEB"/>
+
+  <!-- connectors -->
+  <path d="M120 262 C 120 248, 104 236, 104 226" stroke="#2E3192" stroke-width="2" stroke-linecap="round" stroke-dasharray="0.1 7"/>
+  <path d="M352 52 C 372 40, 380 30, 380 22" stroke="#2E3192" stroke-width="2" stroke-linecap="round" stroke-dasharray="0.1 7"/>
+
+  <!-- new lead card -->
+  <rect x="12" y="250" width="206" height="62" rx="14" fill="#16185A" fill-opacity=".08" transform="translate(0 6)"/>
+  <rect x="12.5" y="250.5" width="206" height="62" rx="14" fill="#FFFFFF" stroke="#D3DCEB"/>
+  <circle cx="44" cy="281" r="16" fill="#E4E6F7"/>
+  <circle cx="44" cy="276" r="6" fill="#2E3192"/>
+  <path d="M33 291 C 35 284, 53 284, 55 291" fill="#2E3192"/>
+  <rect x="70" y="270" width="72" height="9" rx="4.5" fill="#16185A"/>
+  <rect x="70" y="286" width="104" height="7" rx="3.5" fill="#D3DCEB"/>
+  <rect x="160" y="268" width="44" height="16" rx="8" fill="#00AEEF"/>
+
+  <!-- follow-up done card -->
+  <rect x="300" y="0" width="150" height="62" rx="14" fill="#16185A" fill-opacity=".08" transform="translate(0 6)"/>
+  <rect x="300.5" y="0.5" width="150" height="62" rx="14" fill="#FFFFFF" stroke="#D3DCEB"/>
+  <circle cx="330" cy="31" r="14" fill="#2E3192"/>
+  <path d="M323.5 31.5 L328 36 L337 26.5" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="354" y="22" width="70" height="8" rx="4" fill="#16185A"/>
+  <rect x="354" y="36" width="50" height="7" rx="3.5" fill="#D3DCEB"/>
+</svg>

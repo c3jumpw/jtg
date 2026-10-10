@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 320" fill="none">
+  <!-- One group at the center, specialist agencies around it, and an open spot for the next one -->
+  <circle cx="230" cy="160" r="128" stroke="#D3DCEB" stroke-dasharray="2 6"/>
+  <circle cx="230" cy="160" r="72" stroke="#D3DCEB"/>
+
+  <!-- spokes -->
+  <g stroke="#C6CEE3" stroke-width="1.5">
+    <path d="M230 160 L230 32"/><path d="M230 160 L338 92"/><path d="M230 160 L352 196"/>
+    <path d="M230 160 L294 270"/><path d="M230 160 L166 270"/><path d="M230 160 L108 196"/>
+    <path d="M230 160 L122 92"/><path d="M230 160 L282 104"/><path d="M230 160 L178 104"/>
+    <path d="M230 160 L230 232"/><path d="M230 160 L300 176"/><path d="M230 160 L160 176"/>
+  </g>
+
+  <!-- agencies: each node carries the main colour of its branch -->
+  <g stroke="#D3DCEB">
+    <rect x="212.5" y="14.5" width="36" height="36" rx="10" fill="#FFFFFF"/>
+    <rect x="320.5" y="74.5" width="36" height="36" rx="10" fill="#FFFFFF"/>
+    <rect x="334.5" y="178.5" width="36" height="36" rx="10" fill="#FFFFFF"/>
+    <rect x="276.5" y="252.5" width="36" height="36" rx="10" fill="#FFFFFF"/>
+    <rect x="148.5" y="252.5" width="36" height="36" rx="10" fill="#FFFFFF"/>
+    <rect x="90.5" y="178.5" width="36" height="36" rx="10" fill="#FFFFFF"/>
+    <rect x="104.5" y="74.5" width="36" height="36" rx="10" fill="#FFFFFF"/>
+    <rect x="268.5" y="90.5" width="28" height="28" rx="8" fill="#FFFFFF"/>
+    <rect x="164.5" y="90.5" width="28" height="28" rx="8" fill="#FFFFFF"/>
+    <rect x="216.5" y="218.5" width="28" height="28" rx="8" fill="#FFFFFF"/>
+    <rect x="286.5" y="162.5" width="28" height="28" rx="8" fill="#FFFFFF"/>
+    <rect x="146.5" y="162.5" width="28" height="28" rx="8" fill="#FFFFFF"/>
+  </g>
+  <circle cx="231" cy="33" r="8" fill="#1E88E5"/>
+  <circle cx="339" cy="93" r="8" fill="#F2B33D"/>
+  <circle cx="353" cy="197" r="8" fill="#D7262B"/>
+  <circle cx="295" cy="271" r="8" fill="#E0B4B4"/>
+  <circle cx="167" cy="271" r="8" fill="#FF6A2B"/>
+  <circle cx="109" cy="197" r="8" fill="#7FDDB8"/>
+  <circle cx="123" cy="93" r="8" fill="#5FD52A"/>
+  <circle cx="283" cy="105" r="6" fill="#EE2B24"/>
+  <circle cx="179" cy="105" r="6" fill="#7A7A7A"/>
+  <circle cx="231" cy="233" r="6" fill="#16185A"/>
+  <circle cx="301" cy="177" r="6" fill="#FFA000"/>
+  <circle cx="161" cy="177" r="6" fill="#2196F3"/>
+
+  <!-- the next agency -->
+  <path d="M376 54 L400 40" stroke="#00AEEF" stroke-width="1.5" stroke-dasharray="3 4"/>
+  <rect x="396.5" y="16.5" width="36" height="36" rx="10" fill="#FFFFFF" stroke="#00AEEF" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <path d="M414.5 27 V42 M407 34.5 H422" stroke="#00AEEF" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- the group -->
+  <circle cx="230" cy="160" r="40" fill="#2E3192"/>
+  <g transform="translate(206 140)">
+    <path d="M0 20 L48 0 L32 40 Z" fill="#FFFFFF"/>
+    <path d="M32 40 L48 0 L20 30 Z" fill="#00AEEF"/>
+    <path d="M20 30 L24 46 L32 40 Z" fill="#C3C7EC"/>
+  </g>
+</svg>

@@ -55,6 +55,7 @@
             <a class="btn btn--primary" href="#contact">Start a project</a>
             <a class="link-quiet" href="#agencies">Browse our agencies</a>
           </div>
+          <img class="hero__flight" src="/assets/illustrations/flight.svg" alt="" width="520" height="170">
         </div>
 
         <div class="finder" id="finder">
@@ -63,27 +64,27 @@
           <div class="finder__group" role="group" aria-labelledby="finder-business">
             <p class="finder__label" id="finder-business">Your business</p>
             <div class="chips">
-              <button type="button" class="chip" data-match="retail" aria-pressed="false">Retail or ecommerce</button>
-              <button type="button" class="chip" data-match="service" aria-pressed="false">Growing service business</button>
-              <button type="button" class="chip" data-match="startup" aria-pressed="false">New startup</button>
-              <button type="button" class="chip" data-match="hospitality" aria-pressed="false">Restaurant, bar or lounge</button>
-              <button type="button" class="chip" data-match="events" aria-pressed="false">Events or promotions</button>
-              <button type="button" class="chip" data-match="beauty" aria-pressed="false">Beauty business</button>
-              <button type="button" class="chip" data-match="education" aria-pressed="false">School, academy or daycare</button>
-              <button type="button" class="chip" data-match="nonprofit" aria-pressed="false">Nonprofit or community group</button>
-              <button type="button" class="chip" data-match="gov" aria-pressed="false">Government contractor</button>
-              <button type="button" class="chip" data-match="consulting" aria-pressed="false">Consulting practice</button>
+              <button type="button" class="chip" data-match="retail" aria-pressed="false"><svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons.svg#i-store"></use></svg><span>Retail or ecommerce</span></button>
+              <button type="button" class="chip" data-match="service" aria-pressed="false"><svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons.svg#i-briefcase-business"></use></svg><span>Growing service business</span></button>
+              <button type="button" class="chip" data-match="startup" aria-pressed="false"><svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons.svg#i-rocket"></use></svg><span>New startup</span></button>
+              <button type="button" class="chip" data-match="hospitality" aria-pressed="false"><svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons.svg#i-utensils-crossed"></use></svg><span>Restaurant, bar or lounge</span></button>
+              <button type="button" class="chip" data-match="events" aria-pressed="false"><svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons.svg#i-party-popper"></use></svg><span>Events or promotions</span></button>
+              <button type="button" class="chip" data-match="beauty" aria-pressed="false"><svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons.svg#i-sparkles"></use></svg><span>Beauty business</span></button>
+              <button type="button" class="chip" data-match="education" aria-pressed="false"><svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons.svg#i-graduation-cap"></use></svg><span>School, academy or daycare</span></button>
+              <button type="button" class="chip" data-match="nonprofit" aria-pressed="false"><svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons.svg#i-heart-handshake"></use></svg><span>Nonprofit or community group</span></button>
+              <button type="button" class="chip" data-match="gov" aria-pressed="false"><svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons.svg#i-landmark"></use></svg><span>Government contractor</span></button>
+              <button type="button" class="chip" data-match="consulting" aria-pressed="false"><svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons.svg#i-presentation"></use></svg><span>Consulting practice</span></button>
             </div>
           </div>
 
           <div class="finder__group" role="group" aria-labelledby="finder-need">
             <p class="finder__label" id="finder-need">Or what you need</p>
             <div class="chips">
-              <button type="button" class="chip" data-match="eventdesign" aria-pressed="false">Designs for an event</button>
-              <button type="button" class="chip" data-match="video" aria-pressed="false">Video content</button>
-              <button type="button" class="chip" data-match="social" aria-pressed="false">Social media management</button>
-              <button type="button" class="chip" data-match="whitelabel" aria-pressed="false">White-label creative</button>
-              <button type="button" class="chip" data-match="community" aria-pressed="false">A founder community</button>
+              <button type="button" class="chip" data-match="eventdesign" aria-pressed="false"><svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons.svg#i-palette"></use></svg><span>Designs for an event</span></button>
+              <button type="button" class="chip" data-match="video" aria-pressed="false"><svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons.svg#i-video"></use></svg><span>Video content</span></button>
+              <button type="button" class="chip" data-match="social" aria-pressed="false"><svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons.svg#i-megaphone"></use></svg><span>Social media management</span></button>
+              <button type="button" class="chip" data-match="whitelabel" aria-pressed="false"><svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons.svg#i-layers"></use></svg><span>White-label creative</span></button>
+              <button type="button" class="chip" data-match="community" aria-pressed="false"><svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons.svg#i-users-round"></use></svg><span>A founder community</span></button>
             </div>
           </div>
 
@@ -97,28 +98,35 @@
     <!-- What we build -->
     <section class="section" id="services" aria-labelledby="services-title">
       <div class="wrap">
-        <div class="section__head">
+        <div class="section__head section__head--art">
+          <div>
           <h2 id="services-title" class="section__title">What we build</h2>
           <p class="section__intro">Every branch works from the same playbook: put systems in place so growth stops depending on the owner doing everything. These are the four kinds of work behind it.</p>
+          </div>
+          <img class="section__art" src="/assets/illustrations/systems.svg" alt="" width="460" height="320" loading="lazy">
         </div>
 
         <div class="capabilities">
           <article class="capability">
+            <span class="capability__icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons.svg#i-target"></use></svg></span>
             <h3 class="capability__title">Marketing and lead generation</h3>
             <p>Campaigns, funnels and follow-up that bring customers in consistently, instead of in bursts when someone has time.</p>
             <p class="capability__teams"><span class="visually-hidden">Delivered by: </span><a class="tag" href="#branch-f5">Fortune 5 Agency</a><a class="tag" href="#branch-bb">Bar Boost</a><a class="tag" href="#branch-blm">Blloom</a><a class="tag" href="#branch-acad">Acad Branding</a></p>
           </article>
           <article class="capability">
+            <span class="capability__icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons.svg#i-workflow"></use></svg></span>
             <h3 class="capability__title">Operations and workflows</h3>
             <p>The processes, tools and automations that let a business run day to day without every decision going through the owner.</p>
             <p class="capability__teams"><span class="visually-hidden">Delivered by: </span><a class="tag" href="#branch-f5">Fortune 5 Agency</a><a class="tag" href="#branch-bms">Build My Start-Up</a><a class="tag" href="#branch-acad">Acad Branding</a><a class="tag" href="#branch-sd">Seeder</a></p>
           </article>
           <article class="capability">
+            <span class="capability__icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons.svg#i-monitor-smartphone"></use></svg></span>
             <h3 class="capability__title">Brand and digital presence</h3>
             <p>Identity, websites and design that make a business look as capable as it actually is, to customers, funders and buyers.</p>
             <p class="capability__teams"><span class="visually-hidden">Delivered by: </span><a class="tag" href="#branch-bms">Build My Start-Up</a><a class="tag" href="#branch-bc">BC Agency</a><a class="tag" href="#branch-pd">Party Designers</a><a class="tag" href="#branch-blk">Blanket Label</a><a class="tag" href="#branch-sd">Seeder</a></p>
           </article>
           <article class="capability">
+            <span class="capability__icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons.svg#i-clapperboard"></use></svg></span>
             <h3 class="capability__title">Content and social</h3>
             <p>Video and social content that's planned, produced and posted on a schedule, so showing up online stops slipping down the list.</p>
             <p class="capability__teams"><span class="visually-hidden">Delivered by: </span><a class="tag" href="#branch-mbc">Media BC</a><a class="tag" href="#branch-jw">Jumpwebs</a><a class="tag" href="#branch-f5ceo">Fortune 5 CEO</a></p>
@@ -130,9 +138,12 @@
     <!-- Agencies -->
     <section class="section section--mist" id="agencies" aria-labelledby="agencies-title">
       <div class="wrap">
-        <div class="section__head">
+        <div class="section__head section__head--art">
+          <div>
           <h2 id="agencies-title" class="section__title">Specialist agencies, one group</h2>
           <p class="section__intro">Each branch is built around one kind of business, so the team you work with already knows your customers and your busy season. Behind them, JTG shares the same systems, tools and people, and a business can move between branches as it grows.</p>
+          </div>
+          <img class="section__art" src="/assets/illustrations/network.svg" alt="" width="460" height="320" loading="lazy">
         </div>
 
         <div class="agency-group">
@@ -153,7 +164,7 @@
                 </details>
               </div>
               <div class="agency__actions">
-                <a class="agency__site" href="https://befortune5.com" target="_blank" rel="noopener">befortune5.com</a>
+                <a class="agency__site" href="https://befortune5.com" target="_blank" rel="noopener">befortune5.com<svg class="icon icon--xs" aria-hidden="true" focusable="false"><use href="/assets/icons.svg#i-external-link"></use></svg></a>
                 <a class="agency__ask" href="#contact" data-branch="f5">Talk to this team</a>
               </div>
             </li>
@@ -169,7 +180,7 @@
                 </details>
               </div>
               <div class="agency__actions">
-                <a class="agency__site" href="https://buildmystart-up.com" target="_blank" rel="noopener">buildmystart-up.com</a>
+                <a class="agency__site" href="https://buildmystart-up.com" target="_blank" rel="noopener">buildmystart-up.com<svg class="icon icon--xs" aria-hidden="true" focusable="false"><use href="/assets/icons.svg#i-external-link"></use></svg></a>
                 <a class="agency__ask" href="#contact" data-branch="bms">Talk to this team</a>
               </div>
             </li>
@@ -224,7 +235,7 @@
                 </details>
               </div>
               <div class="agency__actions">
-                <a class="agency__site" href="https://wearepartydesigners.com" target="_blank" rel="noopener">wearepartydesigners.com</a>
+                <a class="agency__site" href="https://wearepartydesigners.com" target="_blank" rel="noopener">wearepartydesigners.com<svg class="icon icon--xs" aria-hidden="true" focusable="false"><use href="/assets/icons.svg#i-external-link"></use></svg></a>
                 <a class="agency__ask" href="#contact" data-branch="pd">Talk to this team</a>
               </div>
             </li>
@@ -339,7 +350,7 @@
                 </details>
               </div>
               <div class="agency__actions">
-                <a class="agency__site" href="https://fortune5ceo.com" target="_blank" rel="noopener">fortune5ceo.com</a>
+                <a class="agency__site" href="https://fortune5ceo.com" target="_blank" rel="noopener">fortune5ceo.com<svg class="icon icon--xs" aria-hidden="true" focusable="false"><use href="/assets/icons.svg#i-external-link"></use></svg></a>
                 <a class="agency__ask" href="#contact" data-branch="f5ceo">Talk to this team</a>
               </div>
             </li>
@@ -378,11 +389,16 @@
 
     <!-- Contact -->
     <section class="contact" id="contact" aria-labelledby="contact-title">
+      <img class="contact__art" src="/assets/illustrations/send.svg" alt="" width="520" height="300" loading="lazy">
       <div class="wrap contact__inner">
         <div class="contact__copy">
           <h2 id="contact-title" class="contact__title">Tell us about your business</h2>
-          <p>A few details is all it takes. We'll read it, match you with the right team and reply by email.</p>
-          <p>Not sure which agency fits? Leave the team set to "Help me choose" and we'll point you in the right direction.</p>
+          <p>A few details is all it takes to get started.</p>
+          <ul class="contact__points">
+            <li><span class="contact__point-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons.svg#i-mail-open"></use></svg></span><span>We read every message and reply by email.</span></li>
+            <li><span class="contact__point-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons.svg#i-compass"></use></svg></span><span>Not sure which agency fits? Leave the team on "Help me choose" and we'll match you.</span></li>
+            <li><span class="contact__point-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons.svg#i-layers"></use></svg></span><span>Need more than one team? You still get one point of contact.</span></li>
+          </ul>
         </div>
 
         <form class="form" id="contact-form" action="/api/contact" method="post" novalidate>
@@ -433,7 +449,7 @@
             <input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off">
           </div>
           <p class="form__status" id="form-status" role="status" aria-live="polite"></p>
-          <button class="btn btn--cyan" type="submit" id="form-submit">Send message</button>
+          <button class="btn btn--cyan" type="submit" id="form-submit"><svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons.svg#i-send"></use></svg><span>Send message</span></button>
         </form>
       </div>
     </section>

@@ -170,6 +170,7 @@
   var form = document.getElementById('contact-form');
   var status = document.getElementById('form-status');
   var submit = document.getElementById('form-submit');
+  var submitLabel = submit ? (submit.querySelector('span') || submit) : null;
   var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
   function setStatus(msg, isError) {
@@ -213,7 +214,7 @@
       }
 
       submit.disabled = true;
-      submit.textContent = 'Sending…';
+      submitLabel.textContent = 'Sending…';
       setStatus('');
 
       fetch('/api/contact', {
@@ -235,7 +236,7 @@
         })
         .catch(function (err) {
           submit.disabled = false;
-          submit.textContent = 'Send message';
+          submitLabel.textContent = 'Send message';
           setStatus(err && err.message && err.message !== 'Failed to fetch'
             ? err.message
             : 'The message didn’t send. Check your connection and try again.', true);

@@ -10,7 +10,9 @@ jtg-parent/            ← Vercel project "jtg-jtg-parent", Root Directory = jtg
 ├─ js/app.js           finder data/matching + contact form submit
 ├─ api/contact.js      POST /api/contact → Resend
 ├─ assets/             logo, light logo, icons, share image, self-hosted fonts
-│  └─ brands/          web-sized branch logos (generated from media/)
+│  ├─ brands/          web-sized branch logos (generated from media/)
+│  ├─ illustrations/   brand illustrations (flight path, systems, agency network, contact plane)
+│  └─ icons.svg        icon sprite (Lucide, ISC license)
 └─ media/              original uploads (JTG + branch logos)
 ```
 
@@ -39,5 +41,8 @@ Set these in Vercel → jtg-jtg-parent → Settings → Environment Variables (P
 - Branch logos: the site uses the trimmed copies in `assets/brands/<key>.png` (Party Designers is `pd.jpg`).
   To swap one, replace that file (max ~480×200). ACAD and BC Agency sit on dark tiles because their logos are white;
   that's the `tile: 'dark'` flag in `js/app.js` and the `logo-tile--dark` class in `index.html`.
+- Icons: `assets/icons.svg` holds the Lucide icons the page uses, referenced as
+  `<svg class="icon"><use href="/assets/icons.svg#i-NAME"></use></svg>`. To add one, copy its paths from
+  lucide.dev into a new `<symbol id="i-NAME" viewBox="0 0 24 24">` in the sprite.
 - When a branch gets a website, add the link in its directory row, in `BRANCHES[key].site` in `js/app.js`,
   and in the footer if wanted.

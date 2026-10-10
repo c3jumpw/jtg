@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 300" fill="none">
+  <!-- Outlined paper plane on its way out, for the contact section background -->
+  <path d="M8 286 C 96 290, 140 214, 222 222 S 330 262, 370 196"
+        stroke="#FFFFFF" stroke-opacity=".22" stroke-width="3" stroke-linecap="round" stroke-dasharray="0.1 12"/>
+  <g transform="translate(360 40)" stroke="#FFFFFF" stroke-opacity=".28" stroke-width="2.5" stroke-linejoin="round">
+    <path d="M0 96 L150 0 L104 150 Z"/>
+    <path d="M104 150 L150 0 L64 112 Z" fill="#00AEEF" fill-opacity=".22"/>
+    <path d="M64 112 L76 162 L104 150"/>
+  </g>
+</svg>
