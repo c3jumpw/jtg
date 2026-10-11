@@ -83,6 +83,41 @@
     return n;
   }
 
+  /* ---------- Mobile menu ---------- */
+  var header = document.querySelector('.site-header');
+  var navToggle = document.querySelector('.nav-toggle');
+  var nav = document.getElementById('site-nav');
+
+  function setMenu(open, refocus) {
+    header.classList.toggle('is-open', open);
+    navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (!open && refocus) navToggle.focus();
+  }
+  function menuOpen() { return header.classList.contains('is-open'); }
+
+  if (header && navToggle && nav) {
+    navToggle.addEventListener('click', function () { setMenu(!menuOpen()); });
+    // Picking a section closes the panel so the page can scroll to it.
+    nav.addEventListener('click', function (e) {
+      if (e.target.closest && e.target.closest('a')) setMenu(false);
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && menuOpen()) setMenu(false, true);
+    });
+    // Tapping the page or tabbing out of the header closes it too.
+    document.addEventListener('click', function (e) {
+      if (menuOpen() && !header.contains(e.target)) setMenu(false);
+    });
+    header.addEventListener('focusout', function (e) {
+      if (menuOpen() && e.relatedTarget && !header.contains(e.relatedTarget)) setMenu(false);
+    });
+    // Back to desktop width: the nav is inline again, so reset the panel state.
+    var wide = window.matchMedia('(min-width: 761px)');
+    var onWide = function (mq) { if (mq.matches) setMenu(false); };
+    if (wide.addEventListener) wide.addEventListener('change', onWide);
+    else if (wide.addListener) wide.addListener(onWide);
+  }
+
   /* ---------- Finder ---------- */
   var chips = document.querySelectorAll('.chip[data-match]');
   var result = document.getElementById('finder-result');

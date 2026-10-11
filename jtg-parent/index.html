@@ -33,12 +33,17 @@
       <a class="brand" href="/" aria-label="Jump Tech Group home">
         <img src="/assets/logo.png" alt="Jump Tech Group" width="127" height="40">
       </a>
-      <nav class="site-nav" aria-label="Main">
-        <a href="#services">What we build</a>
-        <a href="#agencies">Our agencies</a>
-        <a href="#process">How it works</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Menu">
+        <svg class="icon nav-toggle__open" aria-hidden="true" focusable="false"><use href="/assets/icons.svg#i-menu"></use></svg>
+        <svg class="icon nav-toggle__close" aria-hidden="true" focusable="false"><use href="/assets/icons.svg#i-x"></use></svg>
+      </button>
+      <nav class="site-nav" id="site-nav" aria-label="Main">
+        <a href="#services">What we build<svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons.svg#i-arrow-right"></use></svg></a>
+        <a href="#agencies">Our agencies<svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons.svg#i-arrow-right"></use></svg></a>
+        <a href="#process">How it works<svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/icons.svg#i-arrow-right"></use></svg></a>
+        <a class="btn btn--primary site-nav__cta" href="#contact">Start a project</a>
       </nav>
-      <a class="btn btn--primary btn--small" href="#contact">Start a project</a>
+      <a class="btn btn--primary btn--small site-header__cta" href="#contact">Start a project</a>
     </div>
   </header>
 
