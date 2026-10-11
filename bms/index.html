@@ -18,34 +18,67 @@
 
   <link rel="preload" href="assets/fonts/montserrat-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/style.css">
+  <!-- Set before first paint so the mobile menu starts closed rather than flashing open. -->
+  <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
+
+<!-- Icons: Lucide v1.55.0 (ISC License, lucide.dev). Used via <svg class="ic"><use href="#i-NAME"/></svg>. -->
+<svg class="sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></symbol>
+  <symbol id="i-search-check" viewBox="0 0 24 24"><path d="m8 11 2 2 4-4" /><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></symbol>
+  <symbol id="i-circle-dollar-sign" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8" /><path d="M12 18V6" /></symbol>
+  <symbol id="i-boxes" viewBox="0 0 24 24"><path d="M2.97 12.92A2 2 0 0 0 2 14.63v3.24a2 2 0 0 0 .97 1.71l3 1.8a2 2 0 0 0 2.06 0L12 19v-5.5l-5-3-4.03 2.42Z" /><path d="m7 16.5-4.74-2.85" /><path d="m7 16.5 5-3" /><path d="M7 16.5v5.17" /><path d="M12 13.5V19l3.97 2.38a2 2 0 0 0 2.06 0l3-1.8a2 2 0 0 0 .97-1.71v-3.24a2 2 0 0 0-.97-1.71L17 10.5l-5 3Z" /><path d="m17 16.5-5-3" /><path d="m17 16.5 4.74-2.85" /><path d="M17 16.5v5.17" /><path d="M7.97 4.42A2 2 0 0 0 7 6.13v4.37l5 3 5-3V6.13a2 2 0 0 0-.97-1.71l-3-1.8a2 2 0 0 0-2.06 0l-3 1.8Z" /><path d="M12 8 7.26 5.15" /><path d="m12 8 4.74-2.85" /><path d="M12 13.5V8" /></symbol>
+  <symbol id="i-rocket" viewBox="0 0 24 24"><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" /><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09" /><path d="M9 12a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.4 22.4 0 0 1-4 2z" /><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 .05 5 .05" /></symbol>
+  <symbol id="i-clipboard-pen" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v2" /><path d="M21.34 15.664a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z" /><path d="M8 22H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" /><rect x="8" y="2" width="8" height="4" rx="1" /></symbol>
+  <symbol id="i-video" viewBox="0 0 24 24"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5" /><rect x="2" y="6" width="14" height="12" rx="2" /></symbol>
+  <symbol id="i-settings-2" viewBox="0 0 24 24"><path d="M14 17H5" /><path d="M19 7h-9" /><circle cx="17" cy="17" r="3" /><circle cx="7" cy="7" r="3" /></symbol>
+  <symbol id="i-circle-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><path d="m16 9-5.5 5.5L8 12" /></symbol>
+  <symbol id="i-calendar-check" viewBox="0 0 24 24"><path d="M8 2v3" /><path d="M16 2v3" /><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18" /><path d="m9 15 2 2 4-4" /></symbol>
+  <symbol id="i-trending-up" viewBox="0 0 24 24"><path d="M16 7h6v6" /><path d="m22 7-8.5 8.5-5-5L2 17" /></symbol>
+</svg>
+
+<a class="skip-link" href="#main">Skip to content</a>
 
 <header class="site-header">
   <div class="wrap">
     <a class="brand" href="/" aria-label="Build My Startup home">
-      <img src="assets/logo.png" alt="Build My Startup" width="200">
+      <img src="assets/logo.png" alt="Build My Startup" width="124" height="40">
     </a>
-    <nav class="nav" aria-label="Primary">
-      <a href="#who-its-for">Who it’s for</a>
-      <a href="#services">What we do</a>
-      <a href="#process">How it works</a>
-    </nav>
-    <a class="btn btn-primary header-cta" href="https://start.buildmystart-up.com/">
-      Start your build <span class="arrow" aria-hidden="true">→</span>
-    </a>
+
+    <button class="nav-toggle" type="button" aria-controls="site-menu" aria-expanded="false" aria-label="Menu">
+      <span class="nav-toggle-bars" aria-hidden="true"><span></span><span></span><span></span></span>
+    </button>
+
+    <div class="menu" id="site-menu">
+      <nav class="nav" aria-label="Primary">
+        <a href="#who-its-for">Who it’s for</a>
+        <a href="#services">What we do</a>
+        <a href="#process">How it works</a>
+      </nav>
+      <div class="menu-ctas">
+        <a class="btn btn-ghost menu-only" href="#book" data-book-cta>
+          <svg class="ic" aria-hidden="true"><use href="#i-calendar-check"/></svg> Schedule a call
+        </a>
+        <a class="btn btn-primary" href="https://start.buildmystart-up.com/">
+          Start your build <svg class="ic arrow" aria-hidden="true"><use href="#i-arrow-right"/></svg>
+        </a>
+      </div>
+    </div>
   </div>
 </header>
+<div class="menu-scrim" hidden></div>
 
-<main>
+<main id="main" tabindex="-1">
 
   <!-- HERO -->
   <section class="hero">
     <div class="wrap">
       <div>
         <span class="eyebrow">For founders past the idea stage</span>
-        <h1 style="margin-top:20px">
-          Take your business <br>
+        <h1>
+          Take your business
           from <span class="mark">startup</span> to a
           <span class="accent">machine</span>.
         </h1>
@@ -55,17 +88,34 @@
         </p>
         <div class="actions">
           <a class="btn btn-primary" href="https://start.buildmystart-up.com/">
-            Start your build <span class="arrow" aria-hidden="true">→</span>
+            Start your build <svg class="ic arrow" aria-hidden="true"><use href="#i-arrow-right"/></svg>
           </a>
-          <a class="btn btn-ghost" href="#book">
-            Schedule a call with a specialist
+          <a class="btn btn-ghost" href="#book" data-book-cta>
+            <svg class="ic" aria-hidden="true"><use href="#i-calendar-check"/></svg> Schedule a call<span class="long">&nbsp;with a specialist</span>
           </a>
         </div>
         <p class="under">Free to start. About 10 minutes of honest answers gets you a specialist who’s already read them.</p>
       </div>
+
+      <!-- The toolbox mark, with the four things we build ticked off beside it
+           and a small growth chart. Illustrative only — no figures. -->
       <div class="hero-art" aria-hidden="true">
         <div class="stack"></div>
         <img class="mark" src="assets/mark.png" alt="">
+        <div class="float float-build">
+          <span class="float-label">Your build</span>
+          <div class="row done"><svg class="ic"><use href="#i-circle-check"/></svg>Brand</div>
+          <div class="row done"><svg class="ic"><use href="#i-circle-check"/></svg>Offer</div>
+          <div class="row done"><svg class="ic"><use href="#i-circle-check"/></svg>Systems</div>
+          <div class="row doing"><span class="dot"></span>Marketing<i></i></div>
+        </div>
+        <div class="float float-growth">
+          <div class="float-head">
+            <span class="float-label">Growth</span>
+            <svg class="ic"><use href="#i-trending-up"/></svg>
+          </div>
+          <div class="bars"><i style="height:30%"></i><i style="height:44%"></i><i style="height:40%"></i><i style="height:62%"></i><i style="height:78%"></i><i class="hi" style="height:100%"></i></div>
+        </div>
       </div>
     </div>
   </section>
@@ -74,31 +124,42 @@
   <section id="who-its-for" class="for-startups">
     <div class="wrap">
       <div class="grid">
-        <div class="section-head" style="margin:0">
-          <span class="eyebrow" style="background:rgba(224,160,40,.18); color:var(--gold)">Built for startups</span>
-          <h2 style="margin-top:14px">You’ve got the <span style="color:var(--gold)">idea</span>. We’ll give you the <span style="color:var(--gold)">structure</span> to win.</h2>
-          <p style="color:#C6CBD6;margin-top:16px">
+        <div class="section-head">
+          <span class="eyebrow eyebrow-gold">Built for startups</span>
+          <h2>You’ve got the <span class="gold">idea</span>. We’ll give you the <span class="gold">structure</span> to win.</h2>
+          <p>
             Most startups don’t fail from a lack of hustle. They stall because the basics
             were never put in place. We build the ones every business needs.
           </p>
+          <!-- From scattered effort to a structured climb. -->
+          <figure class="hustle" aria-hidden="true">
+            <svg viewBox="0 0 360 96" fill="none">
+              <path class="scribble" d="M6 62 C 18 22, 32 88, 46 48 S 70 12, 80 56 S 104 84, 114 36 S 138 70, 150 52 S 162 40, 172 58"/>
+              <path class="link" d="M180 62 H198"/>
+              <path class="stairs" d="M206 74 H234 V58 H262 V42 H290 V26 H322"/>
+              <circle class="peak" cx="334" cy="26" r="7"/>
+              <text x="6" y="94">Hustle</text>
+              <text x="354" y="94" text-anchor="end">System</text>
+            </svg>
+          </figure>
         </div>
-        <ul>
-          <li>
-            <span class="check" aria-hidden="true">✓</span>
+        <ul class="checks">
+          <li data-reveal>
+            <span class="check" aria-hidden="true"><svg class="ic"><use href="#i-check"/></svg></span>
             <div>
               <strong>Nail the basics before you scale them</strong>
               <span>Positioning, offer, and process — the pieces every real business runs on.</span>
             </div>
           </li>
-          <li>
-            <span class="check" aria-hidden="true">✓</span>
+          <li data-reveal>
+            <span class="check" aria-hidden="true"><svg class="ic"><use href="#i-check"/></svg></span>
             <div>
               <strong>Get past the “hustle” trap</strong>
               <span>Move from doing everything yourself to a business that runs on systems.</span>
             </div>
           </li>
-          <li>
-            <span class="check" aria-hidden="true">✓</span>
+          <li data-reveal>
+            <span class="check" aria-hidden="true"><svg class="ic"><use href="#i-check"/></svg></span>
             <div>
               <strong>Start on a foundation you don’t have to redo</strong>
               <span>Build it right the first time so you’re not tearing it up at year two.</span>
@@ -114,27 +175,39 @@
     <div class="wrap">
       <div class="section-head">
         <span class="eyebrow">What we do</span>
-        <h2 style="margin-top:14px">Everything you need to turn ideas into a business that runs.</h2>
+        <h2>Everything you need to turn ideas into a business that runs.</h2>
         <p>Four core services, delivered together so nothing falls between the cracks.</p>
       </div>
       <div class="cards">
-        <article class="card">
-          <div class="num">01</div>
+        <article class="card" data-reveal>
+          <div class="card-top">
+            <span class="card-icon" aria-hidden="true"><svg class="ic"><use href="#i-search-check"/></svg></span>
+            <span class="num">01</span>
+          </div>
           <h3>Business auditing</h3>
           <p>An honest look at where you are today: what’s working, what’s leaking, and what to fix first.</p>
         </article>
-        <article class="card">
-          <div class="num">02</div>
+        <article class="card" data-reveal>
+          <div class="card-top">
+            <span class="card-icon" aria-hidden="true"><svg class="ic"><use href="#i-circle-dollar-sign"/></svg></span>
+            <span class="num">02</span>
+          </div>
           <h3>Profit strategy consulting</h3>
           <p>Pricing, offers and margins built around a business model that actually pays you.</p>
         </article>
-        <article class="card">
-          <div class="num">03</div>
+        <article class="card" data-reveal>
+          <div class="card-top">
+            <span class="card-icon" aria-hidden="true"><svg class="ic"><use href="#i-boxes"/></svg></span>
+            <span class="num">03</span>
+          </div>
           <h3>Systems creation</h3>
           <p>Repeatable processes for the work you’re doing every week — from sales to delivery.</p>
         </article>
-        <article class="card">
-          <div class="num">04</div>
+        <article class="card" data-reveal>
+          <div class="card-top">
+            <span class="card-icon" aria-hidden="true"><svg class="ic"><use href="#i-rocket"/></svg></span>
+            <span class="num">04</span>
+          </div>
           <h3>Marketing &amp; growth planning</h3>
           <p>A clear plan for how new customers find you, with a structure your team can run.</p>
         </article>
@@ -147,25 +220,34 @@
     <div class="wrap">
       <div class="section-head">
         <span class="eyebrow">How it works</span>
-        <h2 style="margin-top:14px">Three steps from where you are to a business that runs itself.</h2>
+        <h2>Three steps from where you are to a business that runs itself.</h2>
       </div>
-      <div class="steps">
-        <div class="step">
-          <div class="n">1</div>
+      <ol class="steps">
+        <li class="step" data-reveal>
+          <div class="step-top">
+            <span class="n">1</span>
+            <svg class="ic step-icon" aria-hidden="true"><use href="#i-clipboard-pen"/></svg>
+          </div>
           <h3>Start your build</h3>
           <p>Answer a few honest questions about your business — about 10 minutes, mostly taps.</p>
-        </div>
-        <div class="step">
-          <div class="n">2</div>
+        </li>
+        <li class="step" data-reveal>
+          <div class="step-top">
+            <span class="n">2</span>
+            <svg class="ic step-icon" aria-hidden="true"><use href="#i-video"/></svg>
+          </div>
           <h3>Meet a specialist</h3>
           <p>A specialist reads every answer before you talk, so the call is strategy, not introductions.</p>
-        </div>
-        <div class="step">
-          <div class="n">3</div>
+        </li>
+        <li class="step" data-reveal>
+          <div class="step-top">
+            <span class="n">3</span>
+            <svg class="ic step-icon" aria-hidden="true"><use href="#i-settings-2"/></svg>
+          </div>
           <h3>Build the machine</h3>
           <p>We put the brand, offer, systems and marketing in place — one structured, thriving business.</p>
-        </div>
-      </div>
+        </li>
+      </ol>
     </div>
   </section>
 
@@ -173,22 +255,23 @@
   <section id="book" class="cta-band">
     <div class="wrap">
       <div>
-        <span class="eyebrow" style="background:rgba(255,255,255,.14); color:#fff">Ready when you are</span>
-        <h2 style="margin-top:14px">Two ways to get started.</h2>
+        <span class="eyebrow eyebrow-on-navy">Ready when you are</span>
+        <h2>Two ways to get started.</h2>
         <p>Fill out the build questionnaire on your own time, or book a call with a specialist first — either works.</p>
         <div class="actions">
           <a class="btn btn-light" href="https://start.buildmystart-up.com/">
-            Start your build <span class="arrow" aria-hidden="true">→</span>
+            Start your build <svg class="ic arrow" aria-hidden="true"><use href="#i-arrow-right"/></svg>
           </a>
-          <a class="btn btn-ghost" href="#book" style="border-color:#fff;color:#fff" data-book-cta>
-            Schedule a call with a specialist
+          <a class="btn btn-ghost on-navy" href="#book" data-book-cta>
+            <svg class="ic" aria-hidden="true"><use href="#i-calendar-check"/></svg> Schedule a call<span class="long">&nbsp;with a specialist</span>
           </a>
         </div>
       </div>
-      <div class="stat">
-        Free
-        <small>The questionnaire and the strategy call. No commitment.</small>
-      </div>
+      <ul class="assurances" aria-label="What it costs">
+        <li><svg class="ic" aria-hidden="true"><use href="#i-circle-check"/></svg> Free build questionnaire</li>
+        <li><svg class="ic" aria-hidden="true"><use href="#i-circle-check"/></svg> Free strategy call</li>
+        <li><svg class="ic" aria-hidden="true"><use href="#i-circle-check"/></svg> No commitment</li>
+      </ul>
     </div>
   </section>
 
@@ -198,10 +281,10 @@
   <div class="wrap">
     <div>
       <a class="brand" href="/" aria-label="Build My Startup home">
-        <img src="assets/logo.png" alt="Build My Startup">
+        <img src="assets/logo.png" alt="Build My Startup" width="136" height="44">
       </a>
       <p>Turning startups into structured, thriving businesses. Brand, offer, systems and marketing built to scale.</p>
-      <div class="parent">A JUMP TECH GROUP COMPANY</div>
+      <div class="parent">© <span id="year">2026</span> Jump Tech Group, LLC. Build My Startup is a Jump Tech Group company.</div>
     </div>
     <div>
       <h4>Site</h4>
@@ -221,17 +304,27 @@
   </div>
 </footer>
 
+<!-- Phone-only: takes over from the hero buttons once they scroll away. -->
+<div class="mobile-cta" inert>
+  <a class="btn btn-ghost" href="#book" data-book-cta aria-label="Schedule a call">
+    <svg class="ic" aria-hidden="true"><use href="#i-calendar-check"/></svg> <span>Call</span>
+  </a>
+  <a class="btn btn-primary" href="https://start.buildmystart-up.com/">
+    Start your build <svg class="ic arrow" aria-hidden="true"><use href="#i-arrow-right"/></svg>
+  </a>
+</div>
+
 <script>
-  // Both "Schedule a call" links point here until the booking page exists. Once
-  // One switch for every "Book a call" link on the page.
-  // updates every button on the page.
+  // One switch for every "Schedule a call" / "Book a call" link on the page.
   var BOOK_URL = 'https://book.buildmystart-up.com';
   if (BOOK_URL) {
-    document.querySelectorAll('[data-book-cta], .btn.btn-ghost[href="#book"]').forEach(function (a) {
+    document.querySelectorAll('[data-book-cta]').forEach(function (a) {
       a.setAttribute('href', BOOK_URL);
     });
   }
+  document.getElementById('year').textContent = new Date().getFullYear();
 </script>
+<script src="js/site.js" defer></script>
 
 </body>
 </html>

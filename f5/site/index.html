@@ -19,33 +19,70 @@
 
   <link rel="preload" href="assets/fonts/montserrat-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/style.css">
+  <!-- Set before first paint so the mobile menu starts closed rather than flashing open. -->
+  <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
+
+<!-- Icons: Lucide v1.55.0 (ISC License, lucide.dev). Used via <svg class="ic"><use href="#i-NAME"/></svg>. -->
+<svg class="sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></symbol>
+  <symbol id="i-workflow" viewBox="0 0 24 24"><rect width="8" height="8" x="3" y="3" rx="2" /><path d="M7 11v4a2 2 0 0 0 2 2h4" /><rect width="8" height="8" x="13" y="13" rx="2" /></symbol>
+  <symbol id="i-crosshair" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><line x1="22" x2="18" y1="12" y2="12" /><line x1="6" x2="2" y1="12" y2="12" /><line x1="12" x2="12" y1="6" y2="2" /><line x1="12" x2="12" y1="22" y2="18" /></symbol>
+  <symbol id="i-trending-up" viewBox="0 0 24 24"><path d="M16 7h6v6" /><path d="m22 7-8.5 8.5-5-5L2 17" /></symbol>
+  <symbol id="i-megaphone" viewBox="0 0 24 24"><path d="M11 6a13 13 0 0 0 8.4-2.8A1 1 0 0 1 21 4v12a1 1 0 0 1-1.6.8A13 13 0 0 0 11 14H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z" /><path d="M6 14a12 12 0 0 0 2.4 7.2 2 2 0 0 0 3.2-2.4A8 8 0 0 1 10 14" /><path d="M8 6v8" /></symbol>
+  <symbol id="i-pen-tool" viewBox="0 0 24 24"><path d="m18 13-.654-4.736a4 4 0 00-2.756-3.266l-9.163-2.9a2 2 0 00-2.017.493l-.82.819a2 2 0 00-.492 2.017l2.9 9.163a4 4 0 003.266 2.756L13 18" /><path d="M18.648 12.352a1.205 1.205 0 011.704 0l1.296 1.296a1.205 1.205 0 010 1.704l-6.296 6.296a1.205 1.205 0 01-1.704 0l-1.296-1.296a1.205 1.205 0 010-1.704z" /><path d="m3 3 6.586 6.586" /><circle cx="11" cy="11" r="2" /></symbol>
+  <symbol id="i-cpu" viewBox="0 0 24 24"><path d="M12 20v2" /><path d="M12 2v2" /><path d="M17 20v2" /><path d="M17 2v2" /><path d="M2 12h2" /><path d="M2 17h2" /><path d="M2 7h2" /><path d="M20 12h2" /><path d="M20 17h2" /><path d="M20 7h2" /><path d="M7 20v2" /><path d="M7 2v2" /><rect x="4" y="4" width="16" height="16" rx="2" /><rect x="8" y="8" width="8" height="8" rx="1" /></symbol>
+  <symbol id="i-infinity" viewBox="0 0 24 24"><path d="M6 16c5 0 7-8 12-8a4 4 0 0 1 0 8c-5 0-7-8-12-8a4 4 0 1 0 0 8" /></symbol>
+  <symbol id="i-message-square-quote" viewBox="0 0 24 24"><path d="M14 14a2 2 0 0 0 2-2V8h-2" /><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z" /><path d="M8 14a2 2 0 0 0 2-2V8H8" /></symbol>
+  <symbol id="i-git-merge" viewBox="0 0 24 24"><circle cx="18" cy="18" r="3" /><circle cx="6" cy="6" r="3" /><path d="M6 21V9a9 9 0 0 0 9 9" /></symbol>
+  <symbol id="i-chart-line" viewBox="0 0 24 24"><path d="M3 3v16a2 2 0 0 0 2 2h16" /><path d="m19 9-5 5-4-4-3 3" /></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z" /><path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12" /><path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17" /></symbol>
+  <symbol id="i-funnel" viewBox="0 0 24 24"><path d="M10 20a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 14 21v-7a2 2 0 0 1 .517-1.341L21.74 4.67A1 1 0 0 0 21 3H3a1 1 0 0 0-.742 1.67l7.225 7.989A2 2 0 0 1 10 14z" /></symbol>
+  <symbol id="i-circle-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><path d="m16 9-5.5 5.5L8 12" /></symbol>
+  <symbol id="i-calendar-check" viewBox="0 0 24 24"><path d="M8 2v3" /><path d="M16 2v3" /><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18" /><path d="m9 15 2 2 4-4" /></symbol>
+  <symbol id="i-quote" viewBox="0 0 24 24"><path d="M16 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z" /><path d="M5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z" /></symbol>
+</svg>
+
+<a class="skip-link" href="#main">Skip to content</a>
 
 <header class="site-header">
   <div class="wrap">
     <a class="brand" href="/" aria-label="The Fortune 5 Agency home">
-      <img src="assets/logo-light.png" alt="The Fortune 5 Agency" width="153">
+      <img src="assets/logo-light.png" alt="The Fortune 5 Agency" width="164" height="30">
     </a>
-    <nav class="nav" aria-label="Primary">
-      <a href="#approach">The approach</a>
-      <a href="#team">The team</a>
-      <a href="#what-we-do">What we do</a>
-    </nav>
-    <a class="btn btn-primary header-cta" href="https://discovery.befortune5.com/">
-      Start today <span class="arrow" aria-hidden="true">→</span>
-    </a>
+
+    <button class="nav-toggle" type="button" aria-controls="site-menu" aria-expanded="false" aria-label="Menu">
+      <span class="nav-toggle-bars" aria-hidden="true"><span></span><span></span><span></span></span>
+    </button>
+
+    <div class="menu" id="site-menu">
+      <nav class="nav" aria-label="Primary">
+        <a href="#approach">The approach</a>
+        <a href="#team">The team</a>
+        <a href="#what-we-do">What we do</a>
+      </nav>
+      <div class="menu-ctas">
+        <a class="btn btn-ghost on-dark menu-only" href="#book" data-book-cta>
+          <svg class="ic" aria-hidden="true"><use href="#i-calendar-check"/></svg> Book a call
+        </a>
+        <a class="btn btn-primary" href="https://discovery.befortune5.com/">
+          Start today <svg class="ic arrow" aria-hidden="true"><use href="#i-arrow-right"/></svg>
+        </a>
+      </div>
+    </div>
   </div>
 </header>
+<div class="menu-scrim" hidden></div>
 
-<main>
+<main id="main" tabindex="-1">
 
   <!-- HERO -->
   <section class="hero">
     <div class="wrap">
       <div>
         <span class="eyebrow hero-eyebrow">For businesses ready to scale</span>
-        <h1 style="margin-top:20px">
+        <h1>
           Turn your business into a
           <span class="accent">Fortune 500</span> brand.
         </h1>
@@ -55,15 +92,42 @@
         </p>
         <div class="actions">
           <a class="btn btn-primary" href="https://discovery.befortune5.com/">
-            Start today with a specialist <span class="arrow" aria-hidden="true">→</span>
+            Start today<span class="long">&nbsp;with a specialist</span> <svg class="ic arrow" aria-hidden="true"><use href="#i-arrow-right"/></svg>
           </a>
-          <a class="btn btn-ghost on-dark" href="#book" data-book-cta>Book a call</a>
+          <a class="btn btn-ghost on-dark" href="#book" data-book-cta>
+            <svg class="ic" aria-hidden="true"><use href="#i-calendar-check"/></svg> Book a call
+          </a>
         </div>
         <p class="under">Free 30-minute strategy call. No commitment required.</p>
       </div>
+
+      <!-- Brand mark with two abstract dashboard cards: growth, and systems
+           ticked off. Deliberately no figures — it illustrates, it doesn't claim. -->
       <div class="hero-art" aria-hidden="true">
         <div class="plate"></div>
         <img class="mark" src="assets/mark.svg" alt="">
+        <div class="float float-chart">
+          <div class="float-head">
+            <span class="float-label">Revenue</span>
+            <svg class="ic" aria-hidden="true"><use href="#i-trending-up"/></svg>
+          </div>
+          <svg class="spark" viewBox="0 0 120 44" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="spark-fill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#2297F9" stop-opacity=".28"/>
+                <stop offset="1" stop-color="#2297F9" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path d="M0 38 L18 33 L34 35 L52 24 L70 26 L88 14 L104 12 L120 4 L120 44 L0 44 Z" fill="url(#spark-fill)"/>
+            <path d="M0 38 L18 33 L34 35 L52 24 L70 26 L88 14 L104 12 L120 4" fill="none" stroke="#2297F9" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+          </svg>
+        </div>
+        <div class="float float-list">
+          <span class="float-label">Systems</span>
+          <div class="row"><svg class="ic" aria-hidden="true"><use href="#i-circle-check"/></svg><i style="width:78%"></i></div>
+          <div class="row"><svg class="ic" aria-hidden="true"><use href="#i-circle-check"/></svg><i style="width:60%"></i></div>
+          <div class="row"><svg class="ic" aria-hidden="true"><use href="#i-circle-check"/></svg><i style="width:70%"></i></div>
+        </div>
       </div>
     </div>
   </section>
@@ -73,22 +137,22 @@
     <div class="wrap">
       <div class="section-head">
         <span class="eyebrow">The approach</span>
-        <h2 style="margin-top:14px">The playbook the top companies actually use.</h2>
+        <h2>The playbook the top companies actually use.</h2>
         <p>The world’s most successful companies don’t run on instinct. They run on proven systems for delivery, marketing and growth. We build that same thinking directly into your business.</p>
       </div>
       <div class="cards">
-        <article class="pillar">
-          <div class="glyph" aria-hidden="true">◆</div>
+        <article class="pillar" data-reveal>
+          <div class="glyph" aria-hidden="true"><svg class="ic"><use href="#i-workflow"/></svg></div>
           <h3>Better Processes</h3>
           <p>Streamlined operations that let you deliver consistently and scale without chaos.</p>
         </article>
-        <article class="pillar">
-          <div class="glyph" aria-hidden="true">◇</div>
+        <article class="pillar" data-reveal>
+          <div class="glyph" aria-hidden="true"><svg class="ic"><use href="#i-crosshair"/></svg></div>
           <h3>Sharper Positioning</h3>
           <p>A clear market identity that makes the right clients choose you over everyone else.</p>
         </article>
-        <article class="pillar">
-          <div class="glyph" aria-hidden="true">▲</div>
+        <article class="pillar" data-reveal>
+          <div class="glyph" aria-hidden="true"><svg class="ic"><use href="#i-trending-up"/></svg></div>
           <h3>Stronger Revenue</h3>
           <p>Growth strategies that move the number that matters most — margin, not just top-line.</p>
         </article>
@@ -100,23 +164,32 @@
   <section id="team" class="team">
     <div class="wrap">
       <div class="section-head">
-        <span class="eyebrow" style="color:var(--blue)">The team</span>
-        <h2 style="margin-top:14px">The perfect mix of minds behind your growth.</h2>
+        <span class="eyebrow eyebrow-on-dark">The team</span>
+        <h2>The perfect mix of minds behind your growth.</h2>
         <p>Three disciplines, one team. We put the right specialists on the parts of your business where they’ll actually move the number.</p>
       </div>
       <div class="team-cols">
-        <div class="role">
-          <div class="kicker">01</div>
+        <div class="role" data-reveal>
+          <div class="role-head">
+            <span class="role-icon" aria-hidden="true"><svg class="ic"><use href="#i-megaphone"/></svg></span>
+            <span class="kicker">01</span>
+          </div>
           <h3>Marketers</h3>
           <p>Who know how to position you, reach the right audience, and make your brand impossible to ignore.</p>
         </div>
-        <div class="role">
-          <div class="kicker">02</div>
+        <div class="role" data-reveal>
+          <div class="role-head">
+            <span class="role-icon" aria-hidden="true"><svg class="ic"><use href="#i-pen-tool"/></svg></span>
+            <span class="kicker">02</span>
+          </div>
           <h3>Creatives</h3>
           <p>Who translate your story into visuals, messaging and experiences that command attention.</p>
         </div>
-        <div class="role">
-          <div class="kicker">03</div>
+        <div class="role" data-reveal>
+          <div class="role-head">
+            <span class="role-icon" aria-hidden="true"><svg class="ic"><use href="#i-cpu"/></svg></span>
+            <span class="kicker">03</span>
+          </div>
           <h3>Technicians</h3>
           <p>Who build the systems, tools and infrastructure that make it all run — and keep running as you scale.</p>
         </div>
@@ -130,27 +203,26 @@
       <div class="grid">
         <div>
           <span class="eyebrow">What we do</span>
-          <h2 style="margin-top:14px">Airtight systems that make growth systems-dependent, not people-dependent.</h2>
+          <h2>Airtight systems that make growth systems-dependent, not people-dependent.</h2>
           <p>We use expertise across technology, business development and marketing to scale mid-market companies up: eliminating bottlenecks, cleaning out inefficiencies, and putting the metrics and mechanisms in place that let a business behave like a corporation.</p>
           <p>The result is a company that delivers consistently — because it’s not depending on any one person to hold it together.</p>
         </div>
-        <div>
-          <ul class="cap-list">
-            <li>Evergreen marketing campaigns and strategy</li>
-            <li>Positioning, brand and messaging systems</li>
-            <li>Process streamlining and operations design</li>
-            <li>Analytics implementation and attribution</li>
-            <li>Core structural and growth systems</li>
-            <li>Revenue operations and pipeline design</li>
-          </ul>
-        </div>
+        <ul class="cap-list" data-reveal>
+          <li><span class="cap-icon" aria-hidden="true"><svg class="ic"><use href="#i-infinity"/></svg></span>Evergreen marketing campaigns and strategy</li>
+          <li><span class="cap-icon" aria-hidden="true"><svg class="ic"><use href="#i-message-square-quote"/></svg></span>Positioning, brand and messaging systems</li>
+          <li><span class="cap-icon" aria-hidden="true"><svg class="ic"><use href="#i-git-merge"/></svg></span>Process streamlining and operations design</li>
+          <li><span class="cap-icon" aria-hidden="true"><svg class="ic"><use href="#i-chart-line"/></svg></span>Analytics implementation and attribution</li>
+          <li><span class="cap-icon" aria-hidden="true"><svg class="ic"><use href="#i-layers"/></svg></span>Core structural and growth systems</li>
+          <li><span class="cap-icon" aria-hidden="true"><svg class="ic"><use href="#i-funnel"/></svg></span>Revenue operations and pipeline design</li>
+        </ul>
       </div>
     </div>
   </section>
 
   <!-- MANIFESTO -->
   <section class="manifesto">
-    <div class="wrap">
+    <div class="wrap" data-reveal>
+      <svg class="ic manifesto-mark" aria-hidden="true"><use href="#i-quote"/></svg>
       <div class="kicker">The idea</div>
       <blockquote>
         A top brand <span class="accent">delivers consistently</span>. And consistency delivers <span class="accent">consistent customers</span>.
@@ -163,21 +235,23 @@
   <section id="book" class="cta-band">
     <div class="wrap">
       <div>
-        <span class="eyebrow" style="color:var(--blue)">Get started</span>
-        <h2 style="margin-top:14px">Ready to scale?</h2>
+        <span class="eyebrow eyebrow-on-dark">Get started</span>
+        <h2>Ready to scale?</h2>
         <p>Start with a free consultation — no pressure, just an honest conversation about where you’re headed.</p>
         <div class="actions">
           <a class="btn btn-primary" href="https://discovery.befortune5.com/">
-            Start today for free <span class="arrow" aria-hidden="true">→</span>
+            Start today for free <svg class="ic arrow" aria-hidden="true"><use href="#i-arrow-right"/></svg>
           </a>
-          <a class="btn btn-ghost on-dark" href="#book" data-book-cta>Book a specialist call</a>
+          <a class="btn btn-ghost on-dark" href="#book" data-book-cta>
+            <svg class="ic" aria-hidden="true"><use href="#i-calendar-check"/></svg> Book a specialist call
+          </a>
         </div>
-        <p class="under">Free 30-minute strategy call · No commitment required.</p>
       </div>
-      <div class="stat">
-        Free
-        <small>The discovery form and the strategy call. Nothing to sign.</small>
-      </div>
+      <ul class="assurances" aria-label="What it costs">
+        <li><svg class="ic" aria-hidden="true"><use href="#i-circle-check"/></svg> Free discovery form</li>
+        <li><svg class="ic" aria-hidden="true"><use href="#i-circle-check"/></svg> Free 30-minute strategy call</li>
+        <li><svg class="ic" aria-hidden="true"><use href="#i-circle-check"/></svg> Nothing to sign, no commitment</li>
+      </ul>
     </div>
   </section>
 
@@ -187,7 +261,7 @@
   <div class="wrap">
     <div>
       <a class="brand" href="/" aria-label="The Fortune 5 Agency home">
-        <img src="assets/logo-light.png" alt="The Fortune 5 Agency">
+        <img src="assets/logo-light.png" alt="The Fortune 5 Agency" width="186" height="34">
       </a>
       <p>Turn your business into a Fortune 500 brand. Better processes. Sharper positioning. Stronger revenue.</p>
       <div class="parent">© <span id="year">2026</span> Jump Tech Group, LLC. All rights reserved. The Fortune 5 Agency is a Jump Tech Group company.</div>
@@ -210,6 +284,16 @@
   </div>
 </footer>
 
+<!-- Phone-only: takes over from the hero buttons once they scroll away. -->
+<div class="mobile-cta" inert>
+  <a class="btn btn-ghost on-dark" href="#book" data-book-cta aria-label="Book a call">
+    <svg class="ic" aria-hidden="true"><use href="#i-calendar-check"/></svg> <span>Book</span>
+  </a>
+  <a class="btn btn-primary" href="https://discovery.befortune5.com/">
+    Start today <svg class="ic arrow" aria-hidden="true"><use href="#i-arrow-right"/></svg>
+  </a>
+</div>
+
 <script>
   // One switch for every "Book a call" link on the page.
   var BOOK_URL = 'https://start.befortune5.com';
@@ -220,6 +304,7 @@
   }
   document.getElementById('year').textContent = new Date().getFullYear();
 </script>
+<script src="js/site.js" defer></script>
 
 </body>
 </html>

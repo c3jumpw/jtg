@@ -53,6 +53,28 @@ a:hover { text-decoration: underline; }
 
 .wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 24px; }
 
+/* ---------------- icons ----------------
+   One inline sprite at the top of <body>; every icon is <svg class="ic"><use/>.
+   Stroke styling lives here so it inherits into the <use> shadow tree. */
+.sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+.ic {
+  display: inline-block; flex: 0 0 auto; width: 1.15em; height: 1.15em; vertical-align: -0.2em;
+  fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+.btn .ic { width: 18px; height: 18px; }
+
+/* Visible only when focused, for keyboard users skipping the header. */
+.skip-link {
+  position: absolute; left: 12px; top: -60px; z-index: 100;
+  padding: 10px 16px; border-radius: 8px; background: var(--white); color: var(--ink);
+  font-weight: 700; box-shadow: var(--shadow-hard); transition: top .15s ease;
+}
+.skip-link:focus { top: 12px; text-decoration: none; }
+main:focus { outline: none; }
+
+/* Anchor jumps land below the sticky header instead of under it. */
+section[id] { scroll-margin-top: 80px; }
+
 .eyebrow {
   display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .14em;
   text-transform: uppercase; color: var(--blue-deep);
@@ -65,6 +87,10 @@ h1 { font-size: clamp(40px, 6vw, 76px); line-height: 1.02; }
 h2 { font-size: clamp(30px, 3.6vw, 46px); line-height: 1.1; }
 h3 { font-size: 20px; line-height: 1.3; }
 p { margin: 0 0 1em; }
+/* Spacing that used to be inline style attributes. */
+.eyebrow + h1 { margin-top: 20px; }
+.eyebrow + h2 { margin-top: 14px; }
+.eyebrow-on-dark { color: var(--blue); }
 
 .btn {
   display: inline-flex; align-items: center; gap: 10px;
@@ -75,20 +101,25 @@ p { margin: 0 0 1em; }
 }
 .btn:hover { text-decoration: none; }
 .btn .arrow { transition: transform .15s ease; }
-.btn:hover .arrow { transform: translateX(3px); }
 
 .btn-primary {
   background: var(--white); color: var(--ink); border-color: var(--white);
   box-shadow: var(--shadow-hard);
 }
-.btn-primary:hover { transform: translate(-2px, -2px); box-shadow: 8px 8px 0 var(--blue); }
 .btn-primary:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--blue); }
 
 .btn-solid {
   background: var(--ink); color: var(--white); border-color: var(--ink);
   box-shadow: var(--shadow-hard);
 }
-.btn-solid:hover { background: #000; transform: translate(-2px, -2px); box-shadow: 8px 8px 0 var(--blue); }
+
+/* Lift effects only where there's a real pointer. On touch screens a tap
+   triggers :hover and it sticks, leaving the button looking half-pressed. */
+@media (hover: hover) {
+  .btn:hover .arrow { transform: translateX(3px); }
+  .btn-primary:hover { transform: translate(-2px, -2px); box-shadow: 8px 8px 0 var(--blue); }
+  .btn-solid:hover { background: #000; transform: translate(-2px, -2px); box-shadow: 8px 8px 0 var(--blue); }
+}
 
 .btn-ghost { background: transparent; color: var(--ink); border-color: var(--ink); }
 .btn-ghost:hover { background: var(--ink); color: var(--white); }
@@ -105,15 +136,86 @@ p { margin: 0 0 1em; }
   border-bottom: 1px solid rgba(255,255,255,.06);
 }
 .site-header .wrap { display: flex; align-items: center; justify-content: space-between; padding-top: 14px; padding-bottom: 14px; gap: 20px; }
-.brand { display: flex; align-items: center; gap: 12px; }
+.brand { display: flex; align-items: center; gap: 12px; flex: 0 0 auto; }
 .brand img { height: 30px; width: auto; }
-.brand .tag { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--silver); border-left: 2px solid var(--blue); padding-left: 12px; }
+
+/* Desktop: logo · links · button, all on one line. */
+.menu { display: flex; align-items: center; gap: 36px; }
 .nav { display: flex; align-items: center; gap: 28px; }
-.nav a { font-weight: 600; color: var(--white); }
+.nav a { position: relative; font-weight: 600; color: var(--white); padding: 6px 0; }
 .nav a:hover { color: var(--blue); text-decoration: none; }
-.header-cta { display: none; }
-@media (min-width: 900px) { .header-cta { display: inline-flex; } }
-@media (max-width: 820px) { .nav { display: none; } .brand .tag { display: none; } }
+.nav a[aria-current="true"] { color: var(--blue); }
+.nav a[aria-current="true"]::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: -2px; height: 2px;
+  background: var(--blue); border-radius: 2px;
+}
+.menu-ctas { display: flex; align-items: center; gap: 12px; }
+.menu-ctas .btn { padding: 12px 18px; font-size: 15px; }
+.menu-only { display: none; }
+
+/* The burger. Three bars that fold into a cross when open. */
+.nav-toggle {
+  display: none; position: relative; width: 44px; height: 44px; margin-right: -8px;
+  border: 0; border-radius: 10px; background: transparent; color: var(--white); cursor: pointer;
+}
+.nav-toggle:hover { background: rgba(255,255,255,.08); }
+.nav-toggle-bars { position: absolute; left: 12px; right: 12px; top: 50%; height: 14px; transform: translateY(-50%); }
+.nav-toggle-bars span {
+  position: absolute; left: 0; right: 0; height: 2px; border-radius: 2px; background: currentColor;
+  transition: transform .22s ease, opacity .15s ease, top .22s ease;
+}
+.nav-toggle-bars span:nth-child(1) { top: 0; }
+.nav-toggle-bars span:nth-child(2) { top: 6px; }
+.nav-toggle-bars span:nth-child(3) { top: 12px; }
+.nav-toggle[aria-expanded="true"] .nav-toggle-bars span:nth-child(1) { top: 6px; transform: rotate(45deg); }
+.nav-toggle[aria-expanded="true"] .nav-toggle-bars span:nth-child(2) { opacity: 0; }
+.nav-toggle[aria-expanded="true"] .nav-toggle-bars span:nth-child(3) { top: 6px; transform: rotate(-45deg); }
+
+.menu-scrim {
+  position: fixed; inset: 0; z-index: 25; background: rgba(8, 11, 18, .55);
+  -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px);
+}
+.menu-scrim[hidden] { display: none; }
+
+@media (max-width: 959px) {
+  .site-header .wrap { flex-wrap: wrap; }
+
+  /* Without JavaScript there is no burger to press, so the links simply sit
+     under the logo as a plain row — every page section is still one tap away. */
+  html:not(.js) .menu { flex-basis: 100%; padding-top: 2px; }
+  html:not(.js) .nav { flex-wrap: wrap; gap: 6px 20px; }
+  html:not(.js) .nav a { white-space: nowrap; font-size: 15px; }
+  html:not(.js) .menu-ctas { display: none; }
+
+  html.js .nav-toggle { display: block; }
+  html.js .menu {
+    position: absolute; left: 0; right: 0; top: 100%;
+    flex-direction: column; align-items: stretch; gap: 0;
+    padding: 8px 24px 24px;
+    max-height: calc(100vh - 72px); max-height: calc(100dvh - 72px);
+    overflow-y: auto; overscroll-behavior: contain;
+    background: var(--ink); border-bottom: 1px solid rgba(255,255,255,.08);
+    box-shadow: 0 24px 48px rgba(0,0,0,.35);
+    visibility: hidden; opacity: 0; transform: translateY(-8px);
+    transition: opacity .2s ease, transform .2s ease, visibility 0s linear .2s;
+  }
+  html.js .menu.is-open {
+    visibility: visible; opacity: 1; transform: none;
+    transition: opacity .2s ease, transform .2s ease, visibility 0s;
+  }
+  html.js .nav { flex-direction: column; align-items: stretch; gap: 0; }
+  html.js .nav a {
+    display: flex; align-items: center; min-height: 56px; padding: 0 2px;
+    font-size: 18px; border-bottom: 1px solid rgba(255,255,255,.08);
+  }
+  html.js .nav a[aria-current="true"]::after { display: none; }
+  html.js .menu-ctas { flex-direction: column; align-items: stretch; gap: 12px; margin-top: 20px; }
+  html.js .menu-ctas .btn { justify-content: center; padding: 16px 20px; font-size: 16px; }
+  html.js .menu-only { display: inline-flex; }
+
+  /* Lock the page behind an open menu so a stray swipe doesn't scroll it. */
+  html.menu-open { overflow: hidden; }
+}
 
 /* ---------------- hero ---------------- */
 
@@ -146,13 +248,38 @@ p { margin: 0 0 1em; }
   border-radius: 24px; background: rgba(34,151,249,.06);
 }
 .hero-art .mark {
-  position: absolute; inset: 0; margin: auto; width: 82%; height: 82%; z-index: 2;
+  position: absolute; inset: 0; margin: auto; width: 74%; height: 74%; z-index: 2;
   filter: drop-shadow(0 24px 40px rgba(0,0,0,.35));
 }
+
+/* Two small dashboard cards floating over the mark. Sized off the art's own
+   width (container units) so they scale down with it on a phone. */
+.hero-art { container-type: inline-size; }
+.float {
+  position: absolute; z-index: 3;
+  background: var(--white); color: var(--ink);
+  border: 1px solid rgba(22,27,38,.08); border-radius: 12px;
+  box-shadow: 5px 5px 0 var(--blue), 0 18px 40px rgba(0,0,0,.28);
+  padding: 12px 14px; padding: 3cqw 3.4cqw;
+  animation: bob 7s ease-in-out infinite;
+}
+.float-label { font-size: 11px; font-size: max(9px, 2.6cqw); font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--steel); }
+.float-chart { left: -6%; top: 13%; width: 46%; }
+.float-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; margin-bottom: 1.6cqw; }
+.float-head .ic { color: var(--blue); width: 16px; height: 16px; width: 4.2cqw; height: 4.2cqw; }
+.float .spark { width: 100%; height: 44px; height: 10cqw; overflow: visible; }
+.float-list { right: -4%; bottom: 9%; width: 44%; animation-delay: -3.5s; }
+.float-list .float-label { display: block; margin-bottom: 8px; margin-bottom: 2cqw; }
+.float-list .row { display: flex; align-items: center; gap: 8px; gap: 2cqw; }
+.float-list .row + .row { margin-top: 7px; margin-top: 1.8cqw; }
+.float-list .row .ic { color: var(--blue); width: 16px; height: 16px; width: 4.2cqw; height: 4.2cqw; }
+.float-list .row i { display: block; height: 7px; height: 1.7cqw; border-radius: 99px; background: #DCE2EA; }
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+
 @media (max-width: 900px) {
   .hero { padding: 56px 0 64px; }
-  .hero .wrap { grid-template-columns: 1fr; gap: 32px; }
-  .hero-art { max-width: 320px; margin: 0 auto; }
+  .hero .wrap { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+  .hero-art { max-width: 300px; margin: 0 auto; }
 }
 
 /* ---------------- section shared ---------------- */
@@ -175,12 +302,17 @@ section { padding: 96px 0; }
   border: 1px solid var(--line); position: relative;
   transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
 }
-.pillar:hover { transform: translate(-3px, -3px); box-shadow: 6px 6px 0 var(--blue); border-color: var(--ink); }
-.pillar .glyph {
-  width: 44px; height: 44px; border-radius: 12px; background: var(--ink); color: var(--blue);
-  display: grid; place-items: center; font-weight: 800; font-size: 20px; margin-bottom: 20px;
-  border-bottom: 4px solid var(--blue);
+@media (hover: hover) {
+  .pillar:hover { transform: translate(-3px, -3px); box-shadow: 6px 6px 0 var(--blue); border-color: var(--ink); }
+  .pillar:hover .glyph { background: var(--blue); color: var(--white); border-bottom-color: var(--ink); }
 }
+.pillar .glyph {
+  width: 52px; height: 52px; border-radius: 14px; background: var(--ink); color: var(--blue);
+  display: grid; place-items: center; margin-bottom: 22px;
+  border-bottom: 4px solid var(--blue);
+  transition: background .15s ease, color .15s ease, border-color .15s ease;
+}
+.pillar .glyph .ic { width: 24px; height: 24px; }
 .pillar h3 { margin-bottom: 10px; }
 .pillar p { color: var(--steel); font-size: 15.5px; margin: 0; }
 @media (max-width: 900px) { .approach .cards { grid-template-columns: 1fr; } }
@@ -211,7 +343,13 @@ section { padding: 96px 0; }
 }
 .role h3 { color: var(--white); font-size: 24px; margin-bottom: 12px; }
 .role p { color: #C6CBD6; font-size: 15.5px; margin: 0; }
-.role .kicker { font-size: 12px; font-weight: 800; letter-spacing: .14em; color: var(--blue); text-transform: uppercase; margin-bottom: 6px; }
+.role-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+.role-icon {
+  width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center;
+  color: var(--blue); background: rgba(34,151,249,.10); border: 1px solid rgba(34,151,249,.28);
+}
+.role-icon .ic { width: 22px; height: 22px; }
+.role .kicker { font-size: 12px; font-weight: 800; letter-spacing: .14em; color: #8B93A4; text-transform: uppercase; }
 @media (max-width: 900px) { .team-cols { grid-template-columns: 1fr; gap: 32px; } }
 
 /* ---------------- capabilities ---------------- */
@@ -219,21 +357,25 @@ section { padding: 96px 0; }
 .capabilities .grid {
   display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: start;
 }
+.capabilities h2 { margin-bottom: 22px; }
 .capabilities .grid > div p { color: var(--steel); font-size: 17px; }
 .cap-list {
   list-style: none; margin: 0; padding: 0; display: grid; gap: 12px;
 }
 .cap-list li {
-  display: flex; align-items: center; gap: 14px;
-  padding: 18px 20px; border: 1px solid var(--line); border-radius: var(--radius);
-  background: var(--white); font-weight: 600; color: var(--ink); font-size: 16px;
+  display: flex; align-items: center; gap: 16px;
+  padding: 14px 18px; border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--white); font-weight: 600; color: var(--ink); font-size: 16px; line-height: 1.35;
   transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
 }
-.cap-list li:hover { transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--blue-tint); border-color: var(--ink); }
-.cap-list li::before {
-  content: ''; flex: 0 0 12px; width: 12px; height: 12px; border-radius: 3px;
-  background: var(--blue);
+@media (hover: hover) {
+  .cap-list li:hover { transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--blue-tint); border-color: var(--ink); }
 }
+.cap-icon {
+  flex: 0 0 40px; width: 40px; height: 40px; border-radius: 10px;
+  display: grid; place-items: center; background: var(--blue-tint); color: var(--blue-deep);
+}
+.cap-icon .ic { width: 20px; height: 20px; }
 @media (max-width: 900px) { .capabilities .grid { grid-template-columns: 1fr; gap: 32px; } }
 
 /* ---------------- manifesto ---------------- */
@@ -243,6 +385,7 @@ section { padding: 96px 0; }
   padding: 96px 0;
 }
 .manifesto .wrap { max-width: 900px; text-align: center; }
+.manifesto-mark { display: block; width: 36px; height: 36px; margin: 0 auto 18px; color: var(--blue); fill: var(--blue-tint); stroke-width: 1.6; }
 .manifesto blockquote {
   margin: 0; font-family: var(--font-body); font-weight: 700;
   font-size: clamp(24px, 3vw, 34px); line-height: 1.3; letter-spacing: -0.01em;
@@ -268,13 +411,15 @@ section { padding: 96px 0; }
 .cta-band h2 { color: var(--white); }
 .cta-band p { color: #C6CBD6; font-size: 18px; margin-top: 14px; }
 .cta-band .actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 24px; }
-.cta-band .under { color: #8B93A4; font-size: 14px; margin-top: 14px; }
-.cta-band .stat {
-  border-left: 4px solid var(--blue); padding: 8px 0 8px 20px;
-  color: var(--white); font-weight: 800; font-size: 22px;
+/* What it costs, as three ticks rather than one word: "Free" on its own left
+   people wondering what exactly was free. */
+.assurances {
+  list-style: none; margin: 0; padding: 24px 26px; display: grid; gap: 14px;
+  border: 1px solid rgba(255,255,255,.12); border-radius: 14px; background: rgba(255,255,255,.04);
 }
-.cta-band .stat small { display: block; color: #C6CBD6; font-weight: 500; font-size: 14px; margin-top: 6px; }
-@media (max-width: 820px) { .cta-band .wrap { grid-template-columns: 1fr; } }
+.assurances li { display: flex; align-items: center; gap: 12px; color: var(--white); font-weight: 600; font-size: 16px; }
+.assurances .ic { width: 22px; height: 22px; color: var(--blue); }
+@media (max-width: 820px) { .cta-band .wrap { grid-template-columns: minmax(0, 1fr); } }
 
 /* ---------------- footer ---------------- */
 
@@ -285,11 +430,68 @@ section { padding: 96px 0; }
 .site-footer a:hover { color: var(--white); text-decoration: underline; }
 .site-footer .brand img { height: 34px; }
 .site-footer p { font-size: 14px; margin-top: 16px; max-width: 46ch; }
-.site-footer .parent { font-size: 12px; letter-spacing: .1em; color: #6B7180; margin-top: 24px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.06); text-transform: uppercase; font-weight: 700; }
+.site-footer .parent { font-size: 13px; color: #7C8394; margin-top: 24px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.06); line-height: 1.6; }
 .site-footer ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
 @media (max-width: 720px) { .site-footer .wrap { grid-template-columns: 1fr; } }
+
+/* ---------------- phones ---------------- */
+
+@media (max-width: 560px) {
+  /* Equal-width, full-width buttons: easier to hit, and they stop looking
+     like two unrelated sizes stacked on top of each other. */
+  .hero .actions .btn, .cta-band .actions .btn { width: 100%; justify-content: center; }
+}
+
+/* Slim bar that takes over from the hero buttons once they scroll away.
+   site.js decides when it shows; it never appears on desktop. */
+.mobile-cta { display: none; }
+@media (max-width: 959px) {
+  .mobile-cta {
+    display: flex; gap: 10px; position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+    background: rgba(22, 27, 38, .94);
+    -webkit-backdrop-filter: saturate(140%) blur(8px); backdrop-filter: saturate(140%) blur(8px);
+    border-top: 1px solid rgba(255,255,255,.08);
+    transform: translateY(110%); transition: transform .25s ease;
+  }
+  .mobile-cta.is-shown { transform: none; }
+  html.menu-open .mobile-cta { transform: translateY(110%); }
+  .mobile-cta .btn { padding: 13px 16px; font-size: 15px; justify-content: center; }
+  .mobile-cta .btn-primary { flex: 1 1 auto; box-shadow: 4px 4px 0 var(--blue); }
+  .mobile-cta .btn-ghost { flex: 0 0 auto; }
+}
+
+/* ---------------- scroll reveals ----------------
+   Only ever applied by site.js to things below the fold at load. */
+   A keyframe animation with `backwards` fill rather than a transition: it
+   plays once, then hands transform back to the element, so it can't collide
+   with the cards' own hover transitions. */
+.reveal-pending { opacity: 0; }
+.reveal-in { animation: reveal-in .6s cubic-bezier(.2,.7,.2,1) backwards; }
+.cards .reveal-in:nth-child(2), .team-cols .reveal-in:nth-child(2) { animation-delay: .08s; }
+.cards .reveal-in:nth-child(3), .team-cols .reveal-in:nth-child(3) { animation-delay: .16s; }
+@keyframes reveal-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
 
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }
   html { scroll-behavior: auto; }
+  .reveal-pending { opacity: 1; transform: none; }
+}
+
+/* Printing renders the whole page without scrolling, so anything still
+   waiting to reveal would print blank. Show everything, drop the chrome. */
+@media print {
+  .reveal-pending, .reveal-in { opacity: 1 !important; animation: none !important; }
+  .site-header, .mobile-cta, .menu-scrim, .skip-link { display: none !important; }
+  .float { animation: none !important; }
+}
+
+/* Button labels: full wording where there's room, the short form where
+   there isn't. Below 560px full-width buttons may also wrap, as a last
+   resort, so no label can ever push past the edge of the screen.
+   (A single-column grid track of plain `1fr` has a content-sized minimum, so
+   one non-wrapping button used to stretch the whole hero past a 320px screen.) */
+@media (max-width: 399px) { .btn .long { display: none; } }
+@media (max-width: 560px) {
+  .hero .actions .btn, .cta-band .actions .btn, .menu-ctas .btn { white-space: normal; text-align: center; }
 }
