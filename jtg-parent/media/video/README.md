@@ -4,7 +4,7 @@ Drop the finished intro video here (GitHub: **Add file → Upload files**, commi
 
 | File | What it is |
 | --- | --- |
-| `intro.mp4` | MK Holding Co. / Jump Tech Group intro video for the homepage |
+| `intro.mp4` | Jump Tech Group intro video for the homepage |
 | `intro.vtt` or `intro.srt` | Captions, if the video generator exports them |
 | `intro.jpg` | Optional thumbnail; otherwise a frame is taken from the video |
 
