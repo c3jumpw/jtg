@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Brand Story · Questionnaire</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --base: #13131f;
+    --surface: #1e1e30;
+    --card: #252540;
+    --border: #3a3a5c;
+    --accent: #7c6fff;
+    --accent-glow: rgba(124,111,255,0.25);
+    --accent2: #4ecdc4;
+    --text: #f0efff;
+    --muted: #8888aa;
+    --success: #4ecdc4;
+    --error: #ff6b8a;
+    --radius: 16px;
+    --transition: 0.42s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--base);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem 4rem;
+    background-image:
+      radial-gradient(ellipse 60% 40% at 70% 10%, rgba(124,111,255,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 30% at 10% 80%, rgba(78,205,196,0.08) 0%, transparent 60%);
+  }
+
+  /* ── HEADER ─────────────────────────────────── */
+  .site-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    max-width: 560px;
+  }
+  .site-header .eyebrow {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+  .site-header h1 {
+    font-size: clamp(1.6rem, 4vw, 2.1rem);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 0.75rem;
+  }
+  .site-header p {
+    font-size: 0.95rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ── PROGRESS ────────────────────────────────── */
+  .progress-wrap {
+    width: 100%;
+    max-width: 620px;
+    margin-bottom: 1.75rem;
+  }
+  .progress-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-bottom: 0.6rem;
+  }
+  .progress-bar-bg {
+    height: 6px;
+    background: var(--border);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 99px;
+    transition: width var(--transition);
+  }
+
+  /* ── CARD ────────────────────────────────────── */
+  .form-card {
+    width: 100%;
+    max-width: 620px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 2.5rem 2.25rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .form-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+  }
+
+  /* ── STEP ────────────────────────────────────── */
+  .step {
+    display: none;
+    animation: none;
+  }
+  .step.active {
+    display: block;
+    animation: slideIn var(--transition) forwards;
+  }
+  .step.exit {
+    animation: slideOut var(--transition) forwards;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(32px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes slideOut {
+    from { opacity: 1; transform: translateX(0); }
+    to   { opacity: 0; transform: translateX(-32px); }
+  }
+  @keyframes slideInBack {
+    from { opacity: 0; transform: translateX(-32px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  .step.active.back {
+    animation: slideInBack var(--transition) forwards;
+  }
+
+  .step-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+  }
+  .step-label .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .step-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 0.4rem;
+  }
+  .step-desc {
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin-bottom: 1.75rem;
+    line-height: 1.55;
+  }
+
+  /* ── QUESTIONS ───────────────────────────────── */
+  .question {
+    margin-bottom: 1.4rem;
+  }
+  .question label {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 0.55rem;
+    line-height: 1.45;
+  }
+  .question label .q-emoji {
+    font-size: 1.05rem;
+    flex-shrink: 0;
+    margin-top: 0.05rem;
+  }
+
+  .question input[type="text"],
+  .question textarea,
+  .question select {
+    width: 100%;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: 'Sora', sans-serif;
+    font-size: 0.9rem;
+    padding: 0.75rem 1rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    resize: none;
+    appearance: none;
+  }
+  .question input[type="text"]:focus,
+  .question textarea:focus,
+  .question select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+  }
+  .question textarea {
+    min-height: 96px;
+    line-height: 1.55;
+  }
+  .question input::placeholder,
+  .question textarea::placeholder {
+    color: var(--muted);
+  }
+
+  /* ── CHAR HINT ───────────────────────────────── */
+  .char-hint {
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-align: right;
+    margin-top: 0.3rem;
+  }
+
+  /* ── RADIO / TAG PILLS ───────────────────────── */
+  .pill-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.1rem;
+  }
+  .pill-group input[type="radio"],
+  .pill-group input[type="checkbox"] {
+    display: none;
+  }
+  .pill-group label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 99px;
+    padding: 0.45rem 1rem;
+    font-size: 0.83rem;
+    font-weight: 400;
+    cursor: pointer;
+    transition: border-color 0.18s, background 0.18s, color 0.18s;
+    margin: 0;
+    color: var(--muted);
+    line-height: 1;
+  }
+  .pill-group input:checked + label {
+    border-color: var(--accent);
+    background: var(--accent-glow);
+    color: var(--text);
+  }
+
+  /* ── DIVIDER ─────────────────────────────────── */
+  .q-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 1.5rem 0;
+  }
+
+  /* ── BUTTONS ─────────────────────────────────── */
+  .btn-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+    gap: 0.75rem;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Sora', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+  }
+  .btn:active { transform: scale(0.97); }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), #9c93ff);
+    color: #fff;
+    box-shadow: 0 4px 18px rgba(124,111,255,0.35);
+    margin-left: auto;
+  }
+  .btn-primary:hover { box-shadow: 0 6px 24px rgba(124,111,255,0.5); }
+
+  .btn-ghost {
+    background: transparent;
+    border: 1.5px solid var(--border);
+    color: var(--muted);
+  }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--text); }
+
+  .btn-success {
+    background: linear-gradient(135deg, var(--success), #38b2ac);
+    color: #fff;
+    box-shadow: 0 4px 18px rgba(78,205,196,0.35);
+    margin-left: auto;
+  }
+
+  /* ── COMPLETE SCREEN ─────────────────────────── */
+  .complete-screen {
+    display: none;
+    text-align: center;
+    padding: 1rem 0;
+  }
+  .complete-screen.active { display: block; }
+  .complete-icon {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+  .complete-screen h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+  }
+  .complete-screen p {
+    font-size: 0.92rem;
+    color: var(--muted);
+    line-height: 1.6;
+    max-width: 380px;
+    margin: 0 auto 1.75rem;
+  }
+  .summary-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+    text-align: left;
+    margin-bottom: 1.5rem;
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: var(--muted);
+    max-height: 300px;
+    overflow-y: auto;
+  }
+  .summary-box .s-row {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.9rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.9rem;
+  }
+  .summary-box .s-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .summary-box .s-q {
+    font-weight: 600;
+    color: var(--text);
+    font-size: 0.8rem;
+    margin-bottom: 0.25rem;
+  }
+  .summary-box .s-a { color: var(--muted); }
+
+  .btn-copy {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    color: var(--text);
+    font-family: 'Sora', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 0.65rem 1.25rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: border-color 0.2s;
+    margin: 0 auto;
+  }
+  .btn-copy:hover { border-color: var(--accent2); color: var(--accent2); }
+
+  /* ── STEP DOTS ───────────────────────────────── */
+  .step-dots {
+    display: flex;
+    gap: 0.4rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+  }
+  .step-dots span {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--border);
+    transition: background 0.2s, width 0.2s;
+  }
+  .step-dots span.active {
+    background: var(--accent);
+    width: 20px;
+    border-radius: 4px;
+  }
+
+  /* ── RESPONSIVE ──────────────────────────────── */
+  @media (max-width: 520px) {
+    .form-card { padding: 1.75rem 1.25rem; }
+    .btn-row { flex-wrap: wrap; }
+    .btn-primary, .btn-success { width: 100%; justify-content: center; }
+    .btn-ghost { width: 100%; justify-content: center; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .step.active, .step.exit { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="eyebrow">Personal Brand Builder</div>
+  <h1>Let's build your brand story 🚀</h1>
+  <p>Answer honestly. The best brands are built on truth. This takes about 10–15 minutes.</p>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-meta">
+    <span id="step-counter">Part 1 of 6</span>
+    <span id="step-pct">0% complete</span>
+  </div>
+  <div class="progress-bar-bg">
+    <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+  </div>
+</div>
+
+<div class="form-card" id="form-card">
+
+  <!-- ═══════════════════════════════════════
+       STEP 1 — Identity & Positioning
+  ════════════════════════════════════════ -->
+  <div class="step active" data-step="1">
+    <div class="step-label"><span class="dot"></span>Part 1 of 6</div>
+    <h2 class="step-title">Identity & Positioning 🎯</h2>
+    <p class="step-desc">Let's figure out who you are and who you're talking to — in the most real way possible.</p>
+
+    <div class="question">
+      <label><span class="q-emoji">⚡</span>What's the one-line version of what you do? (Not your job title — what <em>changes</em> for someone after working with you?)</label>
+      <textarea name="q1" placeholder="e.g. I help 7-figure entrepreneurs reclaim 20+ hours a week without losing momentum…"></textarea>
+    </div>
+
+    <div class="question">
+      <label><span class="q-emoji">🎯</span>Who is your dream client or audience? Describe them like a person, not a demographic.</label>
+      <textarea name="q2" placeholder="e.g. A 35-year-old founder who's crushing revenue but feels like they're always behind…"></textarea>
+    </div>
+
+    <div class="question">
+      <label><span class="q-emoji">🧠</span>What does that person secretly believe about themselves that's holding them back — and what do you know to be true instead?</label>
+      <textarea name="q3" placeholder="e.g. They think working more is the answer. I know it's about working differently…"></textarea>
+    </div>
+
+    <div class="question">
+      <label><span class="q-emoji">🏆</span>What's the big, bold claim you can make? What would your best client say you did for them?</label>
+      <input type="text" name="q4" placeholder="e.g. Doubled their revenue while working 15 fewer hours a week">
+    </div>
+
+    <div class="question">
+      <label><span class="q-emoji">🔥</span>If your personal brand was a movement, what would it be called? What are people joining <em>into</em>?</label>
+      <input type="text" name="q5" placeholder="e.g. The Buy Back Movement, The Anti-Hustle Collective…">
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="nextStep()">Next — Your Story <span>→</span></button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       STEP 2 — Origin Story
+  ════════════════════════════════════════ -->
+  <div class="step" data-step="2">
+    <div class="step-label"><span class="dot"></span>Part 2 of 6</div>
+    <h2 class="step-title">Your Origin Story 📖</h2>
+    <p class="step-desc">The most magnetic brands are built on real struggle. Don't skip this part — it's where trust lives.</p>
+
+    <div class="question">
+      <label><span class="q-emoji">🌑</span>What's the hardest chapter of your life that's directly relevant to what you now help others with?</label>
+      <textarea name="q6" placeholder="e.g. I was $400K in debt and working 90-hour weeks when my marriage nearly fell apart…"></textarea>
+    </div>
+
+    <div class="question">
+      <label><span class="q-emoji">💡</span>What was the moment you realized you'd figured something out that others hadn't?</label>
+      <textarea name="q7" placeholder="e.g. The day I hired my first VA and my calendar opened up — I saw the system clearly for the first time…"></textarea>
+    </div>
+
+    <div class="question">
+      <label><span class="q-emoji">🏳️</span>What did you almost give up on before things turned around?</label>
+      <input type="text" name="q8" placeholder="e.g. My business, my health, my marriage…">
+    </div>
+
+    <div class="question">
+      <label><span class="q-emoji">⏳</span>What would "past you" (5–10 years ago) have paid anything to know?</label>
+      <textarea name="q9" placeholder="e.g. That you don't have to do everything yourself to grow…"></textarea>
+    </div>
+
+    <div class="question">
+      <label><span class="q-emoji">💬</span>What do you want people to feel when they read your story?</label>
+      <div class="pill-group">
+        <input type="radio" name="q10" id="feel-inspired" value="Inspired"><label for="feel-inspired">✨ Inspired</label>
+        <input type="radio" name="q10" id="feel-understood" value="Understood"><label for="feel-understood">🤝 Understood</label>
+        <input type="radio" name="q10" id="feel-calledout" value="Called out"><label for="feel-calledout">🎯 Called out</label>
+        <input type="radio" name="q10" id="feel-hopeful" value="Hopeful"><label for="feel-hopeful">🌤️ Hopeful</label>
+        <input type="radio" name="q10" id="feel-fired" value="Fired up"><label for="feel-fired">🔥 Fired up</label>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="prevStep()">← Back</button>
+      <button class="btn btn-primary" onclick="nextStep()">Next — Credibility <span>→</span></button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       STEP 3 — Credibility & Social Proof
+  ════════════════════════════════════════ -->
+  <div class="step" data-step="3">
+    <div class="step-label"><span class="dot"></span>Part 3 of 6</div>
+    <h2 class="step-title">Credibility & Proof 🏅</h2>
+    <p class="step-desc">Not bragging — just facts. The numbers and names that make people say "ok, this person is legit."</p>
+
+    <div class="question">
+      <label><span class="q-emoji">📊</span>What are your biggest, most concrete results — for yourself or clients? Be specific with numbers.</label>
+      <textarea name="q11" placeholder="e.g. Helped 3 clients 3x their revenue in 12 months. Built a $5M agency from scratch. Coached 2,000+ founders…"></textarea>
+    </div>
+
+    <div class="question">
+      <label><span class="q-emoji">🎤</span>What have you been featured in, spoken at, or associated with that people would recognize?</label>
+      <textarea name="q12" placeholder="e.g. Forbes, TEDx, Tony Robbins events, Inc 5000, YPO…"></textarea>
+    </div>
+
+    <div class="question">
+      <label><span class="q-emoji">📚</span>Do you have a book, course, or signature framework? What's it called and what's the core promise?</label>
+      <input type="text" name="q13" placeholder="e.g. 'The Freedom Framework' — go from operator to owner in 90 days">
+    </div>
+
+    <div class="question">
+      <label><span class="q-emoji">📏</span>What's a number that shows scale — clients served, followers, years in business, revenue milestone?</label>
+      <input type="text" name="q14" placeholder="e.g. 500+ clients, 10 years, $50M+ revenue generated for clients, 100K subscribers">
+    </div>
+
+    <div class="question">
+      <label><span class="q-emoji">🤝</span>Who have you worked with or been endorsed by that adds instant credibility?</label>
+      <input type="text" name="q15" placeholder="e.g. Gary Vee, EO chapters, Fortune 500 companies, Shark Tank alumni…">
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="prevStep()">← Back</button>
+      <button class="btn btn-primary" onclick="nextStep()">Next — Your Offers <span>→</span></button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       STEP 4 — Offers & Ecosystem
+  ════════════════════════════════════════ -->
+  <div class="step" data-step="4">
+    <div class="step-label"><span class="dot"></span>Part 4 of 6</div>
+    <h2 class="step-title">Offers & Ecosystem 💼</h2>
+    <p class="step-desc">How people can work with you, access your thinking, and join your world — across every level.</p>
+
+    <div class="question">
+      <label><span class="q-emoji">🚪</span>What are the 2–4 main ways someone can work with or access you?</label>
+      <textarea name="q16" placeholder="e.g. 1:1 coaching, group mastermind, online course, newsletter, speaking engagements, podcast…"></textarea>
+    </div>
+
+    <div class="question">
+      <label><span class="q-emoji">👥</span>Who is each offer for? (Beginner vs. advanced, B2B vs. consumer, price point, etc.)</label>
+      <textarea name="q17" placeholder="e.g. Course → solopreneurs starting out. Mastermind → 7-figure founders wanting to scale without chaos…"></textarea>
+    </div>
+
+    <div class="question">
+      <label><span class="q-emoji">⭐</span>What's your flagship offer — the thing you're most known for or want to lead with?</label>
+      <input type="text" name="q18" placeholder="e.g. My 12-week 1:1 Freedom Accelerator coaching program">
+    </div>
+
+    <div class="question">
+      <label><span class="q-emoji">📬</span>Do you have a newsletter, podcast, or regular content? What's the core promise in one sentence?</label>
+      <input type="text" name="q19" placeholder="e.g. A weekly email with one unconventional business strategy you can use the same day">
+    </div>
+
+    <div class="question">
+      <label><span class="q-emoji">🌍</span>Is there a community, foundation, or mission layer beyond the business? Something bigger than money?</label>
+      <textarea name="q20" placeholder="e.g. I mentor at-risk youth. I run a free event for young entrepreneurs. I donate 10% to education nonprofits…"></textarea>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="prevStep()">← Back</button>
+      <button class="btn btn-primary" onclick="nextStep()">Next — Your Voice <span>→</span></button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       STEP 5 — Voice & Personality
+  ════════════════════════════════════════ -->
+  <div class="step" data-step="5">
+    <div class="step-label"><span class="dot"></span>Part 5 of 6</div>
+    <h2 class="step-title">Voice & Personality 🎙️</h2>
+    <p class="step-desc">Your brand isn't what you do — it's how you say it. Let's nail your tone so the copy feels unmistakably you.</p>
+
+    <div class="question">
+      <label><span class="q-emoji">🔤</span>Describe your communication style in 3 words.</label>
+      <input type="text" name="q21" placeholder="e.g. Direct, warm, no-BS / Playful, sharp, honest">
+    </div>
+
+    <div class="question">
+      <label><span class="q-emoji">🗣️</span>What topics do you go deep on that feel almost like a crusade for you?</label>
+      <textarea name="q22" placeholder="e.g. Anti-hustle culture. Real estate as a wealth vehicle. The broken education system for entrepreneurs…"></textarea>
+    </div>
+
+    <div class="question">
+      <label><span class="q-emoji">😲</span>What would your audience be shocked to learn about you?</label>
+      <input type="text" name="q23" placeholder="e.g. I was broke at 35. I failed 4 businesses before this one. I only work 4 hours a day now…">
+    </div>
+
+    <div class="question">
+      <label><span class="q-emoji">⚔️</span>Are there any lines you'll cross that others won't? Controversy, uncomfortable truths, naming sacred cows?</label>
+      <textarea name="q24" placeholder="e.g. I'll say hustle culture is killing founders. I'm fine using real numbers others hide. I swear occasionally…"></textarea>
+    </div>
+
+    <div class="question">
+      <label><span class="q-emoji">🌟</span>What do you want someone to feel after 60 seconds on your site?</label>
+      <div class="pill-group">
+        <input type="radio" name="q25" id="feel2-inspired" value="Finally found my people"><label for="feel2-inspired">🤝 Finally found my people</label>
+        <input type="radio" name="q25" id="feel2-challenged" value="Challenged to level up"><label for="feel2-challenged">⚡ Challenged to level up</label>
+        <input type="radio" name="q25" id="feel2-trust" value="This person gets it"><label for="feel2-trust">💡 This person gets it</label>
+        <input type="radio" name="q25" id="feel2-ready" value="Ready to take action"><label for="feel2-ready">🚀 Ready to take action</label>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="prevStep()">← Back</button>
+      <button class="btn btn-primary" onclick="nextStep()">Next — Visual & Brand <span>→</span></button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       STEP 6 — Visual & Brand Direction
+  ════════════════════════════════════════ -->
+  <div class="step" data-step="6">
+    <div class="step-label"><span class="dot"></span>Part 6 of 6</div>
+    <h2 class="step-title">Visual & Brand Direction 🎨</h2>
+    <p class="step-desc">Almost there! Let's capture the look and feel so your site matches your energy.</p>
+
+    <div class="question">
+      <label><span class="q-emoji">🎨</span>3 words to describe how you want the site to look and feel.</label>
+      <input type="text" name="q26" placeholder="e.g. Dark, premium, bold / Clean, warm, human / Bright, energetic, modern">
+    </div>
+
+    <div class="question">
+      <label><span class="q-emoji">👀</span>Are there any personal brands or sites you admire? What specifically do you like about them?</label>
+      <textarea name="q27" placeholder="e.g. I love danmartell.com — the dark, bold feel. I like Alex Hormozi's directness. GaryVee's rawness…"></textarea>
+    </div>
+
+    <div class="question">
+      <label><span class="q-emoji">📸</span>Do you have existing photography you love, or do we need to plan a shoot?</label>
+      <div class="pill-group">
+        <input type="radio" name="q28" id="photo-yes" value="Yes, I have great photos ready"><label for="photo-yes">✅ Yes, I'm ready</label>
+        <input type="radio" name="q28" id="photo-some" value="I have some but need more"><label for="photo-some">📷 I have some</label>
+        <input type="radio" name="q28" id="photo-no" value="Need a full shoot"><label for="photo-no">🎬 Need a full shoot</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <label><span class="q-emoji">🎨</span>What colors feel like "you" — either existing brand colors or ones you're drawn to?</label>
+      <input type="text" name="q29" placeholder="e.g. Deep navy and gold. Black and electric blue. Earthy greens. All black everything…">
+    </div>
+
+    <div class="question">
+      <label><span class="q-emoji">🚫</span>What's one thing you've seen on other entrepreneur sites that you absolutely <em>don't</em> want?</label>
+      <input type="text" name="q30" placeholder="e.g. Cheesy stock photos. Too many pop-ups. The word 'guru'. Comic Sans. Loud auto-play video…">
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="prevStep()">← Back</button>
+      <button class="btn btn-success" onclick="submitForm()">Finish & See Summary 🎉</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       COMPLETE SCREEN
+  ════════════════════════════════════════ -->
+  <div class="complete-screen" id="complete-screen">
+    <span class="complete-icon">🎉</span>
+    <h2>You're all done!</h2>
+    <p>Here's a summary of your brand story building blocks. Copy this and use it to brief your designer or paste it directly into an AI to generate your site copy.</p>
+
+    <div class="summary-box" id="summary-box">
+      <!-- Populated by JS -->
+    </div>
+
+    <button class="btn-copy" onclick="copySummary()">📋 Copy Summary to Clipboard</button>
+  </div>
+
+</div><!-- /form-card -->
+
+<!-- Step dots -->
+<div class="step-dots" id="step-dots">
+  <span class="active"></span>
+  <span></span><span></span><span></span><span></span><span></span>
+</div>
+
+<script>
+  let currentStep = 1;
+  const totalSteps = 6;
+  let goingBack = false;
+
+  const questions = [
+    { name: 'q1',  label: '⚡ What changes after working with you?' },
+    { name: 'q2',  label: '🎯 Dream client description' },
+    { name: 'q3',  label: '🧠 Their hidden belief vs. your truth' },
+    { name: 'q4',  label: '🏆 Bold claim / best client result' },
+    { name: 'q5',  label: '🔥 Movement name' },
+    { name: 'q6',  label: '🌑 Hardest chapter of your life' },
+    { name: 'q7',  label: '💡 The moment you figured it out' },
+    { name: 'q8',  label: '🏳️ What you almost gave up on' },
+    { name: 'q9',  label: '⏳ What past-you needed to hear' },
+    { name: 'q10', label: '💬 How you want your story to feel' },
+    { name: 'q11', label: '📊 Concrete results & numbers' },
+    { name: 'q12', label: '🎤 Features & speaking appearances' },
+    { name: 'q13', label: '📚 Signature framework or book' },
+    { name: 'q14', label: '📏 Scale number' },
+    { name: 'q15', label: '🤝 High-credibility associations' },
+    { name: 'q16', label: '🚪 Ways to work with you' },
+    { name: 'q17', label: '👥 Who each offer is for' },
+    { name: 'q18', label: '⭐ Flagship offer' },
+    { name: 'q19', label: '📬 Newsletter / content promise' },
+    { name: 'q20', label: '🌍 Mission beyond the business' },
+    { name: 'q21', label: '🔤 3 words — your communication style' },
+    { name: 'q22', label: '🗣️ Your crusade topics' },
+    { name: 'q23', label: '😲 Surprising fact about you' },
+    { name: 'q24', label: '⚔️ Lines you\'ll cross' },
+    { name: 'q25', label: '🌟 How site visitors should feel in 60s' },
+    { name: 'q26', label: '🎨 3 words — site look & feel' },
+    { name: 'q27', label: '👀 Sites you admire' },
+    { name: 'q28', label: '📸 Photography status' },
+    { name: 'q29', label: '🎨 Colors that feel like you' },
+    { name: 'q30', label: '🚫 What to absolutely avoid' },
+  ];
+
+  function updateProgress() {
+    const pct = Math.round(((currentStep - 1) / totalSteps) * 100);
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('step-counter').textContent = `Part ${currentStep} of ${totalSteps}`;
+    document.getElementById('step-pct').textContent = pct + '% complete';
+
+    const dots = document.querySelectorAll('.step-dots span');
+    dots.forEach((d, i) => d.classList.toggle('active', i === currentStep - 1));
+  }
+
+  function nextStep() {
+    if (currentStep >= totalSteps) return;
+    goingBack = false;
+
+    const current = document.querySelector(`.step[data-step="${currentStep}"]`);
+    current.classList.add('exit');
+    setTimeout(() => {
+      current.classList.remove('active', 'exit', 'back');
+      currentStep++;
+      updateProgress();
+      const next = document.querySelector(`.step[data-step="${currentStep}"]`);
+      next.classList.add('active');
+    }, 200);
+  }
+
+  function prevStep() {
+    if (currentStep <= 1) return;
+    goingBack = true;
+
+    const current = document.querySelector(`.step[data-step="${currentStep}"]`);
+    current.style.animation = 'none';
+    current.classList.remove('active');
+    currentStep--;
+    updateProgress();
+    const prev = document.querySelector(`.step[data-step="${currentStep}"]`);
+    prev.classList.add('active', 'back');
+  }
+
+  function getVal(name) {
+    const el = document.querySelector(`[name="${name}"]`);
+    if (!el) return '—';
+    if (el.type === 'radio' || el.tagName === 'INPUT' && !el.value) {
+      const checked = document.querySelector(`[name="${name}"]:checked`);
+      return checked ? checked.value : '—';
+    }
+    return el.value.trim() || '—';
+  }
+
+  function submitForm() {
+    // Hide the last step
+    const lastStep = document.querySelector(`.step[data-step="${totalSteps}"]`);
+    lastStep.classList.add('exit');
+    setTimeout(() => {
+      lastStep.classList.remove('active', 'exit');
+      buildSummary();
+      document.getElementById('complete-screen').classList.add('active');
+      document.getElementById('step-dots').style.display = 'none';
+      document.getElementById('progress-fill').style.width = '100%';
+      document.getElementById('step-counter').textContent = 'Complete!';
+      document.getElementById('step-pct').textContent = '100% complete';
+    }, 260);
+  }
+
+  function buildSummary() {
+    const box = document.getElementById('summary-box');
+    box.innerHTML = questions.map(q => {
+      const val = getVal(q.name);
+      return `<div class="s-row">
+        <div class="s-q">${q.label}</div>
+        <div class="s-a">${val}</div>
+      </div>`;
+    }).join('');
+  }
+
+  function copySummary() {
+    const lines = questions.map(q => `${q.label}\n${getVal(q.name)}`).join('\n\n');
+    const full = `ENTREPRENEUR BRAND QUESTIONNAIRE\n${'='.repeat(40)}\n\n${lines}`;
+    navigator.clipboard.writeText(full).then(() => {
+      const btn = document.querySelector('.btn-copy');
+      const orig = btn.innerHTML;
+      btn.innerHTML = '✅ Copied!';
+      setTimeout(() => btn.innerHTML = orig, 2000);
+    });
+  }
+
+  updateProgress();
+</script>
+</body>
+</html>
