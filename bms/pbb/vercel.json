@@ -1,0 +1,27 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
+    }
+  ],
+  "rewrites": [
+    { "source": "/brief", "destination": "/brand-quiz.html" },
+    { "source": "/start", "destination": "/brand-quiz.html" }
+  ],
+  "redirects": [
+    { "source": "/form", "destination": "/brief", "permanent": false }
+  ],
+  "functions": {
+    "api/config.js": {
+      "memory": 128,
+      "maxDuration": 5
+    }
+  }
+}
