@@ -157,14 +157,25 @@ export function repNotificationEmail(a) {
   return { subject: `New booking · ${t.date} · ${t.time}`, html, text };
 }
 
-export async function sendEmail({ to, subject, html, text, replyTo, key, attachment }, env = process.env, fetchImpl = fetch) {
-  if (!env.RESEND_API_KEY || !env.FROM_EMAIL) return 'Resend is not configured (RESEND_API_KEY / FROM_EMAIL).';
+/* The sender address. FROM_EMAIL wins when it's set; otherwise it's built from
+ * the brand settings. This used to require FROM_EMAIL outright, so a project
+ * without it skipped every email with no visible error, despite the callers
+ * defining a fallback they never passed in. */
+export function fromAddress(env = process.env) {
+  if (env.FROM_EMAIL) return env.FROM_EMAIL;
+  const domain = env.BRAND_DOMAIN || 'befortune5.com';
+  const name = env.BRAND_NAME || 'The Fortune 5 Agency';
+  return `${name} <support@${domain}>`;
+}
+
+export async function sendEmail({ to, subject, html, text, replyTo, key, attachment, from }, env = process.env, fetchImpl = fetch) {
+  if (!env.RESEND_API_KEY) return 'Resend is not configured (RESEND_API_KEY).';
   try {
     const res = await fetchImpl('https://api.resend.com/emails', {
       method: 'POST',
       headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json', 'Idempotency-Key': key },
       body: JSON.stringify({
-        from: env.FROM_EMAIL, to: [to], subject, html, text,
+        from: from || fromAddress(env), to: [to], subject, html, text,
         ...(replyTo ? { reply_to: replyTo } : {}),
         ...(attachment ? { attachments: [attachment] } : {})
       })

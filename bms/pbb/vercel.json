@@ -9,19 +9,18 @@
         { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
         { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
       ]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "no-store" }]
     }
   ],
   "rewrites": [
+    { "source": "/api/brief", "destination": "https://book.buildmystart-up.com/api/brief" },
     { "source": "/brief", "destination": "/brand-quiz.html" },
     { "source": "/start", "destination": "/brand-quiz.html" }
   ],
   "redirects": [
     { "source": "/form", "destination": "/brief", "permanent": false }
-  ],
-  "functions": {
-    "api/config.js": {
-      "memory": 128,
-      "maxDuration": 5
-    }
-  }
+  ]
 }
