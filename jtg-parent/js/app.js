@@ -15,11 +15,13 @@
     },
     blk: {
       name: 'Blanket Label', logo: 'blk.png', for: 'Consultants and professionals',
-      offer: 'White-label design, branding and marketing you can resell to your clients under your own brand.'
+      offer: 'White-label design, branding and marketing you can resell to your clients under your own brand.',
+      site: 'blanket-label.j-tgroup.com'
     },
     bb: {
       name: 'Bar Boost', logo: 'bb.png', for: 'Restaurants, bars, clubs and lounges',
-      offer: 'Lead generation, local marketing and customer acquisition systems built for food and nightlife.'
+      offer: 'Lead generation, local marketing and customer acquisition systems built for food and nightlife.',
+      site: 'barboost.j-tgroup.com'
     },
     pd: {
       name: 'Party Designers', logo: 'pd.jpg', tile: 'pd', for: 'Event planners, and anyone planning an event',
@@ -28,27 +30,33 @@
     },
     blm: {
       name: 'Blloom', logo: 'blm.png', for: 'Beauty professionals',
-      offer: 'Client acquisition, social growth, monetization and efficiency systems for beauty businesses.'
+      offer: 'Client acquisition, social growth, monetization and efficiency systems for beauty businesses.',
+      site: 'bloom.j-tgroup.com'
     },
     acad: {
       name: 'Acad Branding', logo: 'acad.png', tile: 'dark', for: 'Schools, academies, daycares and tutoring centers',
-      offer: 'Branding, enrollment marketing and reworked processes that bring in more students.'
+      offer: 'Branding, enrollment marketing and reworked processes that bring in more students.',
+      site: 'acad.j-tgroup.com'
     },
     sd: {
       name: 'Seeder', logo: 'sd.png', for: 'Nonprofits and community organizations',
-      offer: 'Brand, messaging and administrative systems that help you win grants, volunteers and community trust.'
+      offer: 'Brand, messaging and administrative systems that help you win grants, volunteers and community trust.',
+      site: 'seeder.j-tgroup.com'
     },
     bc: {
       name: 'BC Agency', logo: 'bc.png', tile: 'dark', for: 'Government contractors',
-      offer: 'Website, branding and digital infrastructure built to government contracting standards.'
+      offer: 'Website, branding and digital infrastructure built to government contracting standards.',
+      site: 'bc-agency.j-tgroup.com'
     },
     mbc: {
       name: 'Media BC', logo: 'mbc.png', for: 'Small and mid-sized businesses',
-      offer: 'Video content from strategy through editing to posting, produced consistently.'
+      offer: 'Video content from strategy through editing to posting, produced consistently.',
+      site: 'media-bc.j-tgroup.com'
     },
     jw: {
       name: 'Jumpwebs', logo: 'jw.png', for: 'Businesses that need social handled',
-      offer: 'Social content development, strategy, management and posting, done for you.'
+      offer: 'Social content development, strategy, management and posting, done for you.',
+      site: 'jumpwebs.j-tgroup.com'
     },
     f5ceo: {
       name: 'Fortune 5 CEO', logo: 'f5ceo.png', for: 'Entrepreneurs and growing business leaders',
