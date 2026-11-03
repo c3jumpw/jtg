@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 400" fill="none">
+  <!-- Three-step white-label flow: the client brief goes into the studio, where layered design cards take shape, and leaves as a packed set carrying the consultant's own tag -->
+
+  <!-- ground spots -->
+  <circle cx="74" cy="244" r="74" fill="#F4F3F0"/>
+  <circle cx="256" cy="226" r="86" fill="#F4F3F0"/>
+  <circle cx="430" cy="254" r="78" fill="#F4F3F0"/>
+
+  <!-- dotted paths -->
+  <circle cx="110" cy="146" r="4" fill="#5E6066"/>
+  <path d="M112 138 C 128 84, 198 78, 218 122" stroke="#A3A5AA" stroke-width="2" stroke-linecap="round" stroke-dasharray="0.1 7"/>
+  <path d="M-6 -6 L0 0 L-6 6" transform="translate(220 127) rotate(64)" stroke="#5E6066" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="300" cy="134" r="4" fill="#5E6066"/>
+  <path d="M302 126 C 326 76, 394 82, 404 150" stroke="#A3A5AA" stroke-width="2" stroke-linecap="round" stroke-dasharray="0.1 7"/>
+  <path d="M-6 -6 L0 0 L-6 6" transform="translate(404 156) rotate(84)" stroke="#5E6066" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- 1. client brief -->
+  <rect x="16" y="158" width="116" height="164" rx="14" fill="#1D1D20" fill-opacity=".08" transform="translate(0 6)"/>
+  <rect x="16.5" y="158.5" width="116" height="164" rx="14" fill="#FFFFFF" stroke="#DCDAD5"/>
+  <circle cx="46" cy="194" r="15" fill="#F4F3F0"/>
+  <circle cx="46" cy="189" r="5.5" fill="#D9A27A"/>
+  <path d="M36 203 C 38 197, 54 197, 56 203" fill="#5E6066"/>
+  <rect x="70" y="186" width="44" height="8" rx="4" fill="#1D1D20"/>
+  <rect x="70" y="199" width="28" height="6" rx="3" fill="#A3A5AA"/>
+  <path d="M32 222.5 H117" stroke="#DCDAD5"/>
+  <rect x="32.5" y="236.5" width="10" height="10" rx="3" stroke="#A3A5AA"/>
+  <rect x="50" y="238.5" width="58" height="6" rx="3" fill="#DCDAD5"/>
+  <rect x="32.5" y="256.5" width="10" height="10" rx="3" stroke="#A3A5AA"/>
+  <rect x="50" y="258.5" width="44" height="6" rx="3" fill="#DCDAD5"/>
+  <rect x="32.5" y="276.5" width="10" height="10" rx="3" stroke="#A3A5AA"/>
+  <rect x="50" y="278.5" width="52" height="6" rx="3" fill="#DCDAD5"/>
+  <rect x="32" y="298" width="40" height="8" rx="4" fill="#5E6066"/>
+  <path d="M68 168 V152 Q68 146 74 146 Q80 146 80 152 V172 Q80 176 76 176 Q72 176 72 172 V156" stroke="#5E6066" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- 2. studio: layered design cards -->
+  <g transform="translate(256 214) rotate(-9)">
+    <rect x="-70" y="-60" width="140" height="120" rx="14" fill="#FFFFFF" stroke="#DCDAD5"/>
+    <rect x="-54" y="-44" width="40" height="40" rx="10" fill="#E4572E"/>
+  </g>
+  <g transform="translate(256 214) rotate(6)">
+    <rect x="-70" y="-60" width="140" height="120" rx="14" fill="#FFFFFF" stroke="#DCDAD5"/>
+    <rect x="24" y="-46" width="32" height="32" rx="10" fill="#2BB3A3"/>
+  </g>
+  <rect x="186" y="154" width="140" height="120" rx="14" fill="#1D1D20" fill-opacity=".08" transform="translate(0 6)"/>
+  <rect x="186.5" y="154.5" width="140" height="120" rx="14" fill="#FFFFFF" stroke="#DCDAD5"/>
+  <circle cx="224" cy="196" r="18" fill="#2E3192"/>
+  <circle cx="220" cy="196" r="7" fill="#FFFFFF"/>
+  <circle cx="230.5" cy="196" r="4.5" fill="#E4572E"/>
+  <rect x="203.5" y="175.5" width="41" height="41" stroke="#2E3192"/>
+  <rect x="201" y="173" width="5" height="5" fill="#FFFFFF" stroke="#2E3192"/>
+  <rect x="242" y="173" width="5" height="5" fill="#FFFFFF" stroke="#2E3192"/>
+  <rect x="201" y="214" width="5" height="5" fill="#FFFFFF" stroke="#2E3192"/>
+  <rect x="242" y="214" width="5" height="5" fill="#FFFFFF" stroke="#2E3192"/>
+  <rect x="260" y="186" width="50" height="8" rx="4" fill="#1D1D20"/>
+  <rect x="260" y="200" width="34" height="6" rx="3" fill="#A3A5AA"/>
+  <circle cx="211" cy="250" r="7" fill="#2E3192"/>
+  <circle cx="231" cy="250" r="7" fill="#E4572E"/>
+  <circle cx="251" cy="250" r="7" fill="#2BB3A3"/>
+  <circle cx="271" cy="250" r="7" fill="#F2B33D"/>
+  <path d="M244 218 V236 L249 231.5 L252.5 239 L255.5 237.6 L252 230.2 L258.5 230.2 Z" fill="#1D1D20" stroke="#FFFFFF" stroke-width="1.5" stroke-linejoin="round"/>
+
+  <!-- 3. packed set -->
+  <path d="M364 232 L373 218 H467 L476 232 Z" fill="#A3A5AA"/>
+  <rect x="384.5" y="166.5" width="64" height="80" rx="10" fill="#FFFFFF" stroke="#DCDAD5"/>
+  <circle cx="402" cy="184" r="8" fill="#2E3192"/>
+  <rect x="414" y="180" width="24" height="7" rx="3.5" fill="#1D1D20"/>
+  <rect x="396" y="200" width="40" height="6" rx="3" fill="#DCDAD5"/>
+  <g transform="translate(450 206) rotate(10)">
+    <rect x="-20" y="-28" width="44" height="60" rx="8" fill="#2E3192"/>
+    <circle cx="-7" cy="-15" r="5" fill="#FFFFFF"/>
+    <rect x="-12" y="-2" width="24" height="5" rx="2.5" fill="#FFFFFF" fill-opacity=".6"/>
+  </g>
+  <rect x="364" y="232" width="112" height="96" rx="12" fill="#1D1D20" fill-opacity=".08" transform="translate(0 6)"/>
+  <rect x="364" y="232" width="112" height="96" rx="12" fill="#DCDAD5"/>
+  <rect x="377.5" y="252.5" width="58" height="58" rx="10" fill="#FFFFFF"/>
+  <circle cx="396" cy="271" r="10" fill="#1D1D20"/>
+  <path d="M391.5 271.5 L394.5 274.5 L400.5 268" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="388" y="288" width="36" height="7" rx="3.5" fill="#A3A5AA"/>
+  <rect x="388" y="299" width="24" height="5" rx="2.5" fill="#DCDAD5"/>
+
+  <!-- consultant's tag, tied to the box corner -->
+  <path d="M470 238 C 484 246, 482 266, 470 268" stroke="#5E6066" stroke-width="2" stroke-linecap="round"/>
+  <g transform="translate(442 254) rotate(-8 28 15) scale(.66)">
+    <path d="M26 0 H58 Q62 0 65 3 L81 19 Q84 22 84 26 V112 A12 12 0 0 1 72 124 H12 A12 12 0 0 1 0 112 V26 Q0 22 3 19 L19 3 Q22 0 26 0 Z" fill="#1D1D20" fill-opacity=".12" transform="translate(0 9)"/>
+    <path d="M26 0 H58 Q62 0 65 3 L81 19 Q84 22 84 26 V112 A12 12 0 0 1 72 124 H12 A12 12 0 0 1 0 112 V26 Q0 22 3 19 L19 3 Q22 0 26 0 Z" fill="#1D1D20"/>
+    <circle cx="42" cy="22" r="9" fill="#5E6066"/>
+    <circle cx="42" cy="22" r="5" fill="#FFFFFF"/>
+    <circle cx="42" cy="62" r="14" fill="#FFFFFF"/>
+    <rect x="20" y="86" width="44" height="9" rx="4.5" fill="#FFFFFF"/>
+    <rect x="27" y="100" width="30" height="7" rx="3.5" fill="#FFFFFF" fill-opacity=".55"/>
+  </g>
+</svg>

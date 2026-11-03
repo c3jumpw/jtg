@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 460" fill="none">
+  <!-- A video editor: preview frame with play button, clip timeline and playhead, a recording chip, and the finished vertical video on a phone -->
+
+  <!-- editor window -->
+  <rect x="16" y="56" width="404" height="316" rx="16" fill="#161616" fill-opacity=".08" transform="translate(0 6)"/>
+  <rect x="16.5" y="56.5" width="404" height="316" rx="16" fill="#FFFFFF"/>
+  <path d="M17 261 H420 V356.5 A15.5 15.5 0 0 1 404.5 372 H32.5 A15.5 15.5 0 0 1 17 356.5 Z" fill="#F5F4F2"/>
+  <path d="M17 92.5 H420 M17 260.5 H420" stroke="#E2E0DC"/>
+  <rect x="16.5" y="56.5" width="404" height="316" rx="16" stroke="#E2E0DC"/>
+
+  <!-- window bar -->
+  <circle cx="38" cy="74.5" r="4.5" fill="#BDBDBD"/>
+  <circle cx="52" cy="74.5" r="4.5" fill="#BDBDBD"/>
+  <circle cx="66" cy="74.5" r="4.5" fill="#BDBDBD"/>
+  <rect x="176" y="70.5" width="84" height="8" rx="4" fill="#E2E0DC"/>
+  <rect x="316" y="66.5" width="60" height="16" rx="8" fill="#E3241B"/>
+  <rect x="331" y="71.5" width="30" height="6" rx="3" fill="#FFFFFF"/>
+
+  <!-- preview frame -->
+  <rect x="36" y="108" width="232" height="136" rx="10" fill="#161616"/>
+  <circle cx="226" cy="140" r="12" fill="#BDBDBD" fill-opacity=".45"/>
+  <path d="M36 214 C 70 194, 98 196, 128 210 C 152 221, 172 218, 196 204 C 222 190, 248 194, 268 204 V234 A10 10 0 0 1 258 244 H46 A10 10 0 0 1 36 234 Z" fill="#6E6E6E" fill-opacity=".4"/>
+  <path d="M36 230 C 80 214, 130 218, 170 229 C 204 238, 240 230, 268 220 V234 A10 10 0 0 1 258 244 H46 A10 10 0 0 1 36 234 Z" fill="#6E6E6E" fill-opacity=".7"/>
+  <circle cx="152" cy="176" r="24" fill="#E3241B"/>
+  <path d="M146 166.5 L161.5 176 L146 185.5 Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="3" stroke-linejoin="round"/>
+
+  <!-- inspector -->
+  <rect x="284" y="110" width="52" height="8" rx="4" fill="#161616"/>
+  <rect x="284" y="134" width="36" height="6" rx="3" fill="#BDBDBD"/>
+  <rect x="284" y="150" width="92" height="4" rx="2" fill="#E2E0DC"/>
+  <rect x="284" y="150" width="56" height="4" rx="2" fill="#161616"/>
+  <circle cx="340" cy="152" r="6" fill="#FFFFFF" stroke="#BDBDBD"/>
+  <rect x="284" y="170" width="44" height="6" rx="3" fill="#BDBDBD"/>
+  <rect x="284" y="186" width="92" height="4" rx="2" fill="#E2E0DC"/>
+  <rect x="284" y="186" width="30" height="4" rx="2" fill="#E3241B"/>
+  <circle cx="314" cy="188" r="6" fill="#FFFFFF" stroke="#BDBDBD"/>
+  <rect x="284" y="206" width="30" height="6" rx="3" fill="#BDBDBD"/>
+  <rect x="284" y="222" width="92" height="4" rx="2" fill="#E2E0DC"/>
+  <rect x="284" y="222" width="72" height="4" rx="2" fill="#161616"/>
+  <circle cx="356" cy="224" r="6" fill="#FFFFFF" stroke="#BDBDBD"/>
+
+  <!-- timeline: ruler, video clips, b-roll, audio -->
+  <path d="M36 271 H377" stroke="#BDBDBD" stroke-width="6" stroke-dasharray="1 15"/>
+  <rect x="36" y="282" width="72" height="22" rx="6" fill="#161616"/>
+  <rect x="40" y="286" width="14" height="14" rx="4" fill="#6E6E6E"/>
+  <rect x="112" y="282" width="104" height="22" rx="6" fill="#E3241B"/>
+  <rect x="116" y="286" width="14" height="14" rx="4" fill="#B71C14"/>
+  <rect x="136" y="290" width="44" height="6" rx="3" fill="#FFFFFF"/>
+  <rect x="220" y="282" width="88" height="22" rx="6" fill="#161616"/>
+  <rect x="224" y="286" width="14" height="14" rx="4" fill="#6E6E6E"/>
+  <rect x="312" y="282" width="64" height="22" rx="6" fill="#161616"/>
+  <rect x="316" y="286" width="14" height="14" rx="4" fill="#6E6E6E"/>
+  <rect x="60" y="312" width="84" height="14" rx="5" fill="#BDBDBD"/>
+  <rect x="232" y="312" width="100" height="14" rx="5" fill="#BDBDBD"/>
+  <path d="M40 339v6M48 337v10M56 335v14M64 338v8M72 336v12M80 334v16M88 337v10M96 339v6M104 336v12M112 335v14M120 338v8M128 340v4M136 337v10M144 334v16M152 336v12M160 338v8M168 335v14M176 337v10M184 339v6M192 336v12M200 334v16M208 335v14M216 338v8M224 339v6M232 337v10M240 335v14M248 336v12M256 338v8M264 340v4M272 337v10M280 335v14M288 334v16M296 337v10M304 339v6M312 336v12M320 338v8M328 335v14M336 337v10M344 339v6M352 336v12M360 338v8M368 340v4" stroke="#6E6E6E" stroke-width="2" stroke-linecap="round"/>
+  <path d="M176 274 V354" stroke="#E3241B" stroke-width="2" stroke-linecap="round"/>
+  <path d="M170 262 H182 V270 L176 275 L170 270 Z" fill="#E3241B" stroke="#E3241B" stroke-width="2" stroke-linejoin="round"/>
+
+  <!-- recording chip -->
+  <rect x="428" y="64" width="104" height="40" rx="20" fill="#161616" fill-opacity=".08" transform="translate(0 6)"/>
+  <rect x="428.5" y="64.5" width="104" height="40" rx="20" fill="#FFFFFF" stroke="#E2E0DC"/>
+  <circle cx="452" cy="84.5" r="13" fill="#E3241B" fill-opacity=".16"/>
+  <circle cx="452" cy="84.5" r="7" fill="#E3241B"/>
+  <rect x="472" y="80.5" width="44" height="8" rx="4" fill="#161616"/>
+
+  <!-- phone with the vertical cut -->
+  <rect x="392" y="124" width="140" height="284" rx="26" fill="#161616" fill-opacity=".12" transform="translate(0 6)"/>
+  <rect x="531" y="186" width="4" height="30" rx="2" fill="#0B0B0C"/>
+  <rect x="392" y="124" width="140" height="284" rx="26" fill="#0B0B0C"/>
+  <rect x="400" y="132" width="124" height="268" rx="19" fill="#E3241B"/>
+  <circle cx="456" cy="228" r="40" stroke="#FFFFFF" stroke-opacity=".3" stroke-width="6"/>
+  <rect x="450" y="242" width="12" height="28" rx="6" fill="#D9A27A"/>
+  <circle cx="456" cy="226" r="22" fill="#0B0B0C"/>
+  <circle cx="456" cy="232" r="19" fill="#D9A27A"/>
+  <path d="M418 400 V322 C 418 286, 434 264, 456 264 C 478 264, 494 286, 494 322 V400 Z" fill="#161616"/>
+  <rect x="410" y="142" width="32" height="4" rx="2" fill="#FFFFFF"/>
+  <rect x="446" y="142" width="32" height="4" rx="2" fill="#FFFFFF" fill-opacity=".45"/>
+  <rect x="482" y="142" width="32" height="4" rx="2" fill="#FFFFFF" fill-opacity=".45"/>
+  <path d="M508 305 C 500 299, 498 295, 498 292 C 498 288.5, 500.5 286, 503.5 286 C 505.5 286, 507 287, 508 289 C 509 287, 510.5 286, 512.5 286 C 515.5 286, 518 288.5, 518 292 C 518 295, 516 299, 508 305 Z" fill="#FFFFFF"/>
+  <rect x="499" y="320" width="18" height="14" rx="5" fill="#FFFFFF"/>
+  <path d="M503 333 L502 339 L509 333 Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-linejoin="round"/>
+  <path d="M499 358 L517 350 L510 368 L507 361 Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-linejoin="round"/>
+  <rect x="412" y="372" width="60" height="8" rx="4" fill="#FFFFFF"/>
+  <rect x="412" y="385" width="40" height="6" rx="3" fill="#FFFFFF" fill-opacity=".7"/>
+</svg>

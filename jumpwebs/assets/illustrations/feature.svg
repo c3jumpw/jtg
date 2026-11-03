@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 400" fill="none">
+  <!-- A weekly posting schedule: seven day columns with post cards placed in time slots, beside a small rising engagement chart -->
+
+  <!-- schedule board -->
+  <rect x="16" y="68" width="352" height="258" rx="16" fill="#1B1712" fill-opacity=".08" transform="translate(0 6)"/>
+  <rect x="16.5" y="68.5" width="352" height="258" rx="16" fill="#FFFFFF" stroke="#F0E2C8"/>
+  <rect x="34" y="88" width="84" height="10" rx="5" fill="#1B1712"/>
+  <rect x="294.5" y="85.5" width="55" height="15" rx="7.5" fill="#FFF8EA" stroke="#F0E2C8"/>
+  <rect x="306" y="90" width="32" height="6" rx="3" fill="#F5A300"/>
+
+  <!-- today -->
+  <rect x="122" y="108" width="48" height="204" rx="12" fill="#FFC94D" fill-opacity=".2"/>
+  <rect x="126" y="112" width="40" height="18" rx="9" fill="#F5A300"/>
+  <g fill="#F0E2C8">
+    <rect x="46" y="118" width="16" height="6" rx="3"/><rect x="92" y="118" width="16" height="6" rx="3"/>
+    <rect x="184" y="118" width="16" height="6" rx="3"/><rect x="230" y="118" width="16" height="6" rx="3"/>
+    <rect x="276" y="118" width="16" height="6" rx="3"/><rect x="322" y="118" width="16" height="6" rx="3"/>
+  </g>
+  <rect x="138" y="118" width="16" height="6" rx="3" fill="#FFFFFF"/>
+
+  <!-- open slots -->
+  <g fill="#FFF8EA" stroke="#F0E2C8">
+    <rect x="34.5" y="200.5" width="39" height="47" rx="8"/>
+    <rect x="80.5" y="142.5" width="39" height="47" rx="8"/><rect x="80.5" y="258.5" width="39" height="47" rx="8"/>
+    <rect x="126.5" y="258.5" width="39" height="47" rx="8"/>
+    <rect x="172.5" y="142.5" width="39" height="47" rx="8"/><rect x="172.5" y="200.5" width="39" height="47" rx="8"/>
+    <rect x="218.5" y="258.5" width="39" height="47" rx="8"/>
+    <rect x="264.5" y="142.5" width="39" height="47" rx="8"/><rect x="264.5" y="200.5" width="39" height="47" rx="8"/>
+    <rect x="310.5" y="142.5" width="39" height="47" rx="8"/><rect x="310.5" y="258.5" width="39" height="47" rx="8"/>
+  </g>
+
+  <!-- scheduled posts -->
+  <g fill="#F5A300">
+    <rect x="34" y="142" width="40" height="48" rx="8"/><rect x="172" y="258" width="40" height="48" rx="8"/>
+    <rect x="310" y="200" width="40" height="48" rx="8"/>
+  </g>
+  <g fill="#E8231B">
+    <rect x="34" y="258" width="40" height="48" rx="8"/><rect x="126" y="142" width="40" height="48" rx="8"/>
+    <rect x="218" y="200" width="40" height="48" rx="8"/>
+  </g>
+  <g fill="#1B1712">
+    <rect x="80" y="200" width="40" height="48" rx="8"/><rect x="218" y="142" width="40" height="48" rx="8"/>
+  </g>
+  <rect x="126" y="200" width="40" height="48" rx="8" fill="#FFC94D"/>
+  <rect x="264" y="258" width="40" height="48" rx="8" fill="#B85A00"/>
+
+  <!-- post glyphs: play, heart, comment, caption bar -->
+  <path d="M50 156 L60 162 L50 168 Z M142 156 L152 162 L142 168 Z M188 272 L198 278 L188 284 Z M234 214 L244 220 L234 226 Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M54 284.5 C 48 280, 47 277.5, 47 275.5 C 47 273, 48.5 271.5, 50.5 271.5 C 52 271.5, 53.2 272.3, 54 273.5 C 54.8 272.3, 56 271.5, 57.5 271.5 C 59.5 271.5, 61 273, 61 275.5 C 61 277.5, 60 280, 54 284.5 Z M238 168.5 C 232 164, 231 161.5, 231 159.5 C 231 157, 232.5 155.5, 234.5 155.5 C 236 155.5, 237.2 156.3, 238 157.5 C 238.8 156.3, 240 155.5, 241.5 155.5 C 243.5 155.5, 245 157, 245 159.5 C 245 161.5, 244 164, 238 168.5 Z M330 226.5 C 324 222, 323 219.5, 323 217.5 C 323 215, 324.5 213.5, 326.5 213.5 C 328 213.5, 329.2 214.3, 330 215.5 C 330.8 214.3, 332 213.5, 333.5 213.5 C 335.5 213.5, 337 215, 337 217.5 C 337 219.5, 336 222, 330 226.5 Z" fill="#FFFFFF"/>
+  <path d="M146 226.5 C 140 222, 139 219.5, 139 217.5 C 139 215, 140.5 213.5, 142.5 213.5 C 144 213.5, 145.2 214.3, 146 215.5 C 146.8 214.3, 148 213.5, 149.5 213.5 C 151.5 213.5, 153 215, 153 217.5 C 153 219.5, 152 222, 146 226.5 Z" fill="#B85A00"/>
+  <rect x="92" y="214" width="16" height="12" rx="4" fill="#FFFFFF"/>
+  <rect x="276" y="272" width="16" height="12" rx="4" fill="#FFFFFF"/>
+  <path d="M96 225 L95 229 L101 225 Z M280 283 L279 287 L285 283 Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-linejoin="round"/>
+  <g fill="#FFFFFF" fill-opacity=".75">
+    <rect x="42" y="176" width="24" height="5" rx="2.5"/><rect x="42" y="292" width="24" height="5" rx="2.5"/>
+    <rect x="88" y="234" width="24" height="5" rx="2.5"/><rect x="134" y="176" width="24" height="5" rx="2.5"/>
+    <rect x="180" y="292" width="24" height="5" rx="2.5"/><rect x="226" y="176" width="24" height="5" rx="2.5"/>
+    <rect x="226" y="234" width="24" height="5" rx="2.5"/><rect x="272" y="292" width="24" height="5" rx="2.5"/>
+    <rect x="318" y="234" width="24" height="5" rx="2.5"/>
+  </g>
+  <rect x="134" y="234" width="24" height="5" rx="2.5" fill="#B85A00" fill-opacity=".45"/>
+
+  <!-- engagement -->
+  <rect x="388" y="154" width="114" height="172" rx="16" fill="#1B1712" fill-opacity=".08" transform="translate(0 6)"/>
+  <rect x="388.5" y="154.5" width="114" height="172" rx="16" fill="#FFFFFF" stroke="#F0E2C8"/>
+  <rect x="404" y="172" width="44" height="8" rx="4" fill="#1B1712"/>
+  <rect x="404" y="186" width="30" height="6" rx="3" fill="#F0E2C8"/>
+  <rect x="456" y="170" width="30" height="18" rx="9" fill="#E8231B" fill-opacity=".12"/>
+  <path d="M465.5 181.5 L471 176 L476.5 181.5" stroke="#E8231B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M404 306 V278 A6 6 0 0 1 410 272 H414 A6 6 0 0 1 420 278 V306 Z" fill="#F0E2C8"/>
+  <path d="M426 306 V258 A6 6 0 0 1 432 252 H436 A6 6 0 0 1 442 258 V306 Z" fill="#FFC94D"/>
+  <path d="M448 306 V236 A6 6 0 0 1 454 230 H458 A6 6 0 0 1 464 236 V306 Z" fill="#F5A300"/>
+  <path d="M470 306 V212 A6 6 0 0 1 476 206 H480 A6 6 0 0 1 486 212 V306 Z" fill="#E8231B"/>
+  <path d="M400 306.5 H490" stroke="#F0E2C8"/>
+</svg>

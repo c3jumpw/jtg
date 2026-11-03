@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 460" fill="none">
+  <!-- Stories coming: a fanned stack of founder-story covers, a podcast microphone, and a glowing lightbulb -->
+
+  <!-- lightbulb glow -->
+  <circle cx="444" cy="114" r="96" fill="#2090F8" fill-opacity=".06"/>
+  <circle cx="444" cy="114" r="68" fill="#2090F8" fill-opacity=".1"/>
+
+  <!-- back cover: founder portrait -->
+  <g transform="translate(140 276) rotate(-10)">
+    <rect x="-84" y="-116" width="168" height="232" rx="14" fill="#23262D" stroke="#2A2D34"/>
+    <rect x="-68" y="-98" width="70" height="10" rx="5" fill="#A9ABB0" fill-opacity=".55"/>
+    <rect x="8" y="-98" width="30" height="10" rx="5" fill="#1468C8"/>
+    <circle cx="-12" cy="-22" r="42" fill="#1A1C21"/>
+    <circle cx="-12" cy="-32" r="13" fill="#6E4630"/>
+    <path d="M-41.7 7.7 C -39 -6, -28 -12, -12 -12 C 4 -12, 15 -6, 17.7 7.7 A42 42 0 0 1 -41.7 7.7 Z" fill="#6B6B6B"/>
+    <rect x="-68" y="42" width="120" height="9" rx="4.5" fill="#6B6B6B"/>
+    <rect x="-68" y="58" width="84" height="9" rx="4.5" fill="#6B6B6B"/>
+    <rect x="-68" y="78" width="100" height="6" rx="3" fill="#2A2D34"/>
+  </g>
+
+  <!-- back cover: video story -->
+  <g transform="translate(280 276) rotate(9)">
+    <rect x="-84" y="-116" width="168" height="232" rx="14" fill="#23262D" stroke="#2A2D34"/>
+    <rect x="-68" y="-98" width="70" height="10" rx="5" fill="#A9ABB0" fill-opacity=".55"/>
+    <rect x="8" y="-98" width="30" height="10" rx="5" fill="#2090F8"/>
+    <rect x="-68" y="-78" width="136" height="104" rx="10" fill="#1468C8"/>
+    <circle cx="36" cy="-26" r="16" fill="#F5F6F8"/>
+    <path d="M31.5 -33 L43 -26 L31.5 -19 Z" fill="#1468C8" stroke="#1468C8" stroke-width="2" stroke-linejoin="round"/>
+    <rect x="-68" y="42" width="120" height="9" rx="4.5" fill="#6B6B6B"/>
+    <rect x="-68" y="58" width="84" height="9" rx="4.5" fill="#6B6B6B"/>
+    <rect x="-68" y="78" width="100" height="6" rx="3" fill="#2A2D34"/>
+  </g>
+
+  <!-- front cover -->
+  <rect x="126" y="146" width="168" height="232" rx="14" fill="#0C0D10" fill-opacity=".5" transform="translate(0 6)"/>
+  <rect x="126" y="146" width="168" height="232" rx="14" fill="#F5F6F8"/>
+  <rect x="142" y="164" width="84" height="12" rx="6" fill="#0C0D10"/>
+  <rect x="232" y="164" width="46" height="12" rx="6" fill="#2090F8"/>
+  <circle cx="210" cy="242" r="48" fill="#2090F8"/>
+  <rect x="204" y="242" width="12" height="16" rx="6" fill="#A8714A"/>
+  <circle cx="210" cy="232" r="16" fill="#A8714A"/>
+  <path d="M176.1 275.9 C 179 262, 192 254, 210 254 C 228 254, 241 262, 243.9 275.9 A48 48 0 0 1 176.1 275.9 Z" fill="#1A1C21"/>
+  <rect x="142" y="308" width="136" height="10" rx="5" fill="#0C0D10"/>
+  <rect x="142" y="324" width="100" height="10" rx="5" fill="#0C0D10"/>
+  <rect x="142" y="344" width="112" height="6" rx="3" fill="#A9ABB0"/>
+  <rect x="142" y="356" width="64" height="6" rx="3" fill="#A9ABB0"/>
+
+  <!-- coming-soon chip -->
+  <rect x="24.5" y="72.5" width="148" height="40" rx="20" fill="#1A1C21" stroke="#2A2D34"/>
+  <circle cx="46" cy="92.5" r="11" fill="#2090F8" fill-opacity=".22"/>
+  <circle cx="46" cy="92.5" r="5.5" fill="#2090F8"/>
+  <rect x="64" y="88.5" width="56" height="8" rx="4" fill="#F5F6F8"/>
+  <circle cx="134" cy="92.5" r="2.5" fill="#A9ABB0"/>
+  <circle cx="144" cy="92.5" r="2.5" fill="#A9ABB0" fill-opacity=".7"/>
+  <circle cx="154" cy="92.5" r="2.5" fill="#A9ABB0" fill-opacity=".4"/>
+
+  <!-- lightbulb -->
+  <path d="M444 71 V61 M473.7 83.3 L480.8 76.2 M414.3 83.3 L407.2 76.2 M486 113 H496 M402 113 H392" stroke="#2090F8" stroke-width="3" stroke-linecap="round"/>
+  <path d="M444 84 C 427 84, 414 97, 414 113 C 414 124, 420 131, 426 137 C 429 140, 430 144, 430 148 H458 C 458 144, 459 140, 462 137 C 468 131, 474 124, 474 113 C 474 97, 461 84, 444 84 Z" fill="#2090F8"/>
+  <path d="M425 110 C 426 102, 431 96, 438 94.5" stroke="#FFFFFF" stroke-opacity=".55" stroke-width="3" stroke-linecap="round"/>
+  <path d="M436 130 L440 122 L444 130 L448 122 L452 130" stroke="#F5F6F8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="430" y="151" width="28" height="7" rx="3.5" fill="#A9ABB0"/>
+  <rect x="432" y="160" width="24" height="7" rx="3.5" fill="#A9ABB0"/>
+  <rect x="438" y="169" width="12" height="5" rx="2.5" fill="#6B6B6B"/>
+
+  <!-- podcast microphone -->
+  <path d="M496 264 C 504 276, 504 298, 496 310" stroke="#2090F8" stroke-width="3" stroke-linecap="round"/>
+  <path d="M510 252 C 522 272, 522 302, 510 322" stroke="#2090F8" stroke-opacity=".45" stroke-width="3" stroke-linecap="round"/>
+  <path d="M404 278 V294 C 404 320, 422 344, 444 344 C 466 344, 484 320, 484 294 V278" stroke="#6B6B6B" stroke-width="6" stroke-linecap="round"/>
+  <path d="M444 344 V404" stroke="#6B6B6B" stroke-width="6"/>
+  <rect x="404" y="402" width="80" height="14" rx="7" fill="#6B6B6B"/>
+  <rect x="416" y="238" width="56" height="96" rx="28" fill="#A9ABB0"/>
+  <path d="M428 254 H460 M424 264 H464 M424 274 H464 M424 284 H464 M424 294 H464" stroke="#23262D" stroke-width="2.5" stroke-linecap="round"/>
+  <rect x="416" y="304" width="56" height="8" fill="#6B6B6B"/>
+  <circle cx="404" cy="290" r="6" fill="#6B6B6B"/>
+  <circle cx="484" cy="290" r="6" fill="#6B6B6B"/>
+</svg>

@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 400" fill="none">
+  <!-- A month of planned video posts on a content calendar, flowing out to three generic channels -->
+
+  <!-- calendar card -->
+  <rect x="32" y="56" width="314" height="286" rx="16" fill="#161616" fill-opacity=".08" transform="translate(0 6)"/>
+  <rect x="32.5" y="56.5" width="314" height="286" rx="16" fill="#FFFFFF" stroke="#E2E0DC"/>
+  <rect x="52" y="78" width="88" height="10" rx="5" fill="#161616"/>
+  <circle cx="297" cy="83" r="9" fill="#F5F4F2"/>
+  <circle cx="317" cy="83" r="9" fill="#F5F4F2"/>
+  <path d="M299 79 L295 83 L299 87 M315 79 L319 83 L315 87" stroke="#6E6E6E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <g fill="#BDBDBD">
+    <rect x="62" y="106" width="14" height="6" rx="3"/><rect x="102" y="106" width="14" height="6" rx="3"/>
+    <rect x="142" y="106" width="14" height="6" rx="3"/><rect x="182" y="106" width="14" height="6" rx="3"/>
+    <rect x="222" y="106" width="14" height="6" rx="3"/><rect x="262" y="106" width="14" height="6" rx="3"/>
+    <rect x="302" y="106" width="14" height="6" rx="3"/>
+  </g>
+
+  <!-- days -->
+  <g stroke="#E2E0DC">
+    <rect x="52.5" y="126.5" width="33" height="33" rx="8"/><rect x="92.5" y="126.5" width="33" height="33" rx="8"/>
+    <rect x="252.5" y="286.5" width="33" height="33" rx="8"/><rect x="292.5" y="286.5" width="33" height="33" rx="8"/>
+  </g>
+  <g fill="#F5F4F2">
+    <rect x="132" y="126" width="34" height="34" rx="8"/><rect x="212" y="126" width="34" height="34" rx="8"/>
+    <rect x="292" y="126" width="34" height="34" rx="8"/>
+    <rect x="52" y="166" width="34" height="34" rx="8"/><rect x="132" y="166" width="34" height="34" rx="8"/>
+    <rect x="172" y="166" width="34" height="34" rx="8"/><rect x="252" y="166" width="34" height="34" rx="8"/>
+    <rect x="292" y="166" width="34" height="34" rx="8"/>
+    <rect x="52" y="206" width="34" height="34" rx="8"/><rect x="92" y="206" width="34" height="34" rx="8"/>
+    <rect x="172" y="206" width="34" height="34" rx="8"/><rect x="212" y="206" width="34" height="34" rx="8"/>
+    <rect x="252" y="206" width="34" height="34" rx="8"/>
+    <rect x="92" y="246" width="34" height="34" rx="8"/><rect x="132" y="246" width="34" height="34" rx="8"/>
+    <rect x="212" y="246" width="34" height="34" rx="8"/><rect x="292" y="246" width="34" height="34" rx="8"/>
+    <rect x="52" y="286" width="34" height="34" rx="8"/><rect x="92" y="286" width="34" height="34" rx="8"/>
+    <rect x="172" y="286" width="34" height="34" rx="8"/><rect x="212" y="286" width="34" height="34" rx="8"/>
+  </g>
+
+  <!-- video posts -->
+  <g fill="#E3241B">
+    <rect x="172" y="126" width="34" height="34" rx="8"/><rect x="212" y="166" width="34" height="34" rx="8"/>
+    <rect x="132" y="206" width="34" height="34" rx="8"/><rect x="52" y="246" width="34" height="34" rx="8"/>
+    <rect x="252" y="246" width="34" height="34" rx="8"/>
+  </g>
+  <g fill="#161616">
+    <rect x="252" y="126" width="34" height="34" rx="8"/><rect x="92" y="166" width="34" height="34" rx="8"/>
+    <rect x="292" y="206" width="34" height="34" rx="8"/><rect x="172" y="246" width="34" height="34" rx="8"/>
+    <rect x="132" y="286" width="34" height="34" rx="8"/>
+  </g>
+  <path d="M185 137 L195 143 L185 149 Z M265 137 L275 143 L265 149 Z M105 177 L115 183 L105 189 Z M225 177 L235 183 L225 189 Z M145 217 L155 223 L145 229 Z M305 217 L315 223 L305 229 Z M65 257 L75 263 L65 269 Z M185 257 L195 263 L185 269 Z M265 257 L275 263 L265 269 Z M145 297 L155 303 L145 309 Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="2" stroke-linejoin="round"/>
+
+  <!-- flow to channels -->
+  <path d="M358 223 C 392 223, 392 143, 424 143 M358 223 H424 M358 223 C 392 223, 392 303, 424 303" stroke="#E3241B" stroke-width="2" stroke-linecap="round" stroke-dasharray="0.1 7"/>
+  <circle cx="346.5" cy="223" r="12" fill="#E3241B" stroke="#FFFFFF" stroke-width="3"/>
+  <path d="M344 218 L349 223 L344 228" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- channels -->
+  <g fill="#161616" fill-opacity=".08">
+    <circle cx="460" cy="149" r="30"/><circle cx="460" cy="229" r="30"/><circle cx="460" cy="309" r="30"/>
+  </g>
+  <g fill="#FFFFFF" stroke="#E2E0DC">
+    <circle cx="460" cy="143" r="29.5"/><circle cx="460" cy="223" r="29.5"/><circle cx="460" cy="303" r="29.5"/>
+  </g>
+  <circle cx="460" cy="143" r="20" fill="#E3241B"/>
+  <path d="M456 136.5 L466 143 L456 149.5 Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="2" stroke-linejoin="round"/>
+  <circle cx="460" cy="223" r="20" fill="#161616"/>
+  <path d="M460 231 C 452.5 225.5, 451 222, 451 219 C 451 216, 453 214, 455.5 214 C 457.5 214, 459 215, 460 217 C 461 215, 462.5 214, 464.5 214 C 467 214, 469 216, 469 219 C 469 222, 467.5 225.5, 460 231 Z" fill="#FFFFFF"/>
+  <circle cx="460" cy="303" r="20" fill="#B71C14"/>
+  <rect x="450" y="295" width="20" height="14" rx="5" fill="#FFFFFF"/>
+  <path d="M454 308 L453 314 L460 308 Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-linejoin="round"/>
+</svg>

@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 460" fill="none">
+  <!-- A finished white-label deliverable set on a desk mat: brand board, website card and business cards, with a blank swing tag clipped on for the consultant's own label -->
+
+  <!-- desk mat -->
+  <rect x="40" y="96" width="480" height="324" rx="18" fill="#DCDAD5" fill-opacity=".55"/>
+
+  <!-- website card -->
+  <rect x="332" y="52" width="188" height="164" rx="14" fill="#1D1D20" fill-opacity=".08" transform="translate(0 6)"/>
+  <rect x="332.5" y="52.5" width="188" height="164" rx="14" fill="#FFFFFF" stroke="#DCDAD5"/>
+  <circle cx="350" cy="70" r="4" fill="#DCDAD5"/>
+  <circle cx="362" cy="70" r="4" fill="#DCDAD5"/>
+  <circle cx="374" cy="70" r="4" fill="#DCDAD5"/>
+  <rect x="390" y="65" width="112" height="10" rx="5" fill="#F4F3F0"/>
+  <path d="M333 88.5 H520" stroke="#DCDAD5"/>
+  <rect x="350" y="104" width="78" height="10" rx="5" fill="#2E3192"/>
+  <rect x="350" y="120" width="58" height="10" rx="5" fill="#2E3192"/>
+  <rect x="350" y="138" width="70" height="7" rx="3.5" fill="#DCDAD5"/>
+  <rect x="350" y="156" width="48" height="18" rx="9" fill="#E4572E"/>
+  <rect x="440" y="104" width="62" height="70" rx="10" fill="#2BB3A3"/>
+  <circle cx="471" cy="132" r="12" fill="#FFFFFF" fill-opacity=".9"/>
+  <rect x="456" y="152" width="30" height="6" rx="3" fill="#FFFFFF" fill-opacity=".6"/>
+  <rect x="350" y="188" width="44" height="12" rx="6" fill="#F4F3F0"/>
+  <rect x="404" y="188" width="44" height="12" rx="6" fill="#F4F3F0"/>
+  <rect x="458" y="188" width="44" height="12" rx="6" fill="#F4F3F0"/>
+
+  <!-- brand board -->
+  <rect x="92" y="128" width="236" height="256" rx="16" fill="#1D1D20" fill-opacity=".08" transform="translate(0 6)"/>
+  <rect x="92.5" y="128.5" width="236" height="256" rx="16" fill="#FFFFFF" stroke="#DCDAD5"/>
+  <circle cx="134" cy="170" r="20" fill="#2E3192"/>
+  <circle cx="129" cy="170" r="8" fill="#FFFFFF"/>
+  <circle cx="141" cy="170" r="5" fill="#E4572E"/>
+  <rect x="166" y="160" width="88" height="10" rx="5" fill="#1D1D20"/>
+  <rect x="166" y="176" width="56" height="7" rx="3.5" fill="#A3A5AA"/>
+  <path d="M114 210.5 H307" stroke="#DCDAD5"/>
+  <rect x="114" y="226" width="42" height="42" rx="10" fill="#2E3192"/>
+  <rect x="164" y="226" width="42" height="42" rx="10" fill="#E4572E"/>
+  <rect x="214" y="226" width="42" height="42" rx="10" fill="#2BB3A3"/>
+  <rect x="264" y="226" width="42" height="42" rx="10" fill="#F2B33D"/>
+  <rect x="114" y="276" width="26" height="6" rx="3" fill="#DCDAD5"/>
+  <rect x="164" y="276" width="26" height="6" rx="3" fill="#DCDAD5"/>
+  <rect x="214" y="276" width="26" height="6" rx="3" fill="#DCDAD5"/>
+  <rect x="264" y="276" width="26" height="6" rx="3" fill="#DCDAD5"/>
+  <path d="M114 298.5 H307" stroke="#DCDAD5"/>
+  <rect x="114" y="314" width="112" height="10" rx="5" fill="#1D1D20"/>
+  <rect x="114" y="332" width="168" height="7" rx="3.5" fill="#A3A5AA"/>
+  <rect x="114" y="346" width="132" height="7" rx="3.5" fill="#A3A5AA"/>
+
+  <!-- business cards -->
+  <g transform="translate(420 338) rotate(9)">
+    <rect x="-76" y="-44" width="152" height="88" rx="12" fill="#FFFFFF" stroke="#DCDAD5"/>
+    <rect x="-56" y="14" width="60" height="7" rx="3.5" fill="#DCDAD5"/>
+  </g>
+  <g transform="translate(408 344) rotate(-5)">
+    <rect x="-76" y="-38" width="152" height="88" rx="12" fill="#1D1D20" fill-opacity=".12"/>
+    <rect x="-76" y="-44" width="152" height="88" rx="12" fill="#2E3192"/>
+    <circle cx="-48" cy="-16" r="12" fill="#FFFFFF"/>
+    <circle cx="-51" cy="-16" r="5" fill="#2E3192"/>
+    <circle cx="-43" cy="-16" r="3" fill="#E4572E"/>
+    <rect x="-58" y="10" width="70" height="8" rx="4" fill="#FFFFFF"/>
+    <rect x="-58" y="24" width="46" height="6" rx="3" fill="#FFFFFF" fill-opacity=".55"/>
+    <circle cx="52" cy="22" r="6" fill="#F2B33D"/>
+  </g>
+
+  <!-- swing tag, tied to the clip -->
+  <g transform="translate(34 252) rotate(7 42 22)">
+    <path d="M26 0 H58 Q62 0 65 3 L81 19 Q84 22 84 26 V112 A12 12 0 0 1 72 124 H12 A12 12 0 0 1 0 112 V26 Q0 22 3 19 L19 3 Q22 0 26 0 Z" fill="#1D1D20" fill-opacity=".12" transform="translate(0 6)"/>
+    <path d="M26 0 H58 Q62 0 65 3 L81 19 Q84 22 84 26 V112 A12 12 0 0 1 72 124 H12 A12 12 0 0 1 0 112 V26 Q0 22 3 19 L19 3 Q22 0 26 0 Z" fill="#1D1D20"/>
+    <circle cx="42" cy="22" r="9" fill="#5E6066"/>
+    <circle cx="42" cy="22" r="5" fill="#F4F3F0"/>
+    <rect x="14.5" y="46.5" width="55" height="64" rx="8" stroke="#A3A5AA" stroke-width="1.5" stroke-dasharray="4 4"/>
+  </g>
+  <path d="M60 222 C 46 236, 54 262, 74 270" stroke="#5E6066" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- binder clip on the board edge -->
+  <path d="M84 202 L66 198 Q58 197 58 205 V225 Q58 233 66 232 L84 228" stroke="#A3A5AA" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="80" y="194" width="28" height="42" rx="6" fill="#1D1D20"/>
+  <rect x="86" y="200" width="5" height="30" rx="2.5" fill="#5E6066"/>
+</svg>

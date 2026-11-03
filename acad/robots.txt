@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://acad.j-tgroup.com/sitemap.xml

@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 400" fill="none">
+  <!-- A founder community: six members on a ring, all connected to a central lightbulb, with conversation and video chips moving around it -->
+
+  <ellipse cx="260" cy="200" rx="190" ry="140" stroke="#6B6B6B" stroke-opacity=".7" stroke-dasharray="2 6"/>
+
+  <!-- connections -->
+  <path d="M260 200 L424.5 130 M260 200 L260 340 M260 200 L95.5 270 M260 200 L95.5 130" stroke="#2A2D34" stroke-width="2"/>
+  <path d="M260 200 L260 60 M260 200 L424.5 270" stroke="#2090F8" stroke-width="2" stroke-linecap="round" stroke-dasharray="0.1 7"/>
+
+  <!-- the idea at the center -->
+  <circle cx="260" cy="200" r="86" fill="#2090F8" fill-opacity=".06"/>
+  <circle cx="260" cy="200" r="62" fill="#2090F8" fill-opacity=".12"/>
+  <circle cx="260" cy="200" r="42" fill="#2090F8"/>
+  <path d="M260 174 C 250 174, 243 181.5, 243 191 C 243 197.5, 246.5 201.5, 250 205 C 251.5 206.5, 252 208.5, 252 211 H268 C 268 208.5, 268.5 206.5, 270 205 C 273.5 201.5, 277 197.5, 277 191 C 277 181.5, 270 174, 260 174 Z" fill="#FFFFFF"/>
+  <path d="M254 197 L257 192 L260 197 L263 192 L266 197" stroke="#2090F8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="253" y="214" width="14" height="5" rx="2.5" fill="#F5F6F8"/>
+  <rect x="255.5" y="221" width="9" height="4" rx="2" fill="#F5F6F8"/>
+
+  <!-- members -->
+  <g fill="#23262D" stroke="#2A2D34">
+    <circle cx="260" cy="60" r="28"/><circle cx="424.5" cy="130" r="28"/><circle cx="424.5" cy="270" r="28"/>
+    <circle cx="260" cy="340" r="28"/><circle cx="95.5" cy="270" r="28"/><circle cx="95.5" cy="130" r="28"/>
+  </g>
+  <circle cx="260" cy="60" r="33" stroke="#2090F8" stroke-width="2"/>
+  <circle cx="424.5" cy="270" r="33" stroke="#2090F8" stroke-width="2"/>
+
+  <circle cx="260" cy="54" r="10" fill="#F1C7A5"/>
+  <path d="M240.2 79.8 C 243 69, 250 66, 260 66 C 270 66, 277 69, 279.8 79.8 A28 28 0 0 1 240.2 79.8 Z" fill="#2090F8"/>
+  <circle cx="424.5" cy="124" r="10" fill="#6E4630"/>
+  <path d="M404.7 149.8 C 407.5 139, 414.5 136, 424.5 136 C 434.5 136, 441.5 139, 444.3 149.8 A28 28 0 0 1 404.7 149.8 Z" fill="#A9ABB0"/>
+  <circle cx="424.5" cy="264" r="10" fill="#D9A27A"/>
+  <path d="M404.7 289.8 C 407.5 279, 414.5 276, 424.5 276 C 434.5 276, 441.5 279, 444.3 289.8 A28 28 0 0 1 404.7 289.8 Z" fill="#1468C8"/>
+  <circle cx="260" cy="334" r="10" fill="#A8714A"/>
+  <path d="M240.2 359.8 C 243 349, 250 346, 260 346 C 270 346, 277 349, 279.8 359.8 A28 28 0 0 1 240.2 359.8 Z" fill="#F5F6F8"/>
+  <circle cx="95.5" cy="264" r="10" fill="#F1C7A5"/>
+  <path d="M75.7 289.8 C 78.5 279, 85.5 276, 95.5 276 C 105.5 276, 112.5 279, 115.3 289.8 A28 28 0 0 1 75.7 289.8 Z" fill="#6B6B6B"/>
+  <circle cx="95.5" cy="124" r="10" fill="#D9A27A"/>
+  <path d="M75.7 149.8 C 78.5 139, 85.5 136, 95.5 136 C 105.5 136, 112.5 139, 115.3 149.8 A28 28 0 0 1 75.7 149.8 Z" fill="#2090F8"/>
+
+  <!-- conversation + video chips -->
+  <g fill="#1A1C21" stroke="#2A2D34">
+    <rect x="135.5" y="64.5" width="60" height="30" rx="15"/>
+    <rect x="420.5" y="185.5" width="60" height="30" rx="15"/>
+    <rect x="135.5" y="306.5" width="60" height="30" rx="15"/>
+  </g>
+  <rect x="145" y="73.5" width="16" height="12" rx="4" fill="#2090F8"/>
+  <rect x="145" y="315.5" width="16" height="12" rx="4" fill="#2090F8"/>
+  <path d="M149 84.5 L148 88.5 L154 84.5 Z M149 326.5 L148 330.5 L154 326.5 Z" fill="#2090F8" stroke="#2090F8" stroke-linejoin="round"/>
+  <circle cx="437" cy="200.5" r="9" fill="#2090F8"/>
+  <path d="M434.5 196.5 L441 200.5 L434.5 204.5 Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-linejoin="round"/>
+  <g fill="#A9ABB0">
+    <rect x="167" y="76.5" width="20" height="6" rx="3"/><rect x="452" y="197.5" width="20" height="6" rx="3"/>
+    <rect x="167" y="318.5" width="20" height="6" rx="3"/>
+  </g>
+</svg>

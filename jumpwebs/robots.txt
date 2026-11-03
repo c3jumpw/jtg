@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://jumpwebs.j-tgroup.com/sitemap.xml

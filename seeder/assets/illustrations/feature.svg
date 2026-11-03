@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 400" fill="none">
+  <!-- Credibility checklist (brand, messaging, admin all checked) beside one plant at three growth stages, crowned by a small funded ribbon badge -->
+
+  <!-- backdrop -->
+  <circle cx="392" cy="226" r="112" fill="#F1F8EB"/>
+
+  <!-- checklist card -->
+  <rect x="28" y="72" width="222" height="264" rx="18" fill="#12301B" fill-opacity=".08" transform="translate(0 6)"/>
+  <rect x="28.5" y="72.5" width="222" height="264" rx="18" fill="#FFFFFF" stroke="#D8E8CC"/>
+  <rect x="48" y="96" width="96" height="10" rx="5" fill="#12301B"/>
+  <rect x="48" y="114" width="140" height="7" rx="3.5" fill="#D8E8CC"/>
+
+  <g fill="#F1F8EB">
+    <rect x="44" y="140" width="190" height="52" rx="12"/>
+    <rect x="44" y="202" width="190" height="52" rx="12"/>
+    <rect x="44" y="264" width="190" height="52" rx="12"/>
+  </g>
+  <g fill="#FFFFFF" stroke="#D8E8CC">
+    <rect x="56.5" y="150.5" width="32" height="32" rx="9"/>
+    <rect x="56.5" y="212.5" width="32" height="32" rx="9"/>
+    <rect x="56.5" y="274.5" width="32" height="32" rx="9"/>
+  </g>
+  <!-- brand: sprout mark -->
+  <path d="M72.5 176 V167" stroke="#2E7D16" stroke-width="2" stroke-linecap="round"/>
+  <path d="M72 169 C 66 169, 62.5 165, 62.5 159 C 68.5 159, 72 163, 72 169 Z" fill="#5BD12A"/>
+  <path d="M73 166 C 73 160, 77 156.5, 83 156.5 C 83 162.5, 79 166, 73 166 Z" fill="#2E7D16"/>
+  <!-- messaging: speech bubble -->
+  <rect x="62.5" y="220.5" width="20" height="14" rx="4" fill="#2E7D16"/>
+  <path d="M66.5 233.5 V239.5 L72.5 233.5 Z" fill="#2E7D16"/>
+  <rect x="66.5" y="225.5" width="12" height="2.5" rx="1.25" fill="#FFFFFF"/>
+  <rect x="66.5" y="229.5" width="8" height="2.5" rx="1.25" fill="#FFFFFF"/>
+  <!-- admin: folder -->
+  <path d="M62.5 284 A2 2 0 0 1 64.5 282 H70 L73 285 H80.5 A2 2 0 0 1 82.5 287 V296.5 A2 2 0 0 1 80.5 298.5 H64.5 A2 2 0 0 1 62.5 296.5 Z" fill="#2E7D16"/>
+  <path d="M62.5 289 H82.5" stroke="#5BD12A" stroke-width="1.5"/>
+
+  <g fill="#12301B">
+    <rect x="100" y="156" width="70" height="8" rx="4"/>
+    <rect x="100" y="218" width="82" height="8" rx="4"/>
+    <rect x="100" y="280" width="60" height="8" rx="4"/>
+  </g>
+  <g fill="#D8E8CC">
+    <rect x="100" y="170" width="50" height="6" rx="3"/>
+    <rect x="100" y="232" width="56" height="6" rx="3"/>
+    <rect x="100" y="294" width="44" height="6" rx="3"/>
+  </g>
+  <g fill="#5BD12A">
+    <circle cx="214" cy="166" r="11"/>
+    <circle cx="214" cy="228" r="11"/>
+    <circle cx="214" cy="290" r="11"/>
+  </g>
+  <path d="M209 166.5 L212.5 170 L219 163 M209 228.5 L212.5 232 L219 225 M209 290.5 L212.5 294 L219 287" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- growth dotted line -->
+  <path d="M318 262 C 344 252, 364 232, 392 222 S 440 160, 452 132" stroke="#5BD12A" stroke-width="2" stroke-linecap="round" stroke-dasharray="0.1 7"/>
+
+  <!-- ground -->
+  <rect x="284" y="336" width="216" height="6" rx="3" fill="#D8E8CC"/>
+
+  <!-- stage 1: seedling -->
+  <path d="M318 300 V282" stroke="#2E7D16" stroke-width="4" stroke-linecap="round"/>
+  <path d="M317 286 C 310 286, 304 282, 302 274 C 310 273, 316 278, 317 286 Z" fill="#5BD12A"/>
+  <path d="M319 284 C 320 276, 326 270, 334 270 C 333 278, 327 283, 319 284 Z" fill="#74B33F"/>
+
+  <!-- stage 2: young plant -->
+  <path d="M392 300 C 392 280, 390 262, 392 236" stroke="#2E7D16" stroke-width="4.5" stroke-linecap="round"/>
+  <path d="M391 282 C 380 284, 370 278, 366 266 C 378 264, 388 270, 391 282 Z" fill="#74B33F"/>
+  <path d="M393 270 C 396 258, 406 250, 418 251 C 416 263, 406 270, 393 270 Z" fill="#5BD12A"/>
+  <path d="M391 250 C 382 250, 375 244, 373 234 C 382 233, 390 240, 391 250 Z" fill="#5BD12A"/>
+  <path d="M392 240 C 386 232, 386 224, 392 218 C 398 224, 398 232, 392 240 Z" fill="#9BE36D"/>
+
+  <!-- stage 3: grown plant -->
+  <path d="M466 300 C 466 260, 462 220, 466 168" stroke="#2E7D16" stroke-width="5" stroke-linecap="round"/>
+  <path d="M465 284 C 450 288, 436 280, 430 264 C 446 260, 460 268, 465 284 Z" fill="#74B33F"/>
+  <path d="M466 262 C 470 246, 484 236, 500 238 C 497 254, 484 262, 466 262 Z" fill="#5BD12A"/>
+  <path d="M464 234 C 450 236, 438 228, 434 214 C 448 210, 460 218, 464 234 Z" fill="#5BD12A"/>
+  <path d="M466 212 C 470 198, 482 190, 496 192 C 494 206, 482 213, 466 212 Z" fill="#74B33F"/>
+  <path d="M465 186 C 455 186, 447 180, 445 169 C 455 167, 463 174, 465 186 Z" fill="#9BE36D"/>
+  <path d="M467 182 C 469 172, 477 166, 487 167 C 486 177, 478 182, 467 182 Z" fill="#9BE36D"/>
+
+  <!-- pots -->
+  <g fill="#2E7D16">
+    <path d="M296 306 H340 L336 334 A3 3 0 0 1 333 336.5 H301 A3 3 0 0 1 298 334 Z"/>
+    <path d="M370 306 H414 L410 334 A3 3 0 0 1 407 336.5 H375 A3 3 0 0 1 372 334 Z"/>
+    <path d="M444 306 H488 L484 334 A3 3 0 0 1 481 336.5 H449 A3 3 0 0 1 446 334 Z"/>
+  </g>
+  <g fill="#12301B">
+    <rect x="290" y="296" width="56" height="12" rx="6"/>
+    <rect x="364" y="296" width="56" height="12" rx="6"/>
+    <rect x="438" y="296" width="56" height="12" rx="6"/>
+  </g>
+
+  <!-- funded ribbon badge -->
+  <path d="M458 110 L450 140 L457.5 136 L463 143 L468 114 Z" fill="#2E7D16"/>
+  <path d="M474 110 L482 140 L474.5 136 L469 143 L464 114 Z" fill="#2E7D16"/>
+  <circle cx="466" cy="98" r="22" fill="#5BD12A"/>
+  <circle cx="466" cy="98" r="16" stroke="#FFFFFF" stroke-width="1.5" stroke-opacity=".7"/>
+  <path d="M466.0 89.5 L468.1 95.1 L474.1 95.4 L469.4 99.1 L471.0 104.9 L466.0 101.6 L461.0 104.9 L462.6 99.1 L457.9 95.4 L463.9 95.1 Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="1" stroke-linejoin="round"/>
+  <path d="M500 64 Q500 70 506 70 Q500 70 500 76 Q500 70 494 70 Q500 70 500 64 Z" fill="#F6C343"/>
+  <circle cx="432" cy="72" r="3" fill="#F6C343"/>
+</svg>

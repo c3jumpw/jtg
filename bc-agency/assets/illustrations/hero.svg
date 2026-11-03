@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 460" fill="none">
+  <!-- A geometric capitol (dome, pediment, columns) stands behind a laptop showing a clean contractor website wireframe, with a bid document card carrying check rows and a red seal -->
+
+  <!-- capitol -->
+  <path d="M248.5 30 V58" stroke="#243A5E" stroke-width="2" stroke-linecap="round"/>
+  <path d="M249 30 H266 L261 36 L266 42 H249 Z" fill="#D92A22"/>
+  <path d="M176 152 A72 72 0 0 1 320 152 Z" fill="#13284A" stroke="#243A5E" stroke-linejoin="round"/>
+  <path d="M248 80 C 228 92, 220 120, 220 152 M248 80 C 268 92, 276 120, 276 152 M248 80 V152" stroke="#243A5E"/>
+  <rect x="238.5" y="56.5" width="20" height="24" rx="5" fill="#13284A" stroke="#243A5E"/>
+  <rect x="168.5" y="148.5" width="160" height="30" rx="5" fill="#13284A" stroke="#243A5E"/>
+  <g fill="#243A5E">
+    <rect x="183" y="155" width="6" height="16" rx="3"/>
+    <rect x="203" y="155" width="6" height="16" rx="3"/>
+    <rect x="223" y="155" width="6" height="16" rx="3"/>
+    <rect x="245" y="155" width="6" height="16" rx="3"/>
+    <rect x="267" y="155" width="6" height="16" rx="3"/>
+    <rect x="287" y="155" width="6" height="16" rx="3"/>
+    <rect x="307" y="155" width="6" height="16" rx="3"/>
+  </g>
+  <path d="M112 214 L248 178 L384 214 Z" fill="#13284A" stroke="#243A5E" stroke-linejoin="round"/>
+  <circle cx="248" cy="202" r="6.5" stroke="#243A5E"/>
+  <rect x="100.5" y="212.5" width="296" height="14" rx="5" fill="#13284A" stroke="#243A5E"/>
+  <g fill="#243A5E">
+    <rect x="115" y="232" width="14" height="80"/>
+    <rect x="157" y="232" width="14" height="80"/>
+    <rect x="199" y="232" width="14" height="80"/>
+    <rect x="241" y="232" width="14" height="80"/>
+    <rect x="283" y="232" width="14" height="80"/>
+    <rect x="325" y="232" width="14" height="80"/>
+    <rect x="367" y="232" width="14" height="80"/>
+    <rect x="111" y="227" width="22" height="6" rx="2"/>
+    <rect x="153" y="227" width="22" height="6" rx="2"/>
+    <rect x="195" y="227" width="22" height="6" rx="2"/>
+    <rect x="237" y="227" width="22" height="6" rx="2"/>
+    <rect x="279" y="227" width="22" height="6" rx="2"/>
+    <rect x="321" y="227" width="22" height="6" rx="2"/>
+    <rect x="363" y="227" width="22" height="6" rx="2"/>
+    <rect x="111" y="310" width="22" height="6" rx="2"/>
+    <rect x="96" y="316" width="304" height="10" rx="3"/>
+  </g>
+  <rect x="84.5" y="326.5" width="328" height="10" rx="3" fill="#13284A" stroke="#243A5E"/>
+
+  <!-- laptop -->
+  <rect x="140.5" y="268.5" width="216" height="132" rx="12" fill="#E8EDF4" stroke="#D3DBE7"/>
+  <rect x="150" y="278" width="196" height="112" rx="5" fill="#FFFFFF"/>
+  <path d="M114 401 H382 L396 412 A3 3 0 0 1 394 417 H102 A3 3 0 0 1 100 412 Z" fill="#D3DBE7"/>
+  <rect x="226" y="401" width="44" height="5" rx="2.5" fill="#4A5568" fill-opacity=".35"/>
+  <!-- website wireframe -->
+  <rect x="160" y="287" width="22" height="9" rx="3" fill="#0B1B33"/>
+  <circle cx="187" cy="291.5" r="2.5" fill="#D92A22"/>
+  <g fill="#D3DBE7">
+    <rect x="234" y="289" width="16" height="5" rx="2.5"/>
+    <rect x="256" y="289" width="16" height="5" rx="2.5"/>
+    <rect x="278" y="289" width="16" height="5" rx="2.5"/>
+  </g>
+  <path d="M150 302.5 H346" stroke="#E8EDF4"/>
+  <rect x="160" y="312" width="78" height="8" rx="4" fill="#0B1B33"/>
+  <rect x="160" y="325" width="62" height="5" rx="2.5" fill="#D3DBE7"/>
+  <rect x="160" y="334" width="70" height="5" rx="2.5" fill="#D3DBE7"/>
+  <rect x="160" y="346" width="40" height="12" rx="6" fill="#D92A22"/>
+  <rect x="252" y="310" width="60" height="48" rx="6" fill="#E8EDF4"/>
+  <path d="M282 320 L294 325 V333 C 294 341, 288 345, 282 348 C 276 345, 270 341, 270 333 V325 Z" fill="#D3DBE7"/>
+  <g fill="#E8EDF4">
+    <rect x="160" y="368" width="44" height="14" rx="4"/>
+    <rect x="212" y="368" width="44" height="14" rx="4"/>
+    <rect x="264" y="368" width="44" height="14" rx="4"/>
+  </g>
+
+  <!-- bid document -->
+  <g transform="translate(0 14)">
+  <rect x="320" y="232" width="160" height="188" rx="14" fill="#0B1B33" fill-opacity=".12" transform="translate(0 6)"/>
+  <rect x="320.5" y="232.5" width="160" height="188" rx="14" fill="#FFFFFF" stroke="#D3DBE7"/>
+  <rect x="340" y="254" width="74" height="9" rx="4.5" fill="#0B1B33"/>
+  <rect x="340" y="270" width="104" height="7" rx="3.5" fill="#D3DBE7"/>
+  <path d="M336 292.5 H464" stroke="#E8EDF4"/>
+  <g fill="#13284A">
+    <circle cx="348" cy="311" r="8"/>
+    <circle cx="348" cy="335" r="8"/>
+    <circle cx="348" cy="359" r="8"/>
+  </g>
+  <path d="M344.5 311.5 L347 314 L351.5 308.5 M344.5 335.5 L347 338 L351.5 332.5 M344.5 359.5 L347 362 L351.5 356.5" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <g fill="#D3DBE7">
+    <rect x="364" y="308" width="84" height="6" rx="3"/>
+    <rect x="364" y="332" width="68" height="6" rx="3"/>
+    <rect x="364" y="356" width="92" height="6" rx="3"/>
+  </g>
+  <path d="M340 396 C 345 386, 349 386, 351 393 S 358 400, 363 391 S 371 386, 376 394" stroke="#13284A" stroke-width="2" stroke-linecap="round"/>
+  <path d="M338 404.5 H392" stroke="#D3DBE7"/>
+  <!-- red seal -->
+  <path d="M438 398 L430 428 L437.5 424 L443 431 L448 402 Z" fill="#D92A22"/>
+  <path d="M454 398 L462 428 L454.5 424 L449 431 L444 402 Z" fill="#D92A22"/>
+  <circle cx="446" cy="384" r="21" fill="#E8402F"/>
+  <circle cx="446" cy="384" r="15" stroke="#FFFFFF" stroke-width="1.5" stroke-opacity=".7"/>
+  <path d="M446.0 375.5 L448.1 381.1 L454.1 381.4 L449.4 385.1 L451.0 390.9 L446.0 387.6 L441.0 390.9 L442.6 385.1 L437.9 381.4 L443.9 381.1 Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-linejoin="round"/>
+  </g>
+
+  <!-- small stars -->
+  <path d="M452 92 Q452 100 460 100 Q452 100 452 108 Q452 100 444 100 Q452 100 452 92 Z" fill="#E8EDF4" fill-opacity=".8"/>
+  <path d="M74 150 Q74 156 80 156 Q74 156 74 162 Q74 156 68 156 Q74 156 74 150 Z" fill="#E8EDF4" fill-opacity=".6"/>
+  <circle cx="420" cy="140" r="3" fill="#E8402F"/>
+  <circle cx="110" cy="96" r="2.5" fill="#E8EDF4" fill-opacity=".5"/>
+</svg>

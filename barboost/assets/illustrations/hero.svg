@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 460" fill="none">
+  <!-- Night-life growth: a phone shows a venue card with a map pin and incoming bookings, beside a weekly guest chart that climbs, a new-booking alert, a neon cocktail glass and soft glow circles -->
+  <defs>
+    <linearGradient id="bbBars" x1="339" y1="0" x2="505" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#C8101A"/>
+      <stop offset="1" stop-color="#A6CC5E"/>
+    </linearGradient>
+    <linearGradient id="bbBtn" x1="122" y1="0" x2="274" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#C8101A"/>
+      <stop offset="1" stop-color="#A6CC5E"/>
+    </linearGradient>
+  </defs>
+
+  <!-- glow circles -->
+  <circle cx="156" cy="150" r="124" fill="#C8101A" fill-opacity=".14"/>
+  <circle cx="452" cy="244" r="104" fill="#A6CC5E" fill-opacity=".08"/>
+  <circle cx="506" cy="48" r="20" stroke="#E5262F" stroke-opacity=".4" stroke-width="2"/>
+  <circle cx="56" cy="390" r="12" stroke="#C5E37E" stroke-opacity=".35" stroke-width="2"/>
+
+  <!-- phone -->
+  <rect x="100.5" y="36.5" width="196" height="392" rx="32" fill="#2A201D" stroke="#3A2F2C"/>
+  <rect x="110" y="46" width="176" height="372" rx="24" fill="#1C1615"/>
+  <rect x="174" y="54" width="48" height="10" rx="5" fill="#15110F"/>
+
+  <!-- venue card -->
+  <rect x="122" y="76" width="152" height="150" rx="16" fill="#2A201D"/>
+  <rect x="130" y="84" width="136" height="78" rx="11" fill="#3A2F2C"/>
+  <path d="M130 132 H266 M172 84 V162 M218 84 V162 M130 104 C 164 112, 204 98, 266 118" stroke="#2A201D" stroke-width="5"/>
+  <ellipse cx="198" cy="135" rx="12" ry="4.5" fill="#E5262F" fill-opacity=".4"/>
+  <path d="M198 98 C 189 98 183 104.5 183 112.5 C 183 122.5 198 134 198 134 C 198 134 213 122.5 213 112.5 C 213 104.5 207 98 198 98 Z" fill="#E5262F"/>
+  <circle cx="198" cy="112.5" r="5.5" fill="#FBF6F1"/>
+  <rect x="130" y="174" width="84" height="9" rx="4.5" fill="#FBF6F1"/>
+  <rect x="130" y="190" width="58" height="7" rx="3.5" fill="#3A2F2C"/>
+  <circle cx="133" cy="210" r="3" fill="#A6CC5E"/>
+  <circle cx="143" cy="210" r="3" fill="#A6CC5E"/>
+  <circle cx="153" cy="210" r="3" fill="#A6CC5E"/>
+  <circle cx="163" cy="210" r="3" fill="#A6CC5E"/>
+  <circle cx="173" cy="210" r="3" fill="#3A2F2C"/>
+  <rect x="230" y="172" width="36" height="16" rx="8" fill="#A6CC5E" fill-opacity=".18"/>
+  <rect x="238" y="177" width="20" height="6" rx="3" fill="#C5E37E"/>
+
+  <!-- booking rows -->
+  <rect x="122" y="238" width="152" height="40" rx="12" fill="#2A201D"/>
+  <rect x="130" y="246" width="24" height="24" rx="8" fill="#3A2F2C"/>
+  <rect x="135" y="255" width="14" height="6" rx="3" fill="#FBF6F1"/>
+  <rect x="162" y="249" width="56" height="7" rx="3.5" fill="#FBF6F1"/>
+  <rect x="162" y="261" width="36" height="6" rx="3" fill="#3A2F2C"/>
+  <circle cx="256" cy="258" r="9" fill="#A6CC5E"/>
+  <path d="M252 258.5 L255 261.5 L260.5 255.5" stroke="#15110F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <rect x="122" y="286" width="152" height="40" rx="12" fill="#2A201D"/>
+  <rect x="130" y="294" width="24" height="24" rx="8" fill="#3A2F2C"/>
+  <rect x="135" y="303" width="14" height="6" rx="3" fill="#FBF6F1"/>
+  <rect x="162" y="297" width="48" height="7" rx="3.5" fill="#FBF6F1"/>
+  <rect x="162" y="309" width="44" height="6" rx="3" fill="#3A2F2C"/>
+  <circle cx="256" cy="306" r="9" fill="#A6CC5E"/>
+  <path d="M252 306.5 L255 309.5 L260.5 303.5" stroke="#15110F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <rect x="122" y="334" width="152" height="40" rx="12" fill="#2A201D"/>
+  <rect x="130" y="342" width="24" height="24" rx="8" fill="#3A2F2C"/>
+  <rect x="135" y="351" width="14" height="6" rx="3" fill="#FBF6F1"/>
+  <rect x="162" y="345" width="60" height="7" rx="3.5" fill="#FBF6F1"/>
+  <rect x="162" y="357" width="32" height="6" rx="3" fill="#3A2F2C"/>
+  <circle cx="256" cy="354" r="9" fill="#E5262F"/>
+  <circle cx="256" cy="354" r="3" fill="#FBF6F1"/>
+
+  <rect x="122" y="386" width="152" height="22" rx="11" fill="url(#bbBtn)"/>
+  <rect x="176" y="394" width="44" height="6" rx="3" fill="#FBF6F1"/>
+
+  <!-- weekly guests chart -->
+  <rect x="316" y="96" width="212" height="196" rx="18" fill="#15110F" fill-opacity=".7" transform="translate(0 6)"/>
+  <rect x="316.5" y="96.5" width="212" height="196" rx="18" fill="#2A201D" stroke="#3A2F2C"/>
+  <rect x="336" y="116" width="84" height="9" rx="4.5" fill="#FBF6F1"/>
+  <rect x="336" y="132" width="56" height="7" rx="3.5" fill="#3A2F2C"/>
+  <rect x="460" y="114" width="48" height="22" rx="11" fill="#A6CC5E"/>
+  <path d="M474 130 L482 122 L486 126 L494 118 M488 118 H494 V124" stroke="#15110F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M336 188.5 H508 M336 228.5 H508" stroke="#3A2F2C" stroke-dasharray="3 5"/>
+  <path d="M336 268.5 H508" stroke="#3A2F2C"/>
+  <rect x="339" y="232" width="16" height="36" rx="5" fill="url(#bbBars)"/>
+  <rect x="364" y="222" width="16" height="46" rx="5" fill="url(#bbBars)"/>
+  <rect x="389" y="226" width="16" height="42" rx="5" fill="url(#bbBars)"/>
+  <rect x="414" y="208" width="16" height="60" rx="5" fill="url(#bbBars)"/>
+  <rect x="439" y="190" width="16" height="78" rx="5" fill="url(#bbBars)"/>
+  <rect x="464" y="168" width="16" height="100" rx="5" fill="url(#bbBars)"/>
+  <rect x="489" y="154" width="16" height="114" rx="5" fill="url(#bbBars)"/>
+  <rect x="342" y="276" width="10" height="6" rx="3" fill="#3A2F2C"/>
+  <rect x="367" y="276" width="10" height="6" rx="3" fill="#3A2F2C"/>
+  <rect x="392" y="276" width="10" height="6" rx="3" fill="#3A2F2C"/>
+  <rect x="417" y="276" width="10" height="6" rx="3" fill="#3A2F2C"/>
+  <rect x="442" y="276" width="10" height="6" rx="3" fill="#3A2F2C"/>
+  <rect x="467" y="276" width="10" height="6" rx="3" fill="#3A2F2C"/>
+  <rect x="492" y="276" width="10" height="6" rx="3" fill="#C5E37E"/>
+
+  <!-- new booking alert -->
+  <rect x="282" y="318" width="168" height="58" rx="14" fill="#15110F" fill-opacity=".7" transform="translate(0 6)"/>
+  <rect x="282.5" y="318.5" width="168" height="58" rx="14" fill="#2A201D" stroke="#3A2F2C"/>
+  <circle cx="310" cy="347" r="15" fill="#3A2F2C"/>
+  <circle cx="310" cy="342" r="5.5" fill="#D9A27A"/>
+  <path d="M300 357 C 302 350, 318 350, 320 357" fill="#FBF6F1"/>
+  <rect x="334" y="336" width="70" height="8" rx="4" fill="#FBF6F1"/>
+  <rect x="334" y="350" width="46" height="6" rx="3" fill="#3A2F2C"/>
+  <circle cx="428" cy="347" r="6" fill="#C5E37E"/>
+
+  <!-- neon cocktail glass -->
+  <g transform="translate(470 320) scale(.92)" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10 12 H62 L36 40 Z" fill="#E5262F"/>
+    <path d="M0 0 H72 L36 42 Z" stroke="#C5E37E" stroke-width="3"/>
+    <path d="M36 42 V82 M20 84 H52" stroke="#C5E37E" stroke-width="3"/>
+    <path d="M44 -14 L30 22" stroke="#FBF6F1" stroke-width="2"/>
+    <circle cx="33" cy="15" r="6" fill="#A6CC5E"/>
+  </g>
+</svg>

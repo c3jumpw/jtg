@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 460" fill="none">
+  <!-- A brand account's post grid on a phone, scheduled-post chips and like/comment notifications around it, and a charging battery with a bolt -->
+
+  <circle cx="280" cy="232" r="178" fill="#FFC94D" fill-opacity=".22"/>
+
+  <!-- phone -->
+  <rect x="196" y="56" width="168" height="348" rx="28" fill="#1B1712" fill-opacity=".1" transform="translate(0 6)"/>
+  <rect x="363" y="130" width="4" height="34" rx="2" fill="#1B1712"/>
+  <rect x="196" y="56" width="168" height="348" rx="28" fill="#1B1712"/>
+  <rect x="204" y="64" width="152" height="332" rx="21" fill="#FFFFFF"/>
+
+  <!-- profile -->
+  <circle cx="230" cy="98" r="17" stroke="#F5A300" stroke-width="2.5"/>
+  <circle cx="230" cy="98" r="12.5" fill="#E8231B"/>
+  <path d="M232.5 90 L225.5 99.5 H230 L228 106 L235 96.5 H230.5 Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-linejoin="round"/>
+  <rect x="256" y="89" width="66" height="8" rx="4" fill="#1B1712"/>
+  <rect x="256" y="103" width="46" height="6" rx="3" fill="#F0E2C8"/>
+  <rect x="214" y="126" width="62" height="18" rx="9" fill="#F5A300"/>
+  <rect x="229" y="132" width="32" height="6" rx="3" fill="#FFFFFF"/>
+  <rect x="282.5" y="126.5" width="63" height="17" rx="8.5" fill="#FFFFFF" stroke="#F0E2C8"/>
+  <rect x="298" y="132" width="32" height="6" rx="3" fill="#F0E2C8"/>
+
+  <!-- post grid -->
+  <rect x="213.5" y="156.5" width="41" height="41" rx="8" fill="#FFF8EA" stroke="#F5A300" stroke-dasharray="3 3"/>
+  <circle cx="234" cy="177" r="8" stroke="#F5A300" stroke-width="2"/>
+  <path d="M234 173 V177 H237.5" stroke="#F5A300" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="259" y="156" width="42" height="42" rx="8" fill="#F5A300"/>
+  <rect x="305" y="156" width="42" height="42" rx="8" fill="#E8231B"/>
+  <rect x="213" y="202" width="42" height="42" rx="8" fill="#FFC94D"/>
+  <rect x="259" y="202" width="42" height="42" rx="8" fill="#1B1712"/>
+  <rect x="305.5" y="202.5" width="41" height="41" rx="8" fill="#FFF8EA" stroke="#F0E2C8"/>
+  <rect x="213" y="248" width="42" height="42" rx="8" fill="#B85A00"/>
+  <rect x="259" y="248" width="42" height="42" rx="8" fill="#FFC94D"/>
+  <rect x="305" y="248" width="42" height="42" rx="8" fill="#E8231B"/>
+  <rect x="213" y="294" width="42" height="42" rx="8" fill="#F5A300"/>
+  <rect x="259" y="294" width="42" height="42" rx="8" fill="#E8231B"/>
+  <rect x="305" y="294" width="42" height="42" rx="8" fill="#1B1712"/>
+  <!-- tile motifs -->
+  <path d="M276 170.5 L287 177 L276 183.5 Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M326 185 C 319 180, 317.5 177, 317.5 174.5 C 317.5 171.5, 319.5 169.5, 322 169.5 C 323.8 169.5, 325.2 170.5, 326 172 C 326.8 170.5, 328.2 169.5, 330 169.5 C 332.5 169.5, 334.5 171.5, 334.5 174.5 C 334.5 177, 333 180, 326 185 Z" fill="#FFFFFF"/>
+  <rect x="222" y="215" width="24" height="6" rx="3" fill="#1B1712"/>
+  <rect x="222" y="226" width="16" height="6" rx="3" fill="#1B1712" fill-opacity=".35"/>
+  <path d="M282 211 L273 224.5 H280 L277.5 235 L287 221 H280.5 Z" fill="#F5A300" stroke="#F5A300" stroke-linejoin="round"/>
+  <circle cx="335" cy="214" r="6" fill="#F5A300"/>
+  <path d="M305 236 C 314 226, 322 226, 330 232 C 336 228, 342 228, 347 232 V236 A8 8 0 0 1 339 244 H313 A8 8 0 0 1 305 236 Z" fill="#B85A00"/>
+  <circle cx="234" cy="269" r="10" fill="#FFC94D"/>
+  <path d="M276 262.5 L287 269 L276 275.5 Z" fill="#E8231B" stroke="#E8231B" stroke-width="2" stroke-linejoin="round"/>
+  <rect x="317" y="260" width="18" height="13" rx="4" fill="#FFFFFF"/>
+  <path d="M321 272 L320 277 L326 272 Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-linejoin="round"/>
+  <path d="M234 323 C 227 318, 225.5 315, 225.5 312.5 C 225.5 309.5, 227.5 307.5, 230 307.5 C 231.8 307.5, 233.2 308.5, 234 310 C 234.8 308.5, 236.2 307.5, 238 307.5 C 240.5 307.5, 242.5 309.5, 242.5 312.5 C 242.5 315, 241 318, 234 323 Z" fill="#FFFFFF"/>
+  <rect x="268" y="306" width="24" height="6" rx="3" fill="#FFFFFF"/>
+  <rect x="268" y="317" width="16" height="6" rx="3" fill="#FFFFFF" fill-opacity=".6"/>
+  <path d="M322 308.5 L333 315 L322 321.5 Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="2" stroke-linejoin="round"/>
+
+  <!-- tab bar -->
+  <path d="M204 348.5 H356" stroke="#F0E2C8"/>
+  <path d="M225 377 V369.5 L232 363.5 L239 369.5 V377 Z" stroke="#1B1712" stroke-width="2" stroke-linejoin="round"/>
+  <circle cx="280" cy="371" r="11" fill="#F5A300"/>
+  <path d="M280 366 V376 M275 371 H285" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
+  <path d="M328 378 C 321.5 373.5, 320 370.5, 320 368.2 C 320 365.6, 321.8 363.8, 324 363.8 C 325.7 363.8, 327.2 364.8, 328 366.2 C 328.8 364.8, 330.3 363.8, 332 363.8 C 334.2 363.8, 336 365.6, 336 368.2 C 336 370.5, 334.5 373.5, 328 378 Z" stroke="#1B1712" stroke-width="2" stroke-linejoin="round"/>
+
+  <!-- scheduled post chips -->
+  <path d="M100 152 C 100 172, 150 177, 188 177" stroke="#F5A300" stroke-width="2" stroke-linecap="round" stroke-dasharray="0.1 7"/>
+  <rect x="24" y="88" width="152" height="56" rx="14" fill="#1B1712" fill-opacity=".08" transform="translate(0 6)"/>
+  <rect x="24.5" y="88.5" width="152" height="56" rx="14" fill="#FFFFFF" stroke="#F0E2C8"/>
+  <rect x="36" y="100" width="32" height="32" rx="8" fill="#F5A300"/>
+  <path d="M48 110.5 L57 116 L48 121.5 Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="2" stroke-linejoin="round"/>
+  <rect x="78" y="104" width="56" height="8" rx="4" fill="#1B1712"/>
+  <rect x="78" y="118" width="38" height="6" rx="3" fill="#F0E2C8"/>
+  <circle cx="156" cy="116" r="8" stroke="#F5A300" stroke-width="2"/>
+  <path d="M156 112 V116 H159.5" stroke="#F5A300" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <rect x="384" y="276" width="152" height="56" rx="14" fill="#1B1712" fill-opacity=".08" transform="translate(0 6)"/>
+  <rect x="384.5" y="276.5" width="152" height="56" rx="14" fill="#FFFFFF" stroke="#F0E2C8"/>
+  <rect x="396" y="288" width="32" height="32" rx="8" fill="#B85A00"/>
+  <circle cx="412" cy="304" r="7" fill="#FFC94D"/>
+  <rect x="438" y="292" width="56" height="8" rx="4" fill="#1B1712"/>
+  <rect x="438" y="306" width="38" height="6" rx="3" fill="#F0E2C8"/>
+  <circle cx="516" cy="304" r="8" stroke="#F5A300" stroke-width="2"/>
+  <path d="M516 300 V304 H519.5" stroke="#F5A300" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- notifications -->
+  <rect x="64" y="212" width="96" height="40" rx="20" fill="#1B1712" fill-opacity=".1" transform="translate(0 6)"/>
+  <path d="M142 248 L162 260 L154 244 Z" fill="#E8231B" stroke="#E8231B" stroke-width="2" stroke-linejoin="round"/>
+  <rect x="64" y="212" width="96" height="40" rx="20" fill="#E8231B"/>
+  <path d="M88 241 C 80.5 235.5, 79 232, 79 229.5 C 79 226.5, 81 224.5, 83.5 224.5 C 85.5 224.5, 87 225.5, 88 227 C 89 225.5, 90.5 224.5, 92.5 224.5 C 95 224.5, 97 226.5, 97 229.5 C 97 232, 95.5 235.5, 88 241 Z" fill="#FFFFFF"/>
+  <rect x="106" y="228" width="36" height="8" rx="4" fill="#FFFFFF"/>
+
+  <rect x="392" y="64" width="96" height="40" rx="20" fill="#1B1712" fill-opacity=".1" transform="translate(0 6)"/>
+  <path d="M410 100 L388 114 L398 98 Z" fill="#F5A300" stroke="#F5A300" stroke-width="2" stroke-linejoin="round"/>
+  <rect x="392" y="64" width="96" height="40" rx="20" fill="#F5A300"/>
+  <rect x="406" y="77" width="20" height="14" rx="5" fill="#FFFFFF"/>
+  <path d="M410 90 L409 95.5 L416 90 Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-linejoin="round"/>
+  <rect x="434" y="80" width="36" height="8" rx="4" fill="#FFFFFF"/>
+
+  <!-- charging battery -->
+  <rect x="44" y="318" width="120" height="56" rx="16" fill="#1B1712" fill-opacity=".1" transform="translate(0 6)"/>
+  <rect x="164" y="336" width="10" height="20" rx="4" fill="#1B1712"/>
+  <rect x="44" y="318" width="120" height="56" rx="16" fill="#1B1712"/>
+  <rect x="51" y="325" width="52" height="42" rx="10" fill="#E8231B"/>
+  <rect x="105" y="325" width="52" height="42" rx="10" fill="#F5A300"/>
+  <path d="M109 329 L94 349 H103.5 L99 363 L114 343 H104.5 Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="2" stroke-linejoin="round"/>
+</svg>

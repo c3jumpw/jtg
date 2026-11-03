@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 460" fill="none">
+  <!-- A two-leaf sprout grows out of an open grant application; a small community gathers around it, one volunteer raises a hand, and a heart donation badge floats above -->
+
+  <!-- backdrop -->
+  <circle cx="280" cy="254" r="164" fill="#FFFFFF"/>
+  <circle cx="280" cy="254" r="190" stroke="#D8E8CC" stroke-dasharray="2 6"/>
+
+  <!-- ground -->
+  <rect x="28" y="408" width="504" height="8" rx="4" fill="#D8E8CC"/>
+
+  <!-- sprout -->
+  <path d="M280 310 C 280 270, 274 236, 280 186" stroke="#2E7D16" stroke-width="6" stroke-linecap="round"/>
+  <path d="M278 236 C 246 240, 208 222, 194 184 C 232 176, 266 196, 278 236 Z" fill="#5BD12A"/>
+  <path d="M278 234 C 256 222, 230 206, 206 190" stroke="#2E7D16" stroke-opacity=".35" stroke-width="2" stroke-linecap="round"/>
+  <path d="M281 204 C 294 170, 326 144, 368 142 C 362 180, 326 210, 281 204 Z" fill="#74B33F"/>
+  <path d="M283 202 C 304 186, 330 166, 356 152" stroke="#12301B" stroke-opacity=".25" stroke-width="2" stroke-linecap="round"/>
+  <path d="M280 188 C 270 176, 270 162, 280 152 C 290 162, 290 176, 280 188 Z" fill="#9BE36D"/>
+
+  <!-- open grant application -->
+  <path d="M164 298 L280 312 L396 298 V398 L280 412 L164 398 Z" fill="#2E7D16" stroke="#2E7D16" stroke-width="6" stroke-linejoin="round"/>
+  <g transform="matrix(1 0.0952 0 1 0 -16.37)">
+    <rect x="172.5" y="296.5" width="104" height="94" rx="6" fill="#FFFFFF" stroke="#D8E8CC"/>
+    <rect x="186" y="310" width="52" height="8" rx="4" fill="#12301B"/>
+    <rect x="186" y="326" width="76" height="6" rx="3" fill="#D8E8CC"/>
+    <rect x="186" y="338" width="60" height="6" rx="3" fill="#D8E8CC"/>
+    <rect x="186" y="353" width="12" height="12" rx="4" fill="#5BD12A"/>
+    <rect x="186" y="371" width="12" height="12" rx="4" fill="#5BD12A"/>
+    <path d="M189 359 L191.5 361.5 L195.5 356.5 M189 377 L191.5 379.5 L195.5 374.5" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="204" y="356" width="52" height="6" rx="3" fill="#D8E8CC"/>
+    <rect x="204" y="374" width="40" height="6" rx="3" fill="#D8E8CC"/>
+  </g>
+  <g transform="matrix(1 -0.0952 0 1 0 36.94)">
+    <rect x="283.5" y="296.5" width="104" height="94" rx="6" fill="#FFFFFF" stroke="#D8E8CC"/>
+    <rect x="298" y="310" width="72" height="6" rx="3" fill="#D8E8CC"/>
+    <rect x="298" y="322" width="54" height="6" rx="3" fill="#D8E8CC"/>
+    <rect x="298" y="338" width="12" height="12" rx="4" fill="#5BD12A"/>
+    <path d="M301 344 L303.5 346.5 L307.5 341.5" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="316" y="341" width="48" height="6" rx="3" fill="#D8E8CC"/>
+    <path d="M300 372 C 306 362, 310 362, 312 370 S 320 378, 326 368 S 336 362, 342 372" stroke="#2E7D16" stroke-width="2" stroke-linecap="round"/>
+    <path d="M298 380.5 H372" stroke="#D8E8CC"/>
+  </g>
+
+  <!-- community, left -->
+  <path d="M40 410 V380 A24 24 0 0 1 88 380 V410 Z" fill="#2E7D16"/>
+  <circle cx="64" cy="340" r="14" fill="#6E4630"/>
+  <path d="M100 410 V388 A20 20 0 0 1 140 388 V410 Z" fill="#9BE36D"/>
+  <circle cx="120" cy="354" r="12" fill="#F1C7A5"/>
+
+  <!-- community, right: volunteer raising a hand -->
+  <path d="M456 372 L470 320" stroke="#74B33F" stroke-width="12" stroke-linecap="round"/>
+  <circle cx="471.5" cy="312" r="7" fill="#D9A27A"/>
+  <path d="M416 410 V378 A24 24 0 0 1 464 378 V410 Z" fill="#74B33F"/>
+  <circle cx="440" cy="338" r="14" fill="#D9A27A"/>
+  <path d="M478 410 V384 A22 22 0 0 1 522 384 V410 Z" fill="#12301B"/>
+  <circle cx="500" cy="346" r="13" fill="#A8714A"/>
+  <path d="M482 298 L488 292 M474 288 V280 M462 294 L456 288" stroke="#F6C343" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- donation badge -->
+  <path d="M454 162 C 446 190, 420 206, 380 200" stroke="#5BD12A" stroke-width="2" stroke-linecap="round" stroke-dasharray="0.1 7"/>
+  <circle cx="460" cy="128" r="32" fill="#12301B" fill-opacity=".08" transform="translate(0 6)"/>
+  <circle cx="460" cy="128" r="31.5" fill="#FFFFFF" stroke="#D8E8CC"/>
+  <circle cx="460" cy="128" r="21" fill="#F1F8EB"/>
+  <path d="M460 139 C 451 132, 446 127, 446 121.5 A7 7 0 0 1 460 119 A7 7 0 0 1 474 121.5 C 474 127, 469 132, 460 139 Z" fill="#2E7D16"/>
+  <circle cx="484" cy="152" r="10" fill="#F6C343"/>
+  <circle cx="484" cy="152" r="5.5" stroke="#FFFFFF" stroke-width="1.5"/>
+
+  <!-- volunteers chip -->
+  <rect x="66" y="132" width="128" height="48" rx="24" fill="#12301B" fill-opacity=".08" transform="translate(0 6)"/>
+  <rect x="66.5" y="132.5" width="128" height="48" rx="24" fill="#FFFFFF" stroke="#D8E8CC"/>
+  <g stroke="#FFFFFF" stroke-width="2">
+    <circle cx="92" cy="156.5" r="13" fill="#9BE36D"/>
+    <circle cx="112" cy="156.5" r="13" fill="#F1F8EB"/>
+  </g>
+  <circle cx="92" cy="152.5" r="4.5" fill="#A8714A"/>
+  <path d="M84.5 164 C 86 158, 98 158, 99.5 164" fill="#2E7D16"/>
+  <circle cx="112" cy="152.5" r="4.5" fill="#F1C7A5"/>
+  <path d="M104.5 164 C 106 158, 118 158, 119.5 164" fill="#74B33F"/>
+  <circle cx="132" cy="156.5" r="10" fill="#5BD12A"/>
+  <path d="M132 152 V161 M127.5 156.5 H136.5" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
+  <rect x="150" y="149" width="32" height="8" rx="4" fill="#12301B"/>
+  <rect x="150" y="161" width="24" height="6" rx="3" fill="#D8E8CC"/>
+</svg>

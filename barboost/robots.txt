@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://barboost.j-tgroup.com/sitemap.xml
