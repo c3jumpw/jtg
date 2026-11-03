@@ -16,9 +16,14 @@ Pushing to `main` deploys to production.
 
 ## Domain
 
-`blanket-label.j-tgroup.com` is added to Vercel → jtg-blanket-label → Settings → Domains. At GoDaddy (DNS for j-tgroup.com) add
-the `CNAME` record Vercel shows on that page for the name `blanket-label`. The domain turns green
-in Vercel once the record resolves, and Vercel issues the SSL certificate on its own.
+`blanket-label.j-tgroup.com` is added to Vercel → jtg-blanket-label → Settings → Domains. DNS for j-tgroup.com is at GoDaddy;
+add this record there:
+
+| Type | Name | Value |
+| --- | --- | --- |
+| CNAME | `blanket-label` | `aaa3f2757f4f4bd7.vercel-dns-016.com` |
+
+The domain turns green in Vercel once the record resolves, and Vercel issues the SSL certificate on its own.
 
 ## Form → email (no setup needed here)
 

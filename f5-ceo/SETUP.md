@@ -16,10 +16,17 @@ Pushing to `main` deploys to production.
 
 ## Domain
 
-`fortune5ceo.com` and `www.fortune5ceo.com` are added to Vercel → jtg-f5-ceo → Settings → Domains.
-At the DNS provider for fortune5ceo.com, set the records Vercel shows on that page (an `A` record on `@` and a
-`CNAME` on `www`), and remove any parking-page records. The domain turns green in Vercel once the records
-resolve, and Vercel issues the SSL certificate on its own.
+`fortune5ceo.com` and `www.fortune5ceo.com` (redirects to the bare domain) are added to Vercel → jtg-f5-ceo →
+Settings → Domains. DNS for fortune5ceo.com is at GoDaddy; replace the parked-page records with:
+
+| Type | Name | Value |
+| --- | --- | --- |
+| A | `@` | `216.150.1.1` |
+| CNAME | `www` | `f2c1c4871dea0d8b.vercel-dns-016.com` |
+
+Delete GoDaddy's parking `A` record on `@` (`198.12.221.35`) and the existing `www` CNAME that points to
+`fortune5ceo.com`. The Domains page in Vercel turns green once the records resolve, and Vercel issues the SSL
+certificate on its own.
 
 ## Form → email (no setup needed here)
 

@@ -16,9 +16,14 @@ Pushing to `main` deploys to production.
 
 ## Domain
 
-`acad.j-tgroup.com` is added to Vercel → jtg-acad → Settings → Domains. At GoDaddy (DNS for j-tgroup.com) add
-the `CNAME` record Vercel shows on that page for the name `acad`. The domain turns green
-in Vercel once the record resolves, and Vercel issues the SSL certificate on its own.
+`acad.j-tgroup.com` is added to Vercel → jtg-acad → Settings → Domains. DNS for j-tgroup.com is at GoDaddy;
+add this record there:
+
+| Type | Name | Value |
+| --- | --- | --- |
+| CNAME | `acad` | `a065337f7092e572.vercel-dns-016.com` |
+
+The domain turns green in Vercel once the record resolves, and Vercel issues the SSL certificate on its own.
 
 ## Form → email (no setup needed here)
 
