@@ -1,4 +1,4 @@
-import { select, insert, patch, json, clean, EMAIL_RE, UUID_RE, readJson } from '../lib/core.js';
+import { select, insert, patch, json, clean, EMAIL_RE, UUID_RE, readJson, emailFilter, sameEmail } from '../lib/core.js';
 import { requireSession } from '../lib/auth.js';
 
 async function list(session) {
@@ -50,8 +50,8 @@ async function create(body) {
   const meetingTypeIds = Array.isArray(body.meetingTypeIds) ? body.meetingTypeIds.filter((x) => UUID_RE.test(x)) : [];
   if (!EMAIL_RE.test(email)) return json(400, { error: 'Please check the email address.' });
   if (!displayName) return json(400, { error: 'Please add a display name.' });
-  const existing = await select('core', 'people', `select=id&email=ilike.${encodeURIComponent(email)}`);
-  let personId = existing && existing[0] && existing[0].id;
+  const existing = await select('core', 'people', `select=id,email&${emailFilter(email)}`);
+  let personId = ((existing || []).find((p) => sameEmail(p.email, email)) || {}).id;
   if (!personId) {
     const created = await insert('core', 'people', { email, full_name: fullName || displayName, phone: phone || null });
     personId = created && created[0] && created[0].id;

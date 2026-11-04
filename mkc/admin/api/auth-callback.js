@@ -24,9 +24,13 @@ async function handler(request) {
   if (new Date(ml.expires_at).getTime() < Date.now())  return redirect(`${SITE_URL()}/?e=expired`);
   if (!(await isAllowed(ml.email)))                    return redirect(`${SITE_URL()}/?e=notallowed`);
 
-  // Mark used first, so a re-click can't create a second session.
-  try { await patch('core', 'magic_links', `token_hash=eq.${th}`, { used_at: new Date().toISOString() }); }
-  catch (e) { console.error('mark magic link used failed', e.message); }
+  // Mark used first, so a re-click can't create a second session. The
+  // used_at=is.null filter makes this a claim: when two requests race (a
+  // double click, a mail scanner and the person), only one gets a row back.
+  let claimed;
+  try { claimed = await patch('core', 'magic_links', `token_hash=eq.${th}&used_at=is.null`, { used_at: new Date().toISOString() }); }
+  catch (e) { console.error('mark magic link used failed', e.message); return redirect(`${SITE_URL()}/?e=server`); }
+  if (!claimed || claimed.length === 0)              return redirect(`${SITE_URL()}/?e=used`);
 
   const person = await ensurePerson(ml.email);
 
