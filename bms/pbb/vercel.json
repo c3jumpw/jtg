@@ -17,8 +17,8 @@
   ],
   "rewrites": [
     { "source": "/api/brief", "destination": "https://book.buildmystart-up.com/api/brief" },
-    { "source": "/brief", "destination": "/brand-quiz.html" },
-    { "source": "/start", "destination": "/brand-quiz.html" }
+    { "source": "/brief", "destination": "/brand-quiz" },
+    { "source": "/start", "destination": "/brand-quiz" }
   ],
   "redirects": [
     { "source": "/form", "destination": "/brief", "permanent": false }

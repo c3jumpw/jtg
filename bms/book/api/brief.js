@@ -16,7 +16,10 @@ import { sendEmail } from '../lib/emails.js';
  * nothing, so every failure lost the brief outright. Never again. */
 
 const PBB_URL = () => (process.env.PBB_SITE_URL || 'https://pbb.buildmystart-up.com').replace(/\/$/, '');
-const TEAM = () => process.env.NOTIFY_TO || 'support@buildmystart-up.com';
+/* Who receives the team copy. PBB_NOTIFY_TO takes several addresses separated by
+ * commas, so brand briefs can go to more people than booking notifications. */
+const TEAM = () => (process.env.PBB_NOTIFY_TO || process.env.NOTIFY_TO || 'support@buildmystart-up.com')
+  .split(',').map((a) => a.trim()).filter((a) => EMAIL_RE.test(a));
 const ORIGINS = ['https://pbb.buildmystart-up.com', 'https://jtg-bms-pbb.vercel.app'];
 
 export const SESSIONS = {
@@ -195,7 +198,10 @@ async function save(request) {
   if (rateLimited(`brief-post:${clientIp(request)}`, 60, 3600000)) return json(429, { error: 'Too many submissions from this network. Please wait a little and try again.' });
   const { body, error } = await readJson(request, 200000);
   if (error) return error;
-  if (typeof body.hp === 'string' && body.hp.trim()) return json(200, { ok: true }); // bot
+  // The hidden spam-trap field. It used to drop the submission silently, which
+  // would also swallow a real person's answers if a browser extension filled it.
+  // Now the brief is still saved, flagged, and only the team is told.
+  const flagged = typeof body.hp === 'string' && body.hp.trim() !== '';
 
   const session = Number(body.session);
   if (![1, 2, 3].includes(session)) return json(400, { error: 'That session wasn\'t recognised.' });
@@ -228,7 +234,7 @@ async function save(request) {
       const record = {
         ref: newRef(), resume_token_hash: sha256(token), email, name: name || null, answers,
         sessions_done: [session], status: complete ? 'complete' : 'in_progress', completed_at: complete ? now : null,
-        source: { referrer: clean(meta.referrer, 300), utm: readUtm(meta.utm), ua: clean(request.headers.get('user-agent'), 200) }
+        source: { referrer: clean(meta.referrer, 300), utm: readUtm(meta.utm), ua: clean(request.headers.get('user-agent'), 200), ...(flagged ? { flag: 'spam_trap' } : {}) }
       };
       try { row = (await insert('booking', 'brand_briefs', record))[0]; }
       catch (e) { if (e.status === 409) { record.ref = newRef(); row = (await insert('booking', 'brand_briefs', record))[0]; } else throw e; }
@@ -241,9 +247,14 @@ async function save(request) {
   // Saved. From here on nothing may fail the request.
   const resumeUrl = `${PBB_URL()}/brief?resume=${encodeURIComponent(token)}`;
   const stamp = Date.now().toString(36);
+  const team = teamEmail({ row, session, complete });
+  if (flagged) team.subject = `[Possible spam] ${team.subject}`;
   const [teamErr, youErr] = await Promise.all([
-    sendEmail({ to: TEAM(), ...teamEmail({ row, session, complete }), replyTo: row.email, key: `pbb-${row.id}-s${session}-team-${stamp}` }),
-    sendEmail({ to: row.email, ...submitterEmail({ row, session, complete, resumeUrl }), replyTo: TEAM(), key: `pbb-${row.id}-s${session}-you-${stamp}` })
+    sendEmail({ to: TEAM(), ...team, replyTo: row.email, key: `pbb-${row.id}-s${session}-team-${stamp}` }),
+    // Never send a flagged submission's copy to the address it names: that would
+    // let a bot use this form to email strangers.
+    flagged ? 'Skipped: spam-trap field was filled.'
+      : sendEmail({ to: row.email, ...submitterEmail({ row, session, complete, resumeUrl }), replyTo: TEAM()[0], key: `pbb-${row.id}-s${session}-you-${stamp}` })
   ]);
   const log = [
     { session, to: 'team', ok: !teamErr, error: teamErr || null, at: now },

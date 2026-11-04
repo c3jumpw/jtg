@@ -175,7 +175,7 @@ export async function sendEmail({ to, subject, html, text, replyTo, key, attachm
       method: 'POST',
       headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json', 'Idempotency-Key': key },
       body: JSON.stringify({
-        from: from || fromAddress(env), to: [to], subject, html, text,
+        from: from || fromAddress(env), to: Array.isArray(to) ? to : [to], subject, html, text,
         ...(replyTo ? { reply_to: replyTo } : {}),
         ...(attachment ? { attachments: [attachment] } : {})
       })
