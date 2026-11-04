@@ -1,4 +1,4 @@
-import { select, insert, patch, json, clean, EMAIL_RE, readJson } from '../lib/core.js';
+import { select, insert, patch, json, clean, EMAIL_RE, readJson, emailFilter, sameEmail } from '../lib/core.js';
 import { requireSession } from '../lib/auth.js';
 
 /* Reads the MKC CRM Team Directory (ClickUp-backed) and mirrors it into this
@@ -265,8 +265,8 @@ async function apply(body, session) {
     const displayName = m.knownAs || m.fullName || email.split('@')[0];
 
     try {
-      const found = await select('core', 'people', `select=id&email=ilike.${encodeURIComponent(email)}`);
-      let personId = found && found[0] && found[0].id;
+      const found = await select('core', 'people', `select=id,email&${emailFilter(email)}`);
+      let personId = ((found || []).find((p) => sameEmail(p.email, email)) || {}).id;
       let isNew = false;
       if (!personId) {
         const madePerson = await insert('core', 'people', {

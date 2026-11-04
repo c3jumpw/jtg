@@ -78,6 +78,15 @@ export function clean(v, max) {
   return typeof v === 'string' ? v.replace(CTRL, '').trim().slice(0, max) : '';
 }
 export const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+/* Case-insensitive EXACT email match for PostgREST.
+ * Plain ilike treats _ and % as wildcards (and PostgREST turns * into %), so
+ * `ilike.j_hn@x.com` also matches john@x.com. Escape the wildcards here, and
+ * re-check rows with sameEmail(), which also covers `*`. */
+export function emailFilter(email, column = 'email') {
+  const escaped = String(email || '').toLowerCase().replace(/[\\%_]/g, (c) => '\\' + c);
+  return `${column}=ilike.${encodeURIComponent(escaped)}`;
+}
+export const sameEmail = (a, b) => String(a || '').trim().toLowerCase() === String(b || '').trim().toLowerCase();
 export const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 export function esc(s) {

@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { select, insert, json } from './core.js';
+import { select, insert, json, emailFilter, sameEmail } from './core.js';
 
 /* Session cookie utilities: HTTP-only, Secure, SameSite=Lax so the callback link works.
  * The cookie's value is the raw session token; the DB stores only its SHA-256 hash. */
@@ -40,10 +40,11 @@ export async function getAccessRole(email) {
   if (bootstrapEmails().includes(em)) return 'super_admin';
   try {
     const rows = await select('core', 'people',
-      `select=id,tool_access!inner(role,tool)&email=ilike.${encodeURIComponent(em)}&tool_access.tool=eq.booking`
+      `select=id,email,tool_access!inner(role,tool)&${emailFilter(em)}&tool_access.tool=eq.booking`
     );
-    if (!Array.isArray(rows) || rows.length === 0) return null;
-    const ta = (rows[0].tool_access || [])[0] || {};
+    const person = (Array.isArray(rows) ? rows : []).find((p) => sameEmail(p.email, em));
+    if (!person) return null;
+    const ta = (person.tool_access || [])[0] || {};
     return ta.role || null; // 'super_admin' | 'admin' | 'rep'
   } catch (e) {
     console.error('role check failed', e.message);
@@ -78,18 +79,21 @@ export async function requireSuperAdmin(request) {
 
 export async function ensurePerson(email, fullNameGuess = '') {
   const em = email.toLowerCase();
-  const found = await select('core', 'people', `select=id,full_name,email&email=ilike.${encodeURIComponent(em)}`);
-  let person = found && found[0];
+  const found = await select('core', 'people', `select=id,full_name,email&${emailFilter(em)}`);
+  let person = (found || []).find((p) => sameEmail(p.email, em));
   if (!person) {
     const created = await insert('core', 'people', { email, full_name: fullNameGuess || email.split('@')[0] });
     person = created && created[0];
   }
-  if (person) {
-    const isBootstrap = bootstrapEmails().includes(em);
-    const role = isBootstrap ? 'super_admin' : 'admin';
+  // Only bootstrap emails are granted a role here. Everyone else already has
+  // their tool_access row (that is how they got past isAllowed), and it must
+  // not be touched: this used to upsert role 'admin' for every sign-in, which
+  // promoted any rep who signed in to admin and demoted non-bootstrap super
+  // admins.
+  if (person && bootstrapEmails().includes(em)) {
     try {
-      await insert('core', 'tool_access', { person_id: person.id, tool: 'booking', role }, { onConflict: 'person_id,tool' });
-    } catch (e) { /* already granted */ }
+      await insert('core', 'tool_access', { person_id: person.id, tool: 'booking', role: 'super_admin' }, { onConflict: 'person_id,tool' });
+    } catch (e) { console.error('bootstrap grant failed', e.message); }
   }
   return person;
 }
