@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Client portal · Jump Tech Group</title>
+  <meta name="description" content="Sign in to your Jump Tech Group client portal for updates, tasks and guides from your team.">
+  <meta name="theme-color" content="#16185A">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="preload" href="/assets/fonts/saira-latin-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/instrument-sans-latin-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/portal.css">
+  <script type="module" src="/js/portal.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <!-- Signed out: the sign-in page. Rendered as plain HTML so it shows at once. -->
+  <div class="signin" id="signin-view">
+    <main class="signin__panel" id="main">
+      <header class="signin__top">
+        <img class="signin__logo" src="/assets/logo.png" alt="Jump Tech Group" width="160" height="50">
+      </header>
+
+      <div class="signin__body">
+        <p class="eyebrow">Client portal</p>
+        <h1 class="signin__title">Sign in to see your updates</h1>
+        <p class="signin__lede">Progress updates, tasks and how-to guides from your Jump Tech Group team, all in one place.</p>
+
+        <form class="signin__form" id="signin-form" novalidate>
+          <label for="email">Email address</label>
+          <input id="email" name="email" type="email" autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false" required placeholder="you@yourcompany.com">
+          <button class="btn btn--primary" type="submit" id="signin-submit">Email me a sign-in link</button>
+          <p class="signin__status" id="signin-status" role="status" aria-live="polite"></p>
+        </form>
+        <p class="signin__note">No password needed. We’ll email you a link that works once and expires in 15 minutes.</p>
+        <noscript><p class="signin__status is-error">This portal needs JavaScript turned on to sign you in.</p></noscript>
+      </div>
+
+      <footer class="signin__foot">
+        <a class="home-link" href="https://j-tgroup.com/">j-tgroup.com</a>
+      </footer>
+    </main>
+
+    <aside class="brands" aria-labelledby="brands-title">
+      <div class="brands__inner">
+        <h2 class="brands__title" id="brands-title">One group. Twelve specialist teams.</h2>
+        <p class="brands__lede">Whichever of our agencies you work with, your updates live here.</p>
+        <ul class="brands__grid">
+          <li><span class="logo-tile"><img src="/assets/brands/f5.png" alt="Fortune 5 Agency" width="150" height="30" loading="lazy" decoding="async"></span></li>
+          <li><span class="logo-tile"><img src="/assets/brands/bms.png" alt="Build My Start-Up" width="240" height="77" loading="lazy" decoding="async"></span></li>
+          <li><span class="logo-tile"><img src="/assets/brands/blk.png" alt="Blanket Label" width="240" height="38" loading="lazy" decoding="async"></span></li>
+          <li><span class="logo-tile"><img src="/assets/brands/bb.png" alt="Bar Boost" width="240" height="41" loading="lazy" decoding="async"></span></li>
+          <li><span class="logo-tile logo-tile--pd"><img src="/assets/brands/pd.jpg" alt="Party Designers" width="240" height="97" loading="lazy" decoding="async"></span></li>
+          <li><span class="logo-tile"><img src="/assets/brands/blm.png" alt="Blloom" width="240" height="96" loading="lazy" decoding="async"></span></li>
+          <li><span class="logo-tile logo-tile--dark"><img src="/assets/brands/acad.png" alt="Acad Branding" width="223" height="100" loading="lazy" decoding="async"></span></li>
+          <li><span class="logo-tile"><img src="/assets/brands/sd.png" alt="Seeder" width="240" height="72" loading="lazy" decoding="async"></span></li>
+          <li><span class="logo-tile logo-tile--dark"><img src="/assets/brands/bc.png" alt="BC Agency" width="127" height="100" loading="lazy" decoding="async"></span></li>
+          <li><span class="logo-tile"><img src="/assets/brands/mbc.png" alt="Media BC" width="151" height="45" loading="lazy" decoding="async"></span></li>
+          <li><span class="logo-tile"><img src="/assets/brands/jw.png" alt="Jumpwebs" width="145" height="100" loading="lazy" decoding="async"></span></li>
+          <li><span class="logo-tile"><img src="/assets/brands/f5ceo.png" alt="Fortune 5 CEO" width="226" height="100" loading="lazy" decoding="async"></span></li>
+        </ul>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Signed in: filled by js/portal.js. -->
+  <div class="portal" id="portal-view" hidden></div>
+</body>
+</html>
